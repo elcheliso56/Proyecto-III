@@ -4,7 +4,7 @@
     <h1>Hola chicos Soy Gabriel</h1>
     <p>hola bbs</p>
     h1>Hola chicos Soy Gabriel</h1>
-    <p>hola bbs</p>
+    <p>27 millones</p>
 </head>
 <body>
     <div>
