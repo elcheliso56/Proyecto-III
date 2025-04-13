@@ -80,7 +80,7 @@ class perfil extends datos{
             if(!empty($this->imagen)) {
                 $query .= ", imagen = '$this->imagen'";
                 // Eliminar la imagen anterior si existe y no es la imagen por defecto
-                if ($imagen_actual && $imagen_actual != 'otros/img/usuarios/default.jpg' && file_exists($imagen_actual)) {
+                if ($imagen_actual && $imagen_actual != 'otros/img/usuarios/default.png' && file_exists($imagen_actual)) {
                     unlink($imagen_actual); // Eliminar archivo de imagen
                 }
                 $nueva_imagen = $this->imagen; // Asignar nueva imagen

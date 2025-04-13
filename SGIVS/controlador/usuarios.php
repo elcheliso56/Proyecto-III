@@ -49,7 +49,7 @@ if(is_file("vista/".$pagina.".php")){
 				move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_ruta); // Mueve la imagen a la ruta definida
 				$o->set_imagen($imagen_ruta); // Establece la ruta de la imagen en el objeto
 			} else {
-				$o->set_imagen('otros/img/usuarios/default.jpg'); // Establece una imagen por defecto si no se sube ninguna
+				$o->set_imagen('otros/img/usuarios/default.png'); // Establece una imagen por defecto si no se sube ninguna
 			}
 			
 			// Acción para incluir un nuevo usuario

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">		
-	<title>BitBox</title>
-	<link rel="icon" type="image/x-icon" href="otros/img/icons/ico.ico">
+	<title>SGIVS</title>
+	<link rel="icon" type="image/x-icon" href="otros/img/iconos/icono.ico">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/datatables.css"/>
 	<script src="js/jquery.min.js" ></script>

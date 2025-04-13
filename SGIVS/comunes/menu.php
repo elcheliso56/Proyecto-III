@@ -18,7 +18,7 @@
 		<div class="full-width navLateral-body">
 			<!-- Logo y título de la navegación lateral -->
 			<div class="full-width navLateral-body-logo text-center tittles">
-				<i class="zmdi zmdi-close btn-menu"></i> INVENTARIO 
+				<i class="zmdi zmdi-close btn-menu"></i> MENU 
 			</div>
 			<figure class="full-width navLateral-body-tittle-menu">
 				<div>
@@ -41,7 +41,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-view-dashboard"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr" style="color: red;">
 								Principal
 							</div>
 						</a>
@@ -54,7 +54,7 @@
 							<div class="navLateral-body-cl">
 								<i class="bi bi-tags-fill"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Categorías
 							</div>
 						</a>
@@ -65,7 +65,7 @@
 							<div class="navLateral-body-cl">
 								<i class="bi bi-geo-alt-fill"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Ubicaciones
 							</div>
 						</a>
@@ -76,7 +76,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-truck"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Proveedores
 							</div>
 						</a>
@@ -87,7 +87,7 @@
 							<div class="navLateral-body-cl">
 								<i class="bi bi-box-seam-fill"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Productos
 							</div>
 						</a>
@@ -98,7 +98,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-accounts"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Clientes
 							</div>
 						</a>
@@ -110,7 +110,7 @@
 								<div class="navLateral-body-cl">
 									<i class="zmdi zmdi-account"></i>
 								</div>
-								<div class="navLateral-body-cr">
+								<div class="navLateral-body-cr"style="color: red;">
 									Usuarios
 								</div>
 							</a>
@@ -122,7 +122,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</div>
-							<div class="navLateral-body-cr">
+							<div class="navLateral-body-cr"style="color: red;">
 								Movimientos
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
@@ -134,7 +134,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-bag-check-fill"></i>
 									</div>
-									<div class="navLateral-body-cr">
+									<div class="navLateral-body-cr"style="color: red;">
 										Apartados
 									</div>
 								</a>
@@ -144,7 +144,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-cart-plus-fill"></i>
 									</div>
-									<div class="navLateral-body-cr">
+									<div class="navLateral-body-cr"style="color: red;">
 										Entradas
 									</div>
 								</a>
@@ -154,7 +154,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-cart-dash-fill"></i>
 									</div>
-									<div class="navLateral-body-cr">
+									<div class="navLateral-body-cr"style="color: red;">
 										Salidas
 									</div>
 								</a>
@@ -168,7 +168,7 @@
 								<div class="navLateral-body-cl">
 									<i class="bi bi-file-text-fill"></i>
 								</div>
-								<div class="navLateral-body-cr">
+								<div class="navLateral-body-cr"style="color: red;">
 									Reportes
 								</div>
 							</a>

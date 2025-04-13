@@ -4,7 +4,7 @@
     <div class="login-wrap cover"> <!-- Contenedor principal para el formulario de inicio de sesión -->
         <div class="container-login">
             <p class="text-center" id="lh"> <!-- Icono de usuario centrado -->
-                <i class="zmdi zmdi-account-circle"></i>
+                <i class="zmdi zmdi-account-circle" style="color: black;"></i>
             </p>
             <p class="text-center text-condensedLight">Iniciar Sesión</p> <!-- Título del formulario -->
             <form id="loginForm"> <!-- Formulario para el inicio de sesión -->
@@ -16,7 +16,7 @@
                     <input class="mdl-textfield__input" type="password" id="contraseña" name="contraseña" required>
                     <label class="mdl-textfield__label" for="contraseña">Contraseña</label>
                 </div>
-                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect" id="lb"> <!-- Botón para enviar el formulario -->
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect" id="lb" style="color: black;"> <!-- Botón para enviar el formulario -->
                     Iniciar Sesión
                 </button>
             </form>

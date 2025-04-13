@@ -130,7 +130,7 @@ class usuarios extends datos{
 					");
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  '¡Registro modificado con éxito!';
-				if ($imagen_actual && $imagen_actual != 'otros/img/usuarios/default.jpg') {
+				if ($imagen_actual && $imagen_actual != 'otros/img/usuarios/default.png') {
 					if (file_exists($imagen_actual)) {
 						unlink($imagen_actual);
 					}
@@ -163,7 +163,7 @@ class usuarios extends datos{
 					");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  '¡Registro eliminado con exito!';
-				if ($imagen && $imagen != 'otros/img/usuarios/default.jpg') {
+				if ($imagen && $imagen != 'otros/img/usuarios/default.png') {
 					if (file_exists($imagen)) {
 						unlink($imagen);
 					}
