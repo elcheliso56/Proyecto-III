@@ -323,7 +323,7 @@ html, body{
 	align-items: center;
 	justify-content: center;
 	color: black;
-	background-image: url(../otros/img/menu/fontLogin2.png);
+	background-image: url(../otros/img/menu/fontLogin.png);
 }
 
 .login-wrap::before {
