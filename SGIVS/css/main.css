@@ -322,27 +322,40 @@ html, body{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: white;
+	color: black;
 	background-image: url(../otros/img/menu/fontLogin.png);
 }
 
-.container-login{
-	width: 100%;
-	max-width: 300px;
-	box-sizing: border-box;
-	height: auto;
-	margin: 0;
-	padding: 30px;
-	background-color: rgba(0, 0, 0, .9);
-	border-radius: 15px;
+.login-wrap::before {
+    content: ""; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.container-login {
+    position: relative; 
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    height: auto;
+    margin: 0;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-radius: 50px;
+    z-index: 2; 
 }
 
 .navBar{
-	background-color: #14345a;
+	background-color: #38bdde;
 	border: 1px solid black;
 	height: 45px;
 	color: #fff;
 }
+
 .navBar-options{
 	line-height: 45px;
 	height: 45px;
@@ -353,6 +366,7 @@ html, body{
 	padding: 0;
 	transition: all .3s ease-in-out;
 }
+
 .navBar-options-change{
 	width: 100%;
 }
@@ -445,11 +459,11 @@ html, body{
 
 .navLateral {
 	left: 0;
-	width: 300px;
+	width: 200px;
 	z-index: 100;
 	transition: all .3s ease-in-out;
-	background-image: url("../otros/img/menu/NavLateral.jpg");
-	background-size: cover;
+	background-image: url("../otros/img/menu/NavLateral.png");
+	background-size: 100%;
 	background-position: center;
 	color: #fff;
 	overflow: hidden;
@@ -471,7 +485,7 @@ html, body{
 	color: #fff;
 	width: 100%;
 	font-size: 25px;
-	background-color: #14345a;
+	background-color: #38bdde; 
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 }
@@ -537,7 +551,7 @@ html, body{
 	transition: all .3s ease-in-out;
 }
 .menu-principal > li > a:hover{
-	background-color:#14345a ;
+	background-color:#38bdde; 
 }
 
 .menu-principal li a div.navLateral-body-cl,
@@ -571,7 +585,7 @@ html, body{
 	overflow-x: hidden;
 }
 .pageContent{
-	padding-left: 300px;
+	padding-left: 200px;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -761,7 +775,6 @@ html, body{
 	border: 2px solid;
 }
 
-
 /*=====================================================
 					Media  Queries
 ======================================================*/
@@ -802,7 +815,7 @@ html, body{
 	}
 	.navLateral-body{
 		width: 300px;
-		background-image: url("../otros/img/menu/NavLateral.jpg");
+		background-image: url("../otros/img/menu/NavLateral.png");
 		background-size: cover;
 		background-position: center;
 	}
@@ -908,8 +921,6 @@ html, body{
 		display: none;
 	}
 }
-
-
 
 @media (max-width: 210px){
 
