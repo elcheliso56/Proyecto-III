@@ -7,7 +7,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 	<center><h1>Historial de Pacientes</h1></center>
 	<br>
 	<!--<p style="text-align: justify;">"El módulo de Ubicaciones te permite organizar y controlar los diferentes espacios de almacenamiento en tu negocio. Aquí podrás crear y gestionar las distintas áreas donde se almacenan los productos, como almacenes, estantes, o depósitos. Una buena organización de
-		 las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>-->
+		las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>-->
 	<div class="container"> 
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -36,7 +36,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 <div class="modal fade" tabindex="-1" role="dialog" id="modal1">
 	<div class="modal-dialog modal-lg" role="document" id="lm">
 		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="bi bi-geo-alt-fill"></i>Ubicación</h5>
+			<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Historial</h5>
 		</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
@@ -55,6 +55,36 @@ require_once('comunes/menu.php');//Incluye el menú común
 								<input class="form-control" type="text" id="descripcion" name="descripcion" placeholder="Descripción de la ubicacion" />
 								<span id="sdescripcion"></span>
 							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<label for="Apellido">Apellido</label>
+								<input class="form-control" type="text" id="Apellido"  name="Apellido" placeholder="Apellido obligatorio" title="El Apellido no puede ser modificado..."/>
+								<span id="sApellido"></span>
+							</div>
+							<div class="col-md-6">
+								<label for="Edad">Edad</label>
+								<input class="form-control" type="text" id="Edad" name="Edad" placeholder="Edad" />
+								<span id="sEdad"></span>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<label for="telefono">telefono</label>
+								<input class="form-control" type="text" id="telefono"  name="telefono" placeholder="telefono obligatorio" title=""/>
+								<span id="stelefono"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="correo">correo</label>
+								<input class="form-control" type="text" id="correo" name="correo" placeholder="correo  personal" />
+								<span id="scorreo"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="antecedentes">Antecedentes Médicos</label>
+								<input class="form-control" type="text" id="antecedentes" name="antecedentes" placeholder="breve descripcion" />
+								<span id="santecedentes"></span>
+							</div>
+
 						</div>
 						<div class="row mb-3">
 							<!-- Campo para subir imagen y mostrar imagen actual -->
