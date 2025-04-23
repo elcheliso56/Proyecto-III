@@ -34,10 +34,10 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
 				<div class="tile-text">
 					<span class="text-condensedLight">
 						<?php echo $datos['ubicaciones']; ?><br> <!-- Muestra el conteo de ubicaciones -->
-						<small>Ubicaciones</small> <!-- Etiqueta de ubicaciones -->
+						<small>Historiales</small> <!-- Etiqueta de ubicaciones -->
 					</span>
 				</div>
-				<i class="bi bi-geo-alt-fill tile-icon"></i> <!-- Icono de ubicaciones -->
+				<i class="bi bi-clipboard2-pulse tile-icon"></i> <!-- Icono de ubicaciones -->
 			</a>
 		</article>
 		<article class="full-width tile">
