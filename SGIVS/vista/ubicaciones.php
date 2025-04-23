@@ -4,8 +4,10 @@ require_once('comunes/menu.php');//Incluye el menú común
 ?>
 
 <div class="container">
-	<h1> Gestionar Ubicaciones</h1>
-	<p style="text-align: justify;">"El módulo de Ubicaciones te permite organizar y controlar los diferentes espacios de almacenamiento en tu negocio. Aquí podrás crear y gestionar las distintas áreas donde se almacenan los productos, como almacenes, estantes, o depósitos. Una buena organización de las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>
+	<center><h1>Historial de Pacientes</h1></center>
+	<br>
+	<!--<p style="text-align: justify;">"El módulo de Ubicaciones te permite organizar y controlar los diferentes espacios de almacenamiento en tu negocio. Aquí podrás crear y gestionar las distintas áreas donde se almacenan los productos, como almacenes, estantes, o depósitos. Una buena organización de
+		 las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>-->
 	<div class="container"> 
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -18,7 +20,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 			<table class="table table-striped table-hover table-center" id="tablaubicacion">
 				<thead class="tableh">
 					<tr>
-						<th class="text-center">#</th>	
+						<th class="text-center"></th>	
 						<th class="text-center">Nombre</th>
 						<th class="text-center">Descripción</th>
 						<th class="text-center">Imagen</th>

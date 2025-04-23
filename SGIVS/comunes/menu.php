@@ -69,10 +69,10 @@ font-weight:bold
 					<li class="full-width">
 						<a href="?pagina=ubicaciones" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="bi bi-geo-alt-fill"></i>
+								<i class="bi bi-clipboard2-pulse"></i>
 							</div>
 							<div class="navLateral-body-cr"style="color: white;">
-								Ubicaciones
+								Historiales
 							</div>
 						</a>
 					</li>
