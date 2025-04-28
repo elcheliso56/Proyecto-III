@@ -4,12 +4,12 @@ require_once('comunes/menu.php');//Incluye el menú común
 ?> 
 
 <div class="container"> 
-	<h1> Gestionar Categorías</h1>
-	<p style="text-align: justify;">"En la sección de Categorías podrás crear y administrar las diferentes clasificaciones para tus productos. Una estructura bien organizada de categorías permite agrupar los productos de manera lógica, facilitando su búsqueda y gestión. Cada categoría puede tener una descripción detallada que ayude a identificar qué tipos de productos pertenecen a ella."</p> 
+	<h1> Gestionar Publicidad</h1>
+	<p style="text-align: justify;"><!--"En la sección de Categorías podrás crear y administrar las diferentes clasificaciones para tus productos. Una estructura bien organizada de categorías permite agrupar los productos de manera lógica, facilitando su búsqueda y gestión. Cada categoría puede tener una descripción detallada que ayude a identificar qué tipos de productos pertenecen a ella."--></p> 
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
-				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Categoría"><i class="bi bi-plus-square"></i></button><!-- Botón para registrar una nueva categoría -->
+				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Publicidad"><i class="bi bi-plus-square"></i></button><!-- Botón para registrar una nueva categoría -->
 			</div>				
 		</div>
 	</div>
@@ -22,6 +22,8 @@ require_once('comunes/menu.php');//Incluye el menú común
 						<th class="text-center">#</th>	
 						<th class="text-center">Nombre</th>
 						<th class="text-center">Descripción</th>
+						<th class="text-center">Fecha de Inicio</th>
+						<th class="text-center">Fecha de Finalización</th>
 						<th class="text-center">Imagen</th>
 						<th class="text-center">Acciones</th>
 					</tr>
@@ -36,7 +38,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 <div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 	<div class=" modal-dialog modal-lg" role="document" id="lm">
 		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="zmdi zmdi-label"></i> Categoría</h5>
+			<h5 class="modal-title"><i class="zmdi zmdi-label"></i> Publicidad</h5>
 		</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
@@ -56,6 +58,17 @@ require_once('comunes/menu.php');//Incluye el menú común
 								<span id="sdescripcion"></span>
 							</div>
 						</div>
+						<!-- Campos del formulario para las fechas -->
+						<div class="row mb-3" >
+							<div class="col-md-6">
+								<label for="fecha_inicio">Fecha de Inicio</label>
+								<input class="form-control" type="date" id="fecha_inicio" name="fecha_inicio"/>
+							</div>
+							<div class="col-md-6">
+								<label for="fecha_fin">Fecha de Finalización</label>
+								<input class="form-control" type="date" id="fecha_fin" name="fecha_fin"/>
+							</div>
+						</div>
 						<!-- Campo para subir imagen y mostrar imagen actual -->
 						<div class="row mb-3">
 							<div class="col-md-6">
@@ -64,7 +77,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 							</div>
 							<div class="col-md-6">
 								<span id="simagen"></span>
-								<img id="imagen_actual" src="" alt="Imagen de la categoría" class="img"/>
+								<img id="imagen_actual" src="" alt="Imagen de Publicidad" class="img"/>
 							</div>					
 						</div>
 						<!-- Botones del modal -->
@@ -80,7 +93,7 @@ require_once('comunes/menu.php');//Incluye el menú común
 </div>
 </section>
 </section>
-<script type="text/javascript" src="js/categorias.js"></script>
+<script type="text/javascript" src="js/promociones.js"></script>
 <div id="loader" class="loader-container" style="display: none;">
 	<div class="loader"></div>
 	<p>Procesando solicitud...</p>

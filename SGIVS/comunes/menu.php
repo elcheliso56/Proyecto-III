@@ -1,9 +1,4 @@
-<style>
-.navLateral-body-cr{
-font-weight:bold
-}
 
-</style>
 <body>
 	<!-- Área de notificaciones -->
 	<section class="full-width container-notifications">
@@ -56,7 +51,7 @@ font-weight:bold
 
 					<!-- Enlaces a diferentes secciones del menú -->
 					<li class="full-width">
-						<a href="?pagina=categorias" class="full-width">
+						<a href="?pagina=promociones" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="bi bi-tags-fill"></i>
 							</div>
