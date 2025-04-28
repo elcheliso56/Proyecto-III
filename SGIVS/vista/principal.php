@@ -3,7 +3,7 @@ require_once("comunes/encabezado.php"); // Incluye el encabezado de la página
 require_once('comunes/menu.php'); // Incluye el menú de navegación
 require_once('modelo/principal.php'); // Incluye el modelo principal para obtener datos
 $conteos = new principal(); // Crea una instancia de la clase principal
-$datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes categorías
+$datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes publicidad
 ?>
 
 <div class="container"> <!-- Contenedor principal -->
@@ -17,15 +17,15 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
 		</div>		
 	</figure>
 	<section class="full-width text-center"> <!-- Sección para los tiles de conteo -->
-		<article class="full-width tile" > <!-- Tile para categorías -->
-			<a href="?pagina=categorias" class="full-width">				
+		<article class="full-width tile" > <!-- Tile para publicidad -->
+			<a href="?pagina=promociones" class="full-width">				
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						<?php echo $datos['categorias']; ?><br> <!-- Muestra el conteo de categorías -->
-						<small>Categorías</small> <!-- Etiqueta de categorías -->
+						<?php echo $datos['publicidad']; ?><br> <!-- Muestra el conteo de publicidad -->
+						<small>Publicidad</small> <!-- Etiqueta de publicidad -->
 					</span>
 				</div>
-				<i class="bi bi-tags-fill tile-icon"></i> <!-- Icono de categorías -->
+				<i class="bi bi-tags-fill tile-icon"></i> <!-- Icono de publicidad -->
 			</a>	
 		</article>
 		<!-- Repite el mismo patrón para ubicaciones, proveedores, productos, clientes -->
