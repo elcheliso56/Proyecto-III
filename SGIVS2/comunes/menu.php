@@ -1,5 +1,5 @@
 <body>
-	!-- Área de notificaciones -->
+	<!-- Área de notificaciones -->
 	<section class="full-width container-notifications">
 		<!-- Fondo de notificaciones -->
 		<div class="full-width container-notifications-bg btn-Notification" ></div>
@@ -41,20 +41,92 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-view-dashboard"></i>
 							</div>
-							<div class="navLateral-body-cr" style="color: white;">
+							<div class="navLateral-body-cr" style="color: red;">
 								Principal
 							</div>
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
-
-					<!-- Enlaces a diferentes secciones del menú -->
 					<li class="full-width">
-						<a href="?pagina=promociones" class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-shopping-cart"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								Recursos
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="?pagina=equipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-cart-plus-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Equipos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=insumos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-bag-check-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Insumos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=entradasinsumos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-bag-check-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Entradas Insumos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=presentaciones" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-bag-check-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										presentaciones
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=servicios" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-bag-check-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										servicios
+									</div>
+								</a>
+							</li>														
+							<li class="full-width">
+								<a href="?pagina=entradasequipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-bag-check-fill"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Entradas Equipos
+									</div>
+								</a>
+							</li>															
+						</ul>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="?pagina=categorias" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="bi bi-tags-fill"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr"style="color: red;">
 								Categorías
 							</div>
 						</a>
@@ -63,10 +135,10 @@
 					<li class="full-width">
 						<a href="?pagina=ubicaciones" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="bi bi-clipboard2-pulse"></i>
+								<i class="bi bi-geo-alt-fill"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Historiales
+							<div class="navLateral-body-cr"style="color: red;">
+								Ubicaciones
 							</div>
 						</a>
 					</li>
@@ -76,7 +148,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-truck"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr"style="color: red;">
 								Proveedores
 							</div>
 						</a>
@@ -87,7 +159,7 @@
 							<div class="navLateral-body-cl">
 								<i class="bi bi-box-seam-fill"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr"style="color: red;">
 								Productos
 							</div>
 						</a>
@@ -98,7 +170,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-accounts"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr"style="color: red;">
 								Clientes
 							</div>
 						</a>
@@ -110,7 +182,7 @@
 								<div class="navLateral-body-cl">
 									<i class="zmdi zmdi-account"></i>
 								</div>
-								<div class="navLateral-body-cr"style="color: white;">
+								<div class="navLateral-body-cr"style="color: red;">
 									Usuarios
 								</div>
 							</a>
@@ -122,7 +194,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr"style="color: red;">
 								Movimientos
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
@@ -134,7 +206,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-bag-check-fill"></i>
 									</div>
-									<div class="navLateral-body-cr"style="color: white;">
+									<div class="navLateral-body-cr"style="color: red;">
 										Apartados
 									</div>
 								</a>
@@ -144,7 +216,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-cart-plus-fill"></i>
 									</div>
-									<div class="navLateral-body-cr"style="color: white;">
+									<div class="navLateral-body-cr"style="color: red;">
 										Entradas
 									</div>
 								</a>
@@ -154,7 +226,7 @@
 									<div class="navLateral-body-cl">
 										<i class="bi bi-cart-dash-fill"></i>
 									</div>
-									<div class="navLateral-body-cr"style="color: white;">
+									<div class="navLateral-body-cr"style="color: red;">
 										Salidas
 									</div>
 								</a>
@@ -168,7 +240,7 @@
 								<div class="navLateral-body-cl">
 									<i class="bi bi-file-text-fill"></i>
 								</div>
-								<div class="navLateral-body-cr"style="color: white;">
+								<div class="navLateral-body-cr"style="color: red;">
 									Reportes
 								</div>
 							</a>
