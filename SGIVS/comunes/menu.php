@@ -1,5 +1,5 @@
 <body>
-	!-- Área de notificaciones -->
+	<!-- Área de notificaciones -->
 	<section class="full-width container-notifications">
 		<!-- Fondo de notificaciones -->
 		<div class="full-width container-notifications-bg btn-Notification" ></div>
