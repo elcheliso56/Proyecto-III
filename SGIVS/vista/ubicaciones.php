@@ -1,65 +1,112 @@
-<?php 
+<?php
 require_once("comunes/encabezado.php");//Incluye el encabezado común
 require_once('comunes/menu.php');//Incluye el menú común 
 ?>
+<!-- html2canvas para capturar el contenido -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- jsPDF para generar el PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <div class="container">
-	<center><h1>Historial de Pacientes</h1></center>
+	<center>
+		<h1>Historial de Pacientes</h1>
+	</center>
 	<br>
 	<!--<p style="text-align: justify;">"El módulo de Ubicaciones te permite organizar y controlar los diferentes espacios de almacenamiento en tu negocio. Aquí podrás crear y gestionar las distintas áreas donde se almacenan los productos, como almacenes, estantes, o depósitos. Una buena organización de
 		las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>-->
-	<div class="container"> 
+	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
-				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Ubicación"><i class="bi bi-plus-square"></i></button><!-- Botón para registrar una nueva Ubicación -->	    
-			</div>				
+				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir"
+					title="Registrar Ubicación"><i
+						class="bi bi-plus-square"></i></button><!-- Botón para registrar una nueva Ubicación -->
+
+			</div>
+			<div class="col-md-2 text-center">
+				<button class="btn btn-outline-secondary" id="odontomodal" data-bs-toggle="modal"
+					data-bs-target="#miModal">Odontograma</button>
+			</div>
 		</div>
+
 	</div>
 	<div class="container">
-		<div class="table-responsive" id="tt"><!-- Tabla para mostrar las Ubicaciones --> 
+		<div class="table-responsive" id="tt"><!-- Tabla para mostrar las Ubicaciones -->
 			<table class="table table-striped table-hover table-center" id="tablaubicacion">
 				<thead class="tableh">
 					<tr>
-						<th class="text-center"></th>	
+						<th class="text-center"></th>
 						<th class="text-center">Nombre</th>
 						<th class="text-center">Descripción</th>
 						<th class="text-center">Imagen</th>
 						<th class="text-center">Acciones</th>
 					</tr>
 				</thead>
-				<tbody id="resultadoconsulta">			  
+				<tbody id="resultadoconsulta">
 				</tbody>
 			</table>
-		</div> 
+		</div>
 	</div>
-</div> 
+</div>
+<!-- Modal -->
+<div class="modal fade" id="miModal" tabindex="-1">
+
+	<div class="modal-dialog modal-lg">
+		<div class="modal-header" id="hm">
+			<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Odontograma</h5>
+			<button type="button" id="cierrate" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+				<i class="button">Cerrar</i>
+			</button>
+		</div>
+
+		<div id="generar-pdf" class="modal-content">
+
+			<div class="modal-body">
+				<!-- Carga el contenido HTML aquí -->
+				<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<!-- Botones del modal -->
+				<button type="button" class="btn btn-danger" id="generar-pdf">
+					<i class="bi bi-file-pdf"></i> Guardar como PDF
+				</button>
+
+
+			</div>
+		</div>
+	</div>
+
+</div>
 <div class="modal fade" tabindex="-1" role="dialog" id="modal1">
 	<div class="modal-dialog modal-lg" role="document" id="lm">
 		<div class="modal-header" id="hm">
 			<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Historial</h5>
 		</div>
 		<div class="modal-content">
-			<div class="container" id="mtm"> 
+			<div class="container" id="mtm">
 				<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
 					<input autocomplete="off" type="text" class="form-control" name="accion" id="accion">
-					<div class="container">	
+					<div class="container">
 						<!-- Campos del formulario para nombre y descripción -->
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="nombre">Nombre</label>
-								<input class="form-control" type="text" id="nombre"  name="nombre" placeholder="Nombre obligatorio" title="El nombre no puede ser modificado..."/>
+								<input class="form-control" type="text" id="nombre" name="nombre"
+									placeholder="Nombre obligatorio" title="El nombre no puede ser modificado..." />
 								<span id="snombre"></span>
 							</div>
 							<div class="col-md-6">
 								<label for="descripcion">Descripción</label>
-								<input class="form-control" type="text" id="descripcion" name="descripcion" placeholder="Descripción de la ubicacion" />
+								<input class="form-control" type="text" id="descripcion" name="descripcion"
+									placeholder="Descripción de la ubicacion" />
 								<span id="sdescripcion"></span>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="Apellido">Apellido</label>
-								<input class="form-control" type="text" id="Apellido"  name="Apellido" placeholder="Apellido obligatorio" title="El Apellido no puede ser modificado..."/>
+								<input class="form-control" type="text" id="Apellido" name="Apellido"
+									placeholder="Apellido obligatorio" title="El Apellido no puede ser modificado..." />
 								<span id="sApellido"></span>
 							</div>
 							<div class="col-md-6">
@@ -71,17 +118,20 @@ require_once('comunes/menu.php');//Incluye el menú común
 						<div class="row mb-3">
 							<div class="col-md-4">
 								<label for="telefono">telefono</label>
-								<input class="form-control" type="text" id="telefono"  name="telefono" placeholder="telefono obligatorio" title=""/>
+								<input class="form-control" type="text" id="telefono" name="telefono"
+									placeholder="telefono obligatorio" title="" />
 								<span id="stelefono"></span>
 							</div>
 							<div class="col-md-4">
 								<label for="correo">correo</label>
-								<input class="form-control" type="text" id="correo" name="correo" placeholder="correo  personal" />
+								<input class="form-control" type="text" id="correo" name="correo"
+									placeholder="correo  personal" />
 								<span id="scorreo"></span>
 							</div>
 							<div class="col-md-4">
 								<label for="antecedentes">Antecedentes Médicos</label>
-								<input class="form-control" type="text" id="antecedentes" name="antecedentes" placeholder="breve descripcion" />
+								<input class="form-control" type="text" id="antecedentes" name="antecedentes"
+									placeholder="breve descripcion" />
 								<span id="santecedentes"></span>
 							</div>
 
@@ -90,21 +140,25 @@ require_once('comunes/menu.php');//Incluye el menú común
 							<!-- Campo para subir imagen y mostrar imagen actual -->
 							<div class="col-md-6">
 								<label for="imagen">Imagen</label>
-								<input class="col-md-11 inpImg" type="file" id="imagen" name="imagen" accept=".png,.jpg,.jpeg"/>
+								<input class="col-md-11 inpImg" type="file" id="imagen" name="imagen"
+									accept=".png,.jpg,.jpeg" />
 							</div>
 							<div class="col-md-6">
 								<span id="simagen"></span>
-								<img id="imagen_actual" src="" alt="Imagen de la ubicación" class="img"/>
-							</div>						
+								<img id="imagen_actual" src="" alt="Imagen de la ubicación" class="img" />
+							</div>
 						</div>
 						<div class="modal-footer justify-content-between">
 							<!-- Botones del modal -->
-							<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bc"><i
+									class="bi bi-x-square"></i> Cerrar</button>
 							<button type="button" class="btn btn-success bi bi-check-square" id="proceso"></button>
+							<!--	<button type="button" class="btn btn-secondary" onclick="window.open('index.html', '_blank')">Crear
+								Odontograma</button> -->
 						</div>
-					</div>	
+					</div>
 				</form>
-			</div> 
+			</div>
 		</div>
 	</div>
 </div>
@@ -116,4 +170,5 @@ require_once('comunes/menu.php');//Incluye el menú común
 	<p>Procesando solicitud...</p>
 </div>
 </body>
+
 </html>

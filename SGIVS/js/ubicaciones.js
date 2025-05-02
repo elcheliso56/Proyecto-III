@@ -173,6 +173,50 @@ $(document).ready(function() {
 	$("#modal1").modal("show"); // Muestra el modal
 });	
 });
+// Manejo del clic en el botón incluir
+$("#odontomodal").on("click", function() {
+	$("#miModal").modal("show");
+    $("#miModal").modal("hide"); // Muestra el modal
+});	
+$("#cierrate").on("click", function() {
+	$("#miModal").modal("hide");// Muestra el modal
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Configura jsPDF (si usas la versión umd)
+    const { jsPDF } = window.jspdf;
+    
+    // Botón para generar PDF
+    document.getElementById('generar-pdf').addEventListener('click', function() {
+        const iframe = document.querySelector('#miModal iframe');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // 1. Capturar el contenido del iframe con html2canvas
+        html2canvas(iframeDoc.body, {
+            scale: 4, // Aumenta la calidad
+            useCORS: true, // Para contenido externo (si aplica)
+            logging: true, // Depuración en consola
+            backgroundColor: '#FFFFFF' // Fondo blanco
+        }).then(canvas => {
+            // 2. Crear el PDF
+            const pdf = new jsPDF('p', 'mm', 'a4'); // Orientación vertical, formato A4
+            const imgData = canvas.toDataURL('image/png');
+            
+            // Calcular dimensiones para que la imagen quepa en el PDF
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            // 3. Agregar la imagen al PDF
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            
+            // 4. Descargar el PDF
+            pdf.save('odontograma.pdf');
+        }).catch(error => {
+            console.error('Error al generar PDF:', error);
+            alert('No se pudo generar el PDF. Ver consola para detalles.');
+        });
+    });
+});
 
 function validarenvio() {
     // Valida el envío de datos
