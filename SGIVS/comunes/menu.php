@@ -61,6 +61,17 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
+						<a href="?pagina=pacientes" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-accounts"></i>
+							</div>
+							<div class="navLateral-body-cr"style="color: white;">
+								Pacientes
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
 						<a href="?pagina=ubicaciones" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="bi bi-clipboard2-pulse"></i>

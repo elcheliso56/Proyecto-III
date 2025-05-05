@@ -30,6 +30,17 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes public
 		</article>
 		<!-- Repite el mismo patrón para ubicaciones, proveedores, productos, clientes -->
 		<article class="full-width tile">
+			<a href="?pagina=pacientes" class="full-width">
+				<div class="tile-text">
+					<span class="text-condensedLight">
+						<?php echo $datos['pacientes']; ?><br>
+						<small>Pacientes</small>
+					</span>
+				</div>
+				<i class="zmdi zmdi-accounts tile-icon"></i>
+			</a>
+		</article>
+		<article class="full-width tile">
 			<a href="?pagina=ubicaciones" class="full-width">
 				<div class="tile-text">
 					<span class="text-condensedLight">
