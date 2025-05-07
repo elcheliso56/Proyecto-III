@@ -148,7 +148,6 @@ class pacientes extends datos{
 					email = '$this->email',
 					telefono = '$this->telefono',
 					direccion = '$this->direccion'
-					fecha_registro = '$this->fecha_registro'
 					where
 					cedula = '$this->cedula'
 					");
@@ -246,7 +245,7 @@ class pacientes extends datos{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			$resultado = $co->query("Select * from paciente where cedula='$cedula'");
+			$resultado = $co->query("Select * from pacientes where cedula='$cedula'");
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			if($fila){
 				return true;  

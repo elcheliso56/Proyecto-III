@@ -127,12 +127,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<div class="row mb-3">
 							<div class="col-md-8">
 								<label for="direccion">Dirección</label>
-								<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" requerid maxlength="100"/>
+								<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" requerid/>
 								<span id="sdireccion"></span>
 							</div>
 							<div class="col-md-4">
 								<label for="fecha_registro">Fecha de Registro</label>
-								<input class="form-control" type="date" id="fecha_registro" requerid/>
+								<input class="form-control" type="date" id="fecha_registro"/>
 								<span id="sfecha_registro"></span>
 							</div>
 						</div>	

@@ -7,15 +7,15 @@ function consultar() {
 
 function destruyeDT() {
     // Verifica si la tabla existe y la destruye si es así
-	if ($.fn.DataTable.isDataTable("#tablapaciente")) {
-        $("#tablapaciente").DataTable().destroy();
+	if ($.fn.DataTable.isDataTable("#tablacliente")) {
+        $("#tablacliente").DataTable().destroy();
     }
 }
 
 function crearDT() {
     // Crea una nueva tabla si no existe
-    if (!$.fn.DataTable.isDataTable("#tablapaciente")) {
-        $("#tablapaciente").DataTable({
+    if (!$.fn.DataTable.isDataTable("#tablacliente")) {
+        $("#tablacliente").DataTable({
             language: {
                 // Configuración de idioma para la tabla
                 lengthMenu: "Mostrar _MENU_ por página",
@@ -43,8 +43,17 @@ function crearDT() {
         });
     }
     $(window).resize(function() {
-        $('#tablapaciente').DataTable().columns.adjust().draw();
+        $('#tablacliente').DataTable().columns.adjust().draw();
     });
+}
+
+function establecerFechaActual() {
+    var fecha = new Date();
+    var dia = fecha.getDate();
+    var mes = fecha.getMonth() + 1;
+    var anio = fecha.getFullYear();
+    var fechaActual = anio + "-" + (mes < 10 ? "0" + mes : mes) + "-" + (dia < 10 ? "0" + dia : dia);
+    $("#fecha_registro").val(fechaActual);
 }
 
 $(document).ready(function() {
@@ -223,6 +232,7 @@ $(document).ready(function() {
                     if (result.isConfirmed) {
                         var datos = new FormData();
                         datos.append('accion', 'eliminar');
+                        datos.append('cedula', $("#cedula").val());
                         enviaAjax(datos);
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
@@ -444,7 +454,7 @@ function pone(pos, accion) {
         $("#fecha_nacimiento").prop("disabled", false);
         $("#genero").prop("disabled", false);
         $("#tipo_sangre").prop("disabled", false);
-        $("#alrgias").prop("disabled", false);
+        $("#alergias").prop("disabled", false);
         $("#antecedentes").prop("disabled", false);
 		$("#email").prop("disabled", false);
 		$("#telefono").prop("disabled", false);
@@ -458,7 +468,7 @@ function pone(pos, accion) {
         $("#fecha_nacimiento").prop("disabled", true);
         $("#genero").prop("disabled", true);
         $("#tipo_sangre").prop("disabled", true);
-        $("#alrgias").prop("disabled", true);
+        $("#alergias").prop("disabled", true);
         $("#antecedentes").prop("disabled", true);
 		$("#email").prop("disabled", true);
 		$("#telefono").prop("disabled", true);
@@ -480,96 +490,6 @@ function pone(pos, accion) {
     $("#fecha_registro").val($(linea).find("td:eq(12)").text());
 	$("#modal1").modal("show"); // Muestra el modal
 }
-
-function enviaAjax(datos) {
-    // Función para enviar datos a través de AJAX
-	$.ajax({
-		async: true,
-		url: "", // URL del servidor
-		type: "POST",
-		contentType: false,
-		data: datos,
-		processData: false,
-		cache: false,
-		beforeSend: function () {},
-		timeout: 10000, // Tiempo de espera
-		success: function (respuesta) {
-			try {
-				var lee = JSON.parse(respuesta); // Intenta parsear la respuesta JSON
-				if (lee.resultado == "consultar") {
-					destruyeDT();	
-					$("#resultadoconsulta").html(lee.mensaje);
-					crearDT(); // Crea la tabla con los nuevos datos
-				} else if (lee.resultado == "incluir") {
-					if (lee.mensaje == '¡Registro guardado con exito!') {
-						Swal.fire({
-							title: "¡Incluido!",
-							text: "El paciente ha sido incluido con éxito.",
-							icon: "success"
-						});
-						$("#modal1").modal("hide");
-						consultar(); // Actualiza la lista de pacientes
-					} else {
-						Swal.fire({
-							title: "Error",
-							text: lee.mensaje,
-							icon: "error"
-						});
-					}
-				} else if (lee.resultado == "modificar") {
-					Swal.fire({
-						title: lee.mensaje.includes('éxito') ? "¡Modificado!" : "Error",
-						text: lee.mensaje,
-						icon: lee.mensaje.includes('éxito') ? "success" : "error"
-					});
-					if (lee.mensaje.includes('éxito')) {
-						$("#modal1").modal("hide");
-						consultar(); // Actualiza la lista de pacientes
-					}
-				} else if (lee.resultado == "eliminar") {
-					Swal.fire({
-						title: lee.mensaje == '¡Registro eliminado con exito!' ? "¡Eliminado!" : "Error",
-						text: lee.mensaje,
-						icon: lee.mensaje == '¡Registro eliminado con exito!' ? "success" : "error"
-					});
-					if (lee.mensaje == '¡Registro eliminado con exito!') {
-						$("#modal1").modal("hide");
-						consultar(); // Actualiza la lista de pacientes
-					}
-				} else if (lee.resultado == "error") {
-					Swal.fire({
-						title: "Error",
-						text: lee.mensaje,
-						icon: "error"
-					});
-				}
-			} catch (e) {
-				Swal.fire({
-					title: "Error",
-					text: "Error en JSON: " + e.name,
-					icon: "error"
-				});
-			}
-		},
-		error: function (request, status, err) {
-			if (status == "timeout") {
-				Swal.fire({
-					title: "Error",
-					text: "Servidor ocupado, intente de nuevo",
-					icon: "error"
-				});
-			} else {
-				Swal.fire({
-					title: "Error",
-					text: "ERROR: " + request + status + err,
-					icon: "error"
-				});
-			}
-		},
-		complete: function () {},
-	});
-}
-
 
 function enviaAjax(datos) {
     $.ajax({
@@ -680,7 +600,7 @@ function limpia() {
     $("#email").val("");
     $("#telefono").val("");
     $("#direccion").val("");
-    $("#fecha_registro").val("");
+    establecerFechaActual();
     // Habilita los campos del formulario
     $("#cedula").prop("disabled", false); 
     $("#nombre").prop("disabled", false);   
@@ -692,6 +612,6 @@ function limpia() {
     $("#antecedentes").prop("disabled", false);
     $("#email").prop("disabled", false);   
     $("#telefono").prop("disabled", false); 
-    $("#direccion").prop("disabled", false);  
-    $("#fecha_registro").prop("disabled", false);                  
+    $("#direccion").prop("disabled", false);   
+    $("#fecha_registro").prop("disabled", true); // Habilita el campo de fecha de registro               
 }
