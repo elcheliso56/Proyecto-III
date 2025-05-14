@@ -52,6 +52,17 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes public
 			</a>
 		</article>
 		<article class="full-width tile">
+			<a href="?pagina=empleados" class="full-width">
+				<div class="tile-text">
+					<span class="text-condensedLight">
+						<?php echo $datos['empleados']; ?><br> <!-- Muestra el conteo de usuarios -->
+						<small>Empleados</small> <!-- Etiqueta de usuarios -->
+					</span>
+				</div>
+				<i class="zmdi zmdi-account tile-icon"></i> <!-- Icono de usuarios -->
+			</a>
+		</article>	
+		<article class="full-width tile">
 			<a href="?pagina=proveedores" class="full-width">
 				<div class="tile-text">
 					<span class="text-condensedLight">

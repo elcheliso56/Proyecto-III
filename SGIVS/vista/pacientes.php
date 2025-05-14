@@ -4,8 +4,6 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 ?> 
 <div class="container"> 
 	<h1>Gestionar Pacientes</h1> <!-- Título principal de la página -->
-	<!-- Contenedor para el botón de agregar nuevo cliente -->
-	<p style="text-align:justify;">"En el módulo de Gestión de Pacientes podrás mantener organizada tu base de datos de pacientes. Registra información esencial como documento de identidad, datos de contacto y dirección."</p>
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -31,7 +29,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<th class="text-center">Grupo Sanguíneo</th>
 						<th class="text-center">Alergias</th>
 						<th class="text-center">Antecedentes</th>
-						<th class="text-center">E-mail</th>
+						<th class="text-center">Correo</th>
 						<th class="text-center">Telefono</th>
 						<th class="text-center">Dirección</th>
 						<th class="text-center">Fecha de Registro</th>
@@ -57,7 +55,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 				<form method="post" id="f" autocomplete="off"  enctype="multipart/form-data">
 					<input autocomplete="off" type="text" class="form-control" name="accion" id="accion">
 					<div class="container">	
-						<!-- Campos para número de documento, nombre y apellido -->
+						<!-- Campos para cedula, nombre y apellido -->
 						<div class="row mb-3">
 							<div class="col-md-4">
 								<label for="cedula">Cédula</label>
@@ -75,7 +73,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<span id="sapellido"></span>
 							</div>
 						</div>
-						<!-- Campos para tipo de paciente, edad, genero y tipo de sangre-->
+						<!-- Campos para fecha de nacimiento, genero y tipo de sangre-->
 						<div class="row mb-3">
 							<div class="col-md-4">
 								<label for="fecha_nacimiento">Fecha de Nacimiento</label>
@@ -113,8 +111,8 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<!-- Campos para email y teléfono -->
 						<div class="row mb-3">
 							<div class="col-md-6">
-								<label for="email">email</label>
-								<input class="form-control" type="text" id="email" placeholder="Ejemplo: email@email.com"/>
+								<label for="email">Correo</label>
+								<input class="form-control" type="text" id="email" placeholder="Ejemplo@email.com"/>
 								<span id="semail"></span>
 							</div>
 							<div class="col-md-6">

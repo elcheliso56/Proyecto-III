@@ -47,19 +47,10 @@ function crearDT() {
     });
 }
 
-function establecerFechaActual() {
-    var fecha = new Date();
-    var dia = fecha.getDate();
-    var mes = fecha.getMonth() + 1;
-    var anio = fecha.getFullYear();
-    var fechaActual = anio + "-" + (mes < 10 ? "0" + mes : mes) + "-" + (dia < 10 ? "0" + dia : dia);
-    $("#fecha_registro").val(fechaActual);
-}
-
 $(document).ready(function() {
-    // Llama a la función consultar al cargar el documento
+    // Llama a la función consultar al cargar el número de cédula
 	consultar();
-    // Validaciones para el campo de número de documento
+    // Validaciones para el campo de número de cédula
     $("#cedula").on("keypress", function(e) {
         validarkeypress(/^[VEJ0-9-\b]*$/, e);
     });
@@ -80,26 +71,17 @@ $(document).ready(function() {
     $("#apellido").on("keyup", function() {
         validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
     });
-    // Validaciones para el campo de grupo sanguíneo
-    $("#tipo_sangre").on("keypress", function(e) {
-        validarkeypress(/^[A-Z\s+-]*$/, e);
-    });
-    $("#tipo_sangre").on("keyup", function() {
-        validarkeyup(/^[A-Z\s+-]{2,3}$/, $(this), $("#stipo_sangre"), "El grupo sanguíneo debe ser A+, O-, etc.");
-    });
-    // Validaciones para el campo de alergias
-    $("#alergias").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\s,.\-]*$/, e);
-    });
-    $("#alergias").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $(this), $("#salergias"), "Las alergias deben tener entre 2 y 20 caracteres");
-    });
-    // Validaciones para el campo de antecedentes médicos
-    $("#antecedentes").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\s,.\-]*$/, e);
-    });
-    $("#antecedentes").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $(this), $("#santecedentes"), "Los antecedentes médicos deben tener entre 2 y 20 caracteres");
+    // Validaciones para el campo de fecha de nacimiento y coloca la edad automaticamente en el campo edad
+    $("#fecha_nacimiento").on("change", function() {
+        var fecha = $(this).val();
+        var fechaActual = new Date();
+        var fechaNacimiento = new Date(fecha);
+        var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+        var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
+            edad--;
+        }
+        $("#edad").val(edad);
     });
     // Validaciones para el campo de email
     $("#email").on("keypress", function(e) {
@@ -121,15 +103,22 @@ $(document).ready(function() {
     });
     $("#direccion").on("keyup", function() {
         validarkeyup(/^[^"']{1,100}$/, $(this), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres");
-    });	
+    });
+    //Validaciones para el campo de salario
+    $("#salario").on("keypress", function(e) {
+        validarkeypress(/^[0-9\b]*$/, e);
+    });
+    $("#salario").on("keyup", function() {
+        validarkeyup(/^[0-9]{1,10}$/, $(this), $("#ssalario"), "El salario debe ser un número entre 1 y 10 dígitos");
+    });
     // Manejo de clic en el botón de proceso
     $("#proceso").on("click", function() {
         if ($(this).text() == "INCLUIR") {
             if (validarenvio()) {
-            // Confirmación para incluir un nuevo paciente
+            // Confirmación para incluir un nuevo empleado
                 Swal.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas incluir este nuevo paciente?",
+                    text: "¿Deseas incluir este nuevo empleado?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -146,13 +135,12 @@ $(document).ready(function() {
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('tipo_sangre', $("#tipo_sangre").val());
-                            datos.append('alergias', $("#alergias").val());
-                            datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
                             datos.append('telefono', $("#telefono").val());
                             datos.append('direccion', $("#direccion").val());
-                            datos.append('fecha_registro', $("#fecha_registro").val());
+                            datos.append('fecha_contratacion', $("#fecha_contratacion").val());
+                            datos.append('cargo', $("#cargo").val());
+                            datos.append('salario', $("#salario").val());
                             enviaAjax(datos);
                         }
                     }
@@ -161,7 +149,7 @@ $(document).ready(function() {
         }
         else if ($(this).text() == "MODIFICAR") {
             if (validarenvio()) {
-            // Confirmación para modificar un paciente existente
+            // Confirmación para modificar un empleado existente
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
                         confirmButton: "btn btn-success",
@@ -171,7 +159,7 @@ $(document).ready(function() {
                 });
                 swalWithBootstrapButtons.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas modificar la información de este paciente?",
+                    text: "¿Deseas modificar la información de este empleado?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonText: "Sí, modificar",
@@ -187,26 +175,25 @@ $(document).ready(function() {
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('tipo_sangre', $("#tipo_sangre").val());
-                            datos.append('alergias', $("#alergias").val());
-                            datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
                             datos.append('telefono', $("#telefono").val());
-                            datos.append('direccion', $("#direccion").val()); 		
-                            datos.append('fecha_registro', $("#fecha_registro").val());						           
+                            datos.append('direccion', $("#direccion").val()); 	
+                            datos.append('fecha_contratacion', $("#fecha_contratacion").val());
+                            datos.append('cargo', $("#cargo").val());
+                            datos.append('salario', $("#salario").val());					           
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "La información de este paciente no ha sido modificada",
+                            text: "La información de este empleado no ha sido modificada",
                             icon: "error"
                         });
                     }
                 });
             }
         }
-        // Manejo de eliminación de un paciente
+        // Manejo de eliminación de un empleado
         if ($(this).text() == "ELIMINAR") {
             var validacion;
             validacion = validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
@@ -237,7 +224,7 @@ $(document).ready(function() {
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "paciente no eliminado",
+                            text: "Empleado no eliminado",
                             icon: "error"
                         });
                     }
@@ -258,7 +245,7 @@ function validarenvio() {
     if ($("#cedula").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "la cedula del paciente es obligatorio",
+            text: "La cédula del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
@@ -277,7 +264,7 @@ function validarenvio() {
     if ($("#nombre").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El nombre del paciente es obligatorio",
+            text: "El nombre del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
@@ -296,7 +283,7 @@ function validarenvio() {
     if ($("#apellido").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El apellido del paciente es obligatorio",
+            text: "El apellido del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
@@ -305,7 +292,7 @@ function validarenvio() {
     if (validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $("#apellido"), $("#sapellido"), "Solo letras entre 2 y 30 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El apellido debe contener solo letras y tener entre 3 y 30 caracteres",
+            text: "El apellido debe contener solo letras y tener entre 2 y 30 caracteres",
             icon: "error",
             confirmButtonText: "Aceptar"
         });     
@@ -315,69 +302,30 @@ function validarenvio() {
     if ($("#fecha_nacimiento").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La fecha de nacimiento del paciente es obligatoria",
+            text: "La fecha de nacimiento del empleado es obligatoria",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    // Validaciones para el grupo sanguíneo
-    if ($("#tipo_sangre").val().trim() === "") {
+    // Validaciones para edad que sea mayor a 18 años
+    var fechaNacimiento = new Date($("#fecha_nacimiento").val());
+    var fechaActual = new Date();
+    var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
+        edad--;
+    }
+    //validaciones para el genero
+    if ($("#genero").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El grupo sanguíneo del paciente es obligatorio",
+            text: "El género del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Z\s+-]{2,3}$/, $("#tipo_sangre"), $("#stipo_sangre"), "El grupo sanguíneo debe ser A+, O-, etc.") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El grupo sanguíneo debe ser A+, O-, etc.",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    // Validaciones para alergias
-    if ($("#alergias").val().trim() === "") {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Las alergias del paciente son obligatorias",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    if (validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $("#alergias"), $("#salergias"), "Las alergias deben tener entre 2 y 20 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Las alergias deben tener entre 2 y 20 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    // Validaciones para antecedentes médicos
-    if ($("#antecedentes").val().trim() === "") {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los antecedentes médicos del paciente son obligatorios",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    if (validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $("#antecedentes"), $("#santecedentes"), "Los antecedentes médicos deben tener entre 2 y 20 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los antecedentes médicos deben tener entre 2 y 20 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }    
     // Validaciones para el email
     if ($("#email").val().trim() !== "" && validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/, $("#email"), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com") == 0) {
         Swal.fire({
@@ -408,14 +356,34 @@ function validarenvio() {
         });   
         return false;
     }
-    // Validaciones para la fecha de registro
-    if (validarkeyup(/^[0-9]{4}[-/][0-9]{2}[-/][0-9]{2}$/, $("#fecha_registro"), $("#sfecha_registro"), "El formato de fecha de registro debe ser AAAA-MM-DD") == 0) {
+    // Validaciones para la fecha de contratacion
+    if ($("#fecha_contratacion").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de fecha de registro debe ser DD-MM-YYYY",
+            text: "La fecha de contrato del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
-        });   
+        });    
+        return false;
+    }
+    // Validaciones para el cargo
+    if ($("#cargo").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El cargo del empleado es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    // Validaciones para el salario
+    if ($("#salario").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El salario del empleado es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
         return false;
     }
     return true; // Si todas las validaciones pasan, retorna verdadero
@@ -444,36 +412,47 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 }
 
 function pone(pos, accion) {
-    // Función para llenar el formulario con los datos del paciente seleccionado
-	linea = $(pos).closest('tr');
+    // Función para llenar el formulario con los datos del empleado seleccionado
+    linea = $(pos).closest('tr');
+    var fechaNacimiento = new Date($(linea).find("td:eq(4)").text());
+    var fechaActual = new Date();
+    var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
+        edad--;
+    }
 	if (accion == 0) {
 		$("#proceso").text("MODIFICAR");
 		$("#cedula").prop("disabled", true);
 		$("#nombre").prop("disabled", false);
 		$("#apellido").prop("disabled", false);
-        $("#fecha_nacimiento").prop("disabled", false);
+        $("#fecha_nacimiento").prop("disabled", true);
+        $("#edad").val(edad);
+        $("#edad").prop("disabled", true);
+        $("#salario").prop("disabled", false);  
+        $("#edad").prop("disabled", false);
         $("#genero").prop("disabled", true);
-        $("#tipo_sangre").prop("disabled", false);
-        $("#alergias").prop("disabled", false);
-        $("#antecedentes").prop("disabled", false);
 		$("#email").prop("disabled", false);
 		$("#telefono").prop("disabled", false);
 		$("#direccion").prop("disabled", false);
-        $("#fecha_registro").prop("disabled", true);
+        $("#fecha_contratacion").prop("disabled", false);
+        $("#cargo").prop("disabled", false);
+        $("#salario").prop("disabled", false);
 	} else {
 		$("#proceso").text("ELIMINAR");
 		$("#cedula").prop("disabled", true);
 		$("#nombre").prop("disabled", true);
 		$("#apellido").prop("disabled", true);
         $("#fecha_nacimiento").prop("disabled", true);
+        $("#edad").prop("disabled", true);
+        $("#edad").val(edad);
         $("#genero").prop("disabled", true);
-        $("#tipo_sangre").prop("disabled", true);
-        $("#alergias").prop("disabled", true);
-        $("#antecedentes").prop("disabled", true);
 		$("#email").prop("disabled", true);
 		$("#telefono").prop("disabled", true);
 		$("#direccion").prop("disabled", true);	
-        $("#fecha_registro").prop("disabled", true);
+        $("#fecha_contratacion").prop("disabled", true);
+        $("#cargo").prop("disabled", true);
+        $("#salario").prop("disabled", true);
 	}
 	// Llena los campos del formulario con los datos de la fila seleccionada
     $("#cedula").val($(linea).find("td:eq(1)").text().trim()); // Asigna el tipo de documento
@@ -481,13 +460,12 @@ function pone(pos, accion) {
     $("#apellido").val($(linea).find("td:eq(3)").text());
     $("#fecha_nacimiento").val($(linea).find("td:eq(4)").text());
     $("#genero").val($(linea).find("td:eq(5)").text());
-    $("#tipo_sangre").val($(linea).find("td:eq(6)").text());
-    $("#alergias").val($(linea).find("td:eq(7)").text());
-    $("#antecedentes").val($(linea).find("td:eq(8)").text());
-    $("#email").val($(linea).find("td:eq(9)").text());
-    $("#telefono").val($(linea).find("td:eq(10)").text());
-    $("#direccion").val($(linea).find("td:eq(11)").text());
-    $("#fecha_registro").val($(linea).find("td:eq(12)").text());
+    $("#email").val($(linea).find("td:eq(6)").text());
+    $("#telefono").val($(linea).find("td:eq(7)").text());
+    $("#direccion").val($(linea).find("td:eq(8)").text());
+    $("#fecha_contratacion").val($(linea).find("td:eq(9)").text());
+    $("#cargo").val($(linea).find("td:eq(10)").text());
+    $("#salario").val($(linea).find("td:eq(11)").text());
 	$("#modal1").modal("show"); // Muestra el modal
 }
 
@@ -516,7 +494,7 @@ function enviaAjax(datos) {
                     if (lee.mensaje == '¡Registro guardado con exito!') {
                         Swal.fire({
                             title: "¡Incluido!",
-                            text: "El paciente ha sido incluido con éxito.",
+                            text: "El empleado ha sido incluido con éxito.",
                             icon: "success"
                         });
                         $("#modal1").modal("hide");
@@ -593,25 +571,25 @@ function limpia() {
     $("#nombre").val("");
     $("#apellido").val("");
     $("#fecha_nacimiento").val("");
+    $("#edad").val("");
     $("#genero").prop("selectedIndex", 0);
-    $("#tipo_sangre").val("");
-    $("#alergias").val("");
-    $("#antecedentes").val("");
     $("#email").val("");
     $("#telefono").val("");
     $("#direccion").val("");
-    establecerFechaActual();
+    $("#fecha_contratacion").val("");
+    $("#cargo").prop("selectedIndex", 0);
+    $("#salario").val("");
     // Habilita los campos del formulario
     $("#cedula").prop("disabled", false); 
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 
     $("#fecha_nacimiento").prop("disabled", false);
+    $("#edad").prop("disabled", false);
     $("#genero").prop("disabled", false);
-    $("#tipo_sangre").prop("disabled", false);
-    $("#alergias").prop("disabled", false);
-    $("#antecedentes").prop("disabled", false);
     $("#email").prop("disabled", false);   
     $("#telefono").prop("disabled", false); 
-    $("#direccion").prop("disabled", false);   
-    $("#fecha_registro").prop("disabled", true); // Habilita el campo de fecha de registro               
-}
+    $("#direccion").prop("disabled", false);      
+    $("#fecha_contratacion").prop("disabled", false);
+    $("#cargo").prop("disabled", false);
+    $("#salario").prop("disabled", false);    
+}  

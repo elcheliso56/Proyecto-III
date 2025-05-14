@@ -83,6 +83,17 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
+						<a href="?pagina=empleados" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-account"></i>
+							</div>
+							<div class="navLateral-body-cr"style="color: white;">
+								Empleados	
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
 						<a href="?pagina=proveedores" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-truck"></i>

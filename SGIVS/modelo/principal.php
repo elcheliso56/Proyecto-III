@@ -13,7 +13,7 @@ class principal extends datos {
         $conteos = array();
 
         // Definir las tablas de las que se obtendrán los conteos
-        $tablas = ['publicidad', 'ubicaciones', 'pacientes', 'proveedores', 'productos', 'clientes', 'usuarios', 'apartados'];
+        $tablas = ['publicidad', 'pacientes', 'ubicaciones','empleados', 'proveedores', 'productos', 'clientes', 'usuarios', 'apartados'];
 
         // Iterar sobre cada tabla para obtener el conteo
         foreach ($tablas as $tabla) {
