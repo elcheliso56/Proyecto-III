@@ -298,7 +298,7 @@ function validarenvio() {
         });     
         return false;
     }
-    // Validaciones para el fecha de nacimiento
+    // Validaciones para el fecha de nacimiento y valida que sea mayor a 18 años
     if ($("#fecha_nacimiento").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
@@ -308,13 +308,14 @@ function validarenvio() {
         });    
         return false;
     }
-    // Validaciones para edad que sea mayor a 18 años
-    var fechaNacimiento = new Date($("#fecha_nacimiento").val());
-    var fechaActual = new Date();
-    var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
-    var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
-    if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
-        edad--;
+    if (validarkeyup(/^\d{4}-\d{2}-\d{2}$/, $("#fecha_nacimiento"), $("#sfecha_nacimiento"), "El formato de fecha de nacimiento debe ser AAAA-MM-DD") == 0) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El formato de fecha de nacimiento debe ser AAAA-MM-DD",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
     }
     //validaciones para el genero
     if ($("#genero").val().trim() === "") {
@@ -337,23 +338,23 @@ function validarenvio() {
         return false;
     }
     // Validaciones para el teléfono
-    if (validarkeyup(/^0[0-9]{10}$/, $("#telefono"), $("#stelefono"), "El formato de teléfono debe ser 04120000000") == 0) {
+    if ($("#telefono").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de teléfono debe ser 04120000000",
+            text: "El número de telefono del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
-        });   
+        });    
         return false;
     }
     // Validaciones para la dirección
-    if (validarkeyup(/^[^"']{1,100}$/, $("#direccion"), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres") == 0) {
+    if ($("#direccion").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La dirección debe tener un máximo de 100 caracteres",
+            text: "La dirección del empleado es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
-        });   
+        });    
         return false;
     }
     // Validaciones para la fecha de contratacion
@@ -421,52 +422,51 @@ function pone(pos, accion) {
     if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
         edad--;
     }
-	if (accion == 0) {
-		$("#proceso").text("MODIFICAR");
-		$("#cedula").prop("disabled", true);
-		$("#nombre").prop("disabled", false);
-		$("#apellido").prop("disabled", false);
+    if (accion == 0) {
+        $("#proceso").text("MODIFICAR");
+        $("#cedula").prop("disabled", true);
+        $("#nombre").prop("disabled", false);
+        $("#apellido").prop("disabled", false);
         $("#fecha_nacimiento").prop("disabled", true);
-        $("#edad").val(edad);
         $("#edad").prop("disabled", true);
-        $("#salario").prop("disabled", false);  
-        $("#edad").prop("disabled", false);
+        $("#edad").val(edad);
         $("#genero").prop("disabled", true);
-		$("#email").prop("disabled", false);
-		$("#telefono").prop("disabled", false);
-		$("#direccion").prop("disabled", false);
+        $("#email").prop("disabled", false);
+        $("#telefono").prop("disabled", false);
+        $("#direccion").prop("disabled", false);
         $("#fecha_contratacion").prop("disabled", false);
         $("#cargo").prop("disabled", false);
         $("#salario").prop("disabled", false);
-	} else {
-		$("#proceso").text("ELIMINAR");
-		$("#cedula").prop("disabled", true);
-		$("#nombre").prop("disabled", true);
-		$("#apellido").prop("disabled", true);
+    } else {
+        $("#proceso").text("ELIMINAR");
+        $("#cedula").prop("disabled", true);
+        $("#nombre").prop("disabled", true);
+        $("#apellido").prop("disabled", true);
         $("#fecha_nacimiento").prop("disabled", true);
         $("#edad").prop("disabled", true);
         $("#edad").val(edad);
         $("#genero").prop("disabled", true);
-		$("#email").prop("disabled", true);
-		$("#telefono").prop("disabled", true);
-		$("#direccion").prop("disabled", true);	
+        $("#email").prop("disabled", true);
+        $("#telefono").prop("disabled", true);
+        $("#direccion").prop("disabled", true);
         $("#fecha_contratacion").prop("disabled", true);
         $("#cargo").prop("disabled", true);
         $("#salario").prop("disabled", true);
-	}
-	// Llena los campos del formulario con los datos de la fila seleccionada
-    $("#cedula").val($(linea).find("td:eq(1)").text().trim()); // Asigna el tipo de documento
+    }
+    // Llena los campos del formulario con los datos de la fila seleccionada
+    $("#cedula").val($(linea).find("td:eq(1)").text().trim());
     $("#nombre").val($(linea).find("td:eq(2)").text());
     $("#apellido").val($(linea).find("td:eq(3)").text());
     $("#fecha_nacimiento").val($(linea).find("td:eq(4)").text());
-    $("#genero").val($(linea).find("td:eq(5)").text());
-    $("#email").val($(linea).find("td:eq(6)").text());
-    $("#telefono").val($(linea).find("td:eq(7)").text());
-    $("#direccion").val($(linea).find("td:eq(8)").text());
-    $("#fecha_contratacion").val($(linea).find("td:eq(9)").text());
-    $("#cargo").val($(linea).find("td:eq(10)").text());
-    $("#salario").val($(linea).find("td:eq(11)").text());
-	$("#modal1").modal("show"); // Muestra el modal
+    $("#edad").val(edad);
+    $("#genero").val($(linea).find("td:eq(6)").text());
+    $("#email").val($(linea).find("td:eq(7)").text());
+    $("#telefono").val($(linea).find("td:eq(8)").text());
+    $("#direccion").val($(linea).find("td:eq(9)").text());
+    $("#fecha_contratacion").val($(linea).find("td:eq(10)").text());
+    $("#cargo").val($(linea).find("td:eq(11)").text());
+    $("#salario").val($(linea).find("td:eq(12)").text());
+    $("#modal1").modal("show"); // Muestra el modal
 }
 
 function enviaAjax(datos) {
@@ -584,7 +584,7 @@ function limpia() {
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 
     $("#fecha_nacimiento").prop("disabled", false);
-    $("#edad").prop("disabled", false);
+    $("#edad").prop("disabled", true);
     $("#genero").prop("disabled", false);
     $("#email").prop("disabled", false);   
     $("#telefono").prop("disabled", false); 
@@ -592,4 +592,4 @@ function limpia() {
     $("#fecha_contratacion").prop("disabled", false);
     $("#cargo").prop("disabled", false);
     $("#salario").prop("disabled", false);    
-}  
+}

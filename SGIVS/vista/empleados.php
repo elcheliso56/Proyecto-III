@@ -25,6 +25,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<th class="text-center">Nombre</th>
 								<th class="text-center">Apellido</th>
 								<th class="text-center">Fecha de Nacimiento</th>
+								<th class="text-center">Edad</th>
 								<th class="text-center">Género</th>
 								<th class="text-center">Correo</th>
 								<th class="text-center">Teléfono</th>
@@ -81,7 +82,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 									<div class="col-md-4">
 										<label for="edad">Edad</label>
-										<input class="form-control" type="text" id="edad" placeholder="Edad del paciente" style="text-align:center;" disabled/>
+										<input class="form-control" type="text" id="edad" placeholder="Edad del empleado" style="text-align:center;" disabled/>
 										<span id="sedad"></span>
 									</div>
 									<div class="col-md-4" title="El tipo de género no puede ser modificado...">

@@ -80,6 +80,34 @@ $(document).ready(function() {
     $("#apellido").on("keyup", function() {
         validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
     });
+    //Validaciones para el campo de fecha de nacimiento y coloca la edad y clasificación automática
+    $("#fecha_nacimiento").on("change", function() {
+        var fecha = $(this).val();
+        var fechaActual = new Date();
+        var fechaNacimiento = new Date(fecha);
+        var anios = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+        var meses = fechaActual.getMonth() - fechaNacimiento.getMonth();
+        var dias = fechaActual.getDate() - fechaNacimiento.getDate();
+        if (dias < 0) {
+            meses--;
+            dias += new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 0).getDate();
+        }
+        if (meses < 0) {
+            anios--;
+            meses += 12;
+        }
+        $("#edad").val(anios);
+        // Clasificación automática
+        var clasificacion = "";
+        if (anios <= 12) {
+            clasificacion = "Niño";
+        } else if (anios <= 17) {
+            clasificacion = "Adolescente";
+        } else {
+            clasificacion = "Adulto";
+        }
+        $("#clasificacion").val(clasificacion);
+    });
     // Validaciones para el campo de grupo sanguíneo
     $("#tipo_sangre").on("keypress", function(e) {
         validarkeypress(/^[A-Z\s+-]*$/, e);
@@ -321,6 +349,16 @@ function validarenvio() {
         });    
         return false;
     }
+    //Validaciones para el género
+    if ($("#genero").val() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El genero del paciente es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
     // Validaciones para el grupo sanguíneo
     if ($("#tipo_sangre").val().trim() === "") {
         Swal.fire({
@@ -445,49 +483,75 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 
 function pone(pos, accion) {
     // Función para llenar el formulario con los datos del paciente seleccionado
-	linea = $(pos).closest('tr');
-	if (accion == 0) {
-		$("#proceso").text("MODIFICAR");
-		$("#cedula").prop("disabled", true);
-		$("#nombre").prop("disabled", false);
-		$("#apellido").prop("disabled", false);
-        $("#fecha_nacimiento").prop("disabled", false);
+    linea = $(pos).closest('tr');
+    var fechaNacimiento = new Date($(linea).find("td:eq(4)").text());
+    var fechaActual = new Date();
+    var anios = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    var meses = fechaActual.getMonth() - fechaNacimiento.getMonth();
+    var dias = fechaActual.getDate() - fechaNacimiento.getDate();
+    if (dias < 0) {
+        meses--;
+        dias += new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 0).getDate();
+    }
+    if (meses < 0) {
+        anios--;
+        meses += 12;
+    }
+    // Clasificación automática
+    var clasificacion = $(linea).find("td:eq(6)").text();
+
+    if (accion == 0) {
+        $("#proceso").text("MODIFICAR");
+        $("#cedula").prop("disabled", true);
+        $("#nombre").prop("disabled", false);
+        $("#apellido").prop("disabled", false);
+        $("#fecha_nacimiento").prop("disabled", true);
+        $("#edad").prop("disabled", true);
+        $("#edad").val(anios);
+        $("#clasificacion").prop("disabled", true);
+        $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
         $("#tipo_sangre").prop("disabled", false);
         $("#alergias").prop("disabled", false);
         $("#antecedentes").prop("disabled", false);
-		$("#email").prop("disabled", false);
-		$("#telefono").prop("disabled", false);
-		$("#direccion").prop("disabled", false);
+        $("#email").prop("disabled", false);
+        $("#telefono").prop("disabled", false);
+        $("#direccion").prop("disabled", false);
         $("#fecha_registro").prop("disabled", true);
-	} else {
-		$("#proceso").text("ELIMINAR");
-		$("#cedula").prop("disabled", true);
-		$("#nombre").prop("disabled", true);
-		$("#apellido").prop("disabled", true);
+    } else {
+        $("#proceso").text("ELIMINAR");
+        $("#cedula").prop("disabled", true);
+        $("#nombre").prop("disabled", true);
+        $("#apellido").prop("disabled", true);
         $("#fecha_nacimiento").prop("disabled", true);
+        $("#edad").prop("disabled", true);
+        $("#edad").val(anios);
+        $("#clasificacion").prop("disabled", true);
+        $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
         $("#tipo_sangre").prop("disabled", true);
         $("#alergias").prop("disabled", true);
         $("#antecedentes").prop("disabled", true);
-		$("#email").prop("disabled", true);
-		$("#telefono").prop("disabled", true);
-		$("#direccion").prop("disabled", true);	
+        $("#email").prop("disabled", true);
+        $("#telefono").prop("disabled", true);
+        $("#direccion").prop("disabled", true);
         $("#fecha_registro").prop("disabled", true);
-	}
-	// Llena los campos del formulario con los datos de la fila seleccionada
-    $("#cedula").val($(linea).find("td:eq(1)").text().trim()); // Asigna el tipo de documento
+    }
+    // Llena los campos del formulario con los datos de la fila seleccionada
+    $("#cedula").val($(linea).find("td:eq(1)").text().trim());
     $("#nombre").val($(linea).find("td:eq(2)").text());
     $("#apellido").val($(linea).find("td:eq(3)").text());
     $("#fecha_nacimiento").val($(linea).find("td:eq(4)").text());
-    $("#genero").val($(linea).find("td:eq(5)").text());
-    $("#tipo_sangre").val($(linea).find("td:eq(6)").text());
-    $("#alergias").val($(linea).find("td:eq(7)").text());
-    $("#antecedentes").val($(linea).find("td:eq(8)").text());
-    $("#email").val($(linea).find("td:eq(9)").text());
-    $("#telefono").val($(linea).find("td:eq(10)").text());
-    $("#direccion").val($(linea).find("td:eq(11)").text());
-    $("#fecha_registro").val($(linea).find("td:eq(12)").text());
+    $("#edad").val(anios);
+    $("#clasificacion").val(clasificacion);
+    $("#genero").val($(linea).find("td:eq(7)").text());
+    $("#tipo_sangre").val($(linea).find("td:eq(8)").text());
+    $("#alergias").val($(linea).find("td:eq(9)").text());
+    $("#antecedentes").val($(linea).find("td:eq(10)").text());
+    $("#email").val($(linea).find("td:eq(11)").text());
+    $("#telefono").val($(linea).find("td:eq(12)").text());
+    $("#direccion").val($(linea).find("td:eq(13)").text());
+    $("#fecha_registro").val($(linea).find("td:eq(14)").text());
 	$("#modal1").modal("show"); // Muestra el modal
 }
 
@@ -593,6 +657,8 @@ function limpia() {
     $("#nombre").val("");
     $("#apellido").val("");
     $("#fecha_nacimiento").val("");
+    $("#edad").val("");
+    $("#clasificacion").val("");
     $("#genero").prop("selectedIndex", 0);
     $("#tipo_sangre").val("");
     $("#alergias").val("");
@@ -606,6 +672,8 @@ function limpia() {
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 
     $("#fecha_nacimiento").prop("disabled", false);
+    $("#edad").prop("disabled", true);
+    $("#clasificacion").prop("disabled", true);
     $("#genero").prop("disabled", false);
     $("#tipo_sangre").prop("disabled", false);
     $("#alergias").prop("disabled", false);

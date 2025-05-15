@@ -5,7 +5,7 @@
 --
 
 CREATE TABLE `empleados` (
-  `id` int(20) NOT NULL,
+  `id_empleado` int(20) NOT NULL,
   `cedula` int(20) NOT NULL,
   `nombre` varchar(20) NOT NULL,
   `apellido` varchar(20) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `empleados` (
   `genero` enum('M','F','O') NOT NULL,
   `email` varchar(50) NOT NULL,
   `direccion` varchar(50) NOT NULL,
-  `telefono` int(15) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
   `fecha_contratacion` date NOT NULL,
   `cargo` varchar(20) NOT NULL,
   `salario` decimal(10,0) NOT NULL
@@ -26,7 +26,7 @@ CREATE TABLE `empleados` (
 --
 
 CREATE TABLE `pacientes` (
-  `id` int(20) NOT NULL,
+  `id_paciente` int(20) NOT NULL,
   `cedula` int(20) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,

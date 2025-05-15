@@ -25,6 +25,8 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<th class="text-center">Nombre</th>
 						<th class="text-center">Apellido</th>
 						<th class="text-center">Fecha de Nacimiento</th>
+						<th class="text-center">Edad</th>
+						<th class="text-center">Clasificación</th>
 						<th class="text-center">Género</th>
 						<th class="text-center">Grupo Sanguíneo</th>
 						<th class="text-center">Alergias</th>
@@ -32,7 +34,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<th class="text-center">Correo</th>
 						<th class="text-center">Telefono</th>
 						<th class="text-center">Dirección</th>
-						<th class="text-center">Fecha de Registro</th>
+						<th class="text-center">Fecha_de Registro</th>
 						<th class="text-center">Acciones</th>
 					</tr>
 				</thead>
@@ -75,10 +77,20 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						</div>
 						<!-- Campos para fecha de nacimiento, genero y tipo de sangre-->
 						<div class="row mb-3">
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<label for="fecha_nacimiento">Fecha de Nacimiento</label>
 								<input class="form-control" type="date" id="fecha_nacimiento" title="Fecha de nacimiento del paciente" requerid/>
 								<span id="sfecha_nacimiento"></span>
+							</div>
+							<div class="col-md-2">
+								<label for="edad">Edad</label>
+								<input class="form-control" type="text" id="edad" title="Edad del paciente" style="text-align:center" disabled/>
+								<span id="sedad"></span>
+							</div>
+							<div class="col-md-3">
+								<label for="clasificacion">Clasificación</label>
+								<input class="form-control" type="text" id="clasificacion" title="Clasificación por Edad" style="text-align:center" disabled/>
+								<span id="sclasificacion"></span>
 							</div>
 							<div class="col-md-4" title="El tipo de género no puede ser modificado...">
 								<label for="genero">Género</label>
@@ -89,20 +101,20 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									<option value="O"title="Otro">Otro</option>
 								</select>
 							</div>
+						</div>
+						<!-- Campos para alergias y antecedentes familiares -->
+						<div class="row mb-3">
 							<div class="col-md-4">
 								<label for="tipo_sangre">Grupo Sanguíneo</label>
 								<input class="form-control" type="text" id="tipo_sangre" title="Tipo de sangre del paciente" placeholder="Ejemplo: O+" requerid/>
 								<span id="stipo_sangre"></span>
 							</div>
-						</div>
-						<!-- Campos para alergias y antecedentes familiares -->
-						<div class="row mb-3">
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<label for="alergias">Alergia</label>
 								<input class="form-control" type="text" id="alergias" placeholder="Ejemplo: Penicilina" />
 								<span id="salergias"></span>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<label for="antecedentes">Antecendentes Familiares</label>
 								<input class="form-control" type="text" id="antecedentes" placeholder="Ejemplo: Diabetes"/>
 								<span id="santecedentes"></span>

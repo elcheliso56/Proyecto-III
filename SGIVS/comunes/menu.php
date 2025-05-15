@@ -47,15 +47,13 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
-
-					<!-- Enlaces a diferentes secciones del menú -->
 					<li class="full-width">
-						<a href="?pagina=promociones" class="full-width">
+						<a href="?pagina=empleados" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="bi bi-tags-fill"></i>
+								<i class="zmdi zmdi-account"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Categorías
+							<div class="navLateral-body-cr" style="color: white;">
+								Empleados
 							</div>
 						</a>
 					</li>
@@ -65,7 +63,7 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-accounts"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr" style="color: white;">
 								Pacientes
 							</div>
 						</a>
@@ -82,16 +80,32 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- Enlaces a diferentes secciones del menú -->
 					<li class="full-width">
-						<a href="?pagina=empleados" class="full-width">
+						<a href="?pagina=promociones" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-account"></i>
+								<i class="bi bi-tags-fill"></i>
 							</div>
 							<div class="navLateral-body-cr"style="color: white;">
-								Empleados	
+								Categorías
 							</div>
 						</a>
 					</li>
+					<li class="full-width divider-menu-h"></li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="?pagina=proveedores" class="full-width">

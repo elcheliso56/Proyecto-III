@@ -18,27 +18,26 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes public
 	</figure>
 	<section class="full-width text-center"> <!-- Sección para los tiles de conteo -->
 		<article class="full-width tile" > <!-- Tile para publicidad -->
-			<a href="?pagina=promociones" class="full-width">				
+			<a href="?pagina=empleados" class="full-width">				
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						<?php echo $datos['publicidad']; ?><br> <!-- Muestra el conteo de publicidad -->
-						<small>Publicidad</small> <!-- Etiqueta de publicidad -->
+						<?php echo $datos['empleados']; ?><br> <!-- Muestra el conteo de publicidad -->
+						<small>Empleados</small> <!-- Etiqueta de publicidad -->
 					</span>
 				</div>
-				<i class="bi bi-tags-fill tile-icon"></i> <!-- Icono de publicidad -->
+				<i class="zmdi zmdi-account tile-icon"></i><!-- Icono de publicidad -->
 			</a>	
 		</article>
-		<!-- Repite el mismo patrón para ubicaciones, proveedores, productos, clientes -->
-		<article class="full-width tile">
-			<a href="?pagina=pacientes" class="full-width">
+		<article class="full-width tile" > <!-- Tile para publicidad -->
+			<a href="?pagina=pacientes" class="full-width">				
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						<?php echo $datos['pacientes']; ?><br>
-						<small>Pacientes</small>
+						<?php echo $datos['pacientes']; ?><br> <!-- Muestra el conteo de publicidad -->
+						<small>Pacientes</small> <!-- Etiqueta de publicidad -->
 					</span>
 				</div>
-				<i class="zmdi zmdi-accounts tile-icon"></i>
-			</a>
+				<i class="zmdi zmdi-accounts tile-icon"></i><!-- Icono de publicidad -->
+			</a>	
 		</article>
 		<article class="full-width tile">
 			<a href="?pagina=ubicaciones" class="full-width">
@@ -51,17 +50,21 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes public
 				<i class="bi bi-clipboard2-pulse tile-icon"></i> <!-- Icono de ubicaciones -->
 			</a>
 		</article>
-		<article class="full-width tile">
-			<a href="?pagina=empleados" class="full-width">
+
+
+
+		<article class="full-width tile" > <!-- Tile para publicidad -->
+			<a href="?pagina=promociones" class="full-width">				
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						<?php echo $datos['empleados']; ?><br> <!-- Muestra el conteo de usuarios -->
-						<small>Empleados</small> <!-- Etiqueta de usuarios -->
+						<?php echo $datos['publicidad']; ?><br> <!-- Muestra el conteo de publicidad -->
+						<small>Publicidad</small> <!-- Etiqueta de publicidad -->
 					</span>
 				</div>
-				<i class="zmdi zmdi-account tile-icon"></i> <!-- Icono de usuarios -->
-			</a>
-		</article>	
+				<i class="bi bi-tags-fill tile-icon"></i> <!-- Icono de publicidad -->
+			</a>	
+		</article>
+		<!-- Repite el mismo patrón para ubicaciones, proveedores, productos, clientes -->
 		<article class="full-width tile">
 			<a href="?pagina=proveedores" class="full-width">
 				<div class="tile-text">

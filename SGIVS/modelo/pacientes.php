@@ -199,31 +199,46 @@ class pacientes extends datos{
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try{		
-			$resultado = $co->query("Select * from pacientes  ORDER BY id DESC");
+			$resultado = $co->query("Select * from pacientes  ORDER BY id_paciente DESC");
 			if($resultado){	
 				$respuesta = '';
 				$n=1;
 				// Recorre los resultados y genera la tabla HTML
 				foreach($resultado as $r){
+					// Calcular edad
+					$fecha_nacimiento = new DateTime($r['fecha_nacimiento']);
+					$hoy = new DateTime();
+					$edad = $hoy->diff($fecha_nacimiento)->y;
+					// Clasificación por edad
+					if ($edad <= 12) {
+						$clasificacion = "Niño";
+					} elseif ($edad <= 17) {
+						$clasificacion = "Adolescente";
+					} else {
+						$clasificacion = "Adulto";
+					}
+					// Generar fila de la tabla
 					$respuesta = $respuesta."<tr class='text-center'>";
 					$respuesta = $respuesta."<td class='align-middle'>$n</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['cedula']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['nombre']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['apellido']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['fecha_nacimiento']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['genero']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['tipo_sangre']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['alergias']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['antecedentes']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['email']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['telefono']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['direccion']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['fecha_registro']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>";
-					$respuesta = $respuesta."<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta = $respuesta."<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente'><i class='bi bi-trash'></i></button><br/>";
-					$respuesta = $respuesta."</td>";
-					$respuesta = $respuesta."</tr>";
+					$respuesta .= "<td class='align-middle'>".$edad."</td>";
+					$respuesta .= "<td class='align-middle'>".$clasificacion."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['genero']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['tipo_sangre']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['alergias']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['antecedentes']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['email']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['telefono']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['direccion']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['fecha_registro']."</td>";
+					$respuesta .= "<td class='align-middle' style='display:flex;'>";
+					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>";
+					$respuesta .= "<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>";
+					$respuesta .= "</td>";
+					$respuesta .= "</tr>";
 					$n++;
 				}
 				$r['resultado'] = 'consultar';
