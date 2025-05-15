@@ -108,13 +108,6 @@ $(document).ready(function() {
         }
         $("#clasificacion").val(clasificacion);
     });
-    // Validaciones para el campo de grupo sanguíneo
-    $("#tipo_sangre").on("keypress", function(e) {
-        validarkeypress(/^[A-Z\s+-]*$/, e);
-    });
-    $("#tipo_sangre").on("keyup", function() {
-        validarkeyup(/^[A-Z\s+-]{2,3}$/, $(this), $("#stipo_sangre"), "El grupo sanguíneo debe ser A+, O-, etc.");
-    });
     // Validaciones para el campo de alergias
     $("#alergias").on("keypress", function(e) {
         validarkeypress(/^[A-Za-z\s,.\-]*$/, e);
@@ -174,7 +167,6 @@ $(document).ready(function() {
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('tipo_sangre', $("#tipo_sangre").val());
                             datos.append('alergias', $("#alergias").val());
                             datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
@@ -215,7 +207,6 @@ $(document).ready(function() {
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('tipo_sangre', $("#tipo_sangre").val());
                             datos.append('alergias', $("#alergias").val());
                             datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
@@ -359,25 +350,6 @@ function validarenvio() {
         });    
         return false;
     }
-    // Validaciones para el grupo sanguíneo
-    if ($("#tipo_sangre").val().trim() === "") {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El grupo sanguíneo del paciente es obligatorio",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    if (validarkeyup(/^[A-Z\s+-]{2,3}$/, $("#tipo_sangre"), $("#stipo_sangre"), "El grupo sanguíneo debe ser A+, O-, etc.") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El grupo sanguíneo debe ser A+, O-, etc.",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
     // Validaciones para alergias
     if ($("#alergias").val().trim() === "") {
         Swal.fire({
@@ -499,7 +471,6 @@ function pone(pos, accion) {
     }
     // Clasificación automática
     var clasificacion = $(linea).find("td:eq(6)").text();
-
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
         $("#cedula").prop("disabled", true);
@@ -511,7 +482,6 @@ function pone(pos, accion) {
         $("#clasificacion").prop("disabled", true);
         $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
-        $("#tipo_sangre").prop("disabled", false);
         $("#alergias").prop("disabled", false);
         $("#antecedentes").prop("disabled", false);
         $("#email").prop("disabled", false);
@@ -529,7 +499,6 @@ function pone(pos, accion) {
         $("#clasificacion").prop("disabled", true);
         $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
-        $("#tipo_sangre").prop("disabled", true);
         $("#alergias").prop("disabled", true);
         $("#antecedentes").prop("disabled", true);
         $("#email").prop("disabled", true);
@@ -545,13 +514,12 @@ function pone(pos, accion) {
     $("#edad").val(anios);
     $("#clasificacion").val(clasificacion);
     $("#genero").val($(linea).find("td:eq(7)").text());
-    $("#tipo_sangre").val($(linea).find("td:eq(8)").text());
-    $("#alergias").val($(linea).find("td:eq(9)").text());
-    $("#antecedentes").val($(linea).find("td:eq(10)").text());
-    $("#email").val($(linea).find("td:eq(11)").text());
-    $("#telefono").val($(linea).find("td:eq(12)").text());
-    $("#direccion").val($(linea).find("td:eq(13)").text());
-    $("#fecha_registro").val($(linea).find("td:eq(14)").text());
+    $("#alergias").val($(linea).find("td:eq(8)").text());
+    $("#antecedentes").val($(linea).find("td:eq(9)").text());
+    $("#email").val($(linea).find("td:eq(10)").text());
+    $("#telefono").val($(linea).find("td:eq(11)").text());
+    $("#direccion").val($(linea).find("td:eq(12)").text());
+    $("#fecha_registro").val($(linea).find("td:eq(13)").text());
 	$("#modal1").modal("show"); // Muestra el modal
 }
 
@@ -660,7 +628,6 @@ function limpia() {
     $("#edad").val("");
     $("#clasificacion").val("");
     $("#genero").prop("selectedIndex", 0);
-    $("#tipo_sangre").val("");
     $("#alergias").val("");
     $("#antecedentes").val("");
     $("#email").val("");
@@ -675,7 +642,6 @@ function limpia() {
     $("#edad").prop("disabled", true);
     $("#clasificacion").prop("disabled", true);
     $("#genero").prop("disabled", false);
-    $("#tipo_sangre").prop("disabled", false);
     $("#alergias").prop("disabled", false);
     $("#antecedentes").prop("disabled", false);
     $("#email").prop("disabled", false);   

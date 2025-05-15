@@ -7,7 +7,6 @@ class pacientes extends datos{
 	private $apellido;
 	private $fecha_nacimiento;
 	private $genero;
-	private $tipo_sangre;
     private $alergias;
     private $antecedentes;
 	private $email;
@@ -31,9 +30,6 @@ class pacientes extends datos{
 	function set_genero($valor){
 		$this->genero = $valor;
 	}	
-	function set_tipo_sangre($valor){
-		$this->tipo_sangre = $valor;
-	}
 	function set_alergias($valor){
 		$this->alergias = $valor;
 	}	
@@ -68,9 +64,6 @@ class pacientes extends datos{
 	function get_genero(){
 		return $this->genero;
 	}	
-	function get_tipo_sangre(){
-		return $this->tipo_sangre;
-	}
 	function get_alergias(){
 		return $this->alergias;
 	}
@@ -99,14 +92,13 @@ class pacientes extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo cliente			
-				$co->query("Insert into pacientes(cedula,nombre,apellido,fecha_nacimiento,genero,tipo_sangre,alergias,antecedentes,email,telefono,direccion,fecha_registro)
+				$co->query("Insert into pacientes(cedula,nombre,apellido,fecha_nacimiento,genero,alergias,antecedentes,email,telefono,direccion,fecha_registro)
 					Values(
 					'$this->cedula',
 					'$this->nombre',
 					'$this->apellido',
 					'$this->fecha_nacimiento',
 					'$this->genero',
-                    '$this->tipo_sangre',
 					'$this->alergias',
                     '$this->antecedentes',
 					'$this->email',
@@ -142,7 +134,6 @@ class pacientes extends datos{
 					apellido = '$this->apellido',
                     fecha_nacimiento = '$this->fecha_nacimiento',
                     genero = '$this->genero',
-                    tipo_sangre = '$this->tipo_sangre',
                     alergias = '$this->alergias',
                     antecedentes = '$this->antecedentes',
 					email = '$this->email',
@@ -227,7 +218,6 @@ class pacientes extends datos{
 					$respuesta .= "<td class='align-middle'>".$edad."</td>";
 					$respuesta .= "<td class='align-middle'>".$clasificacion."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['genero']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['tipo_sangre']."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['alergias']."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['antecedentes']."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['email']."</td>";

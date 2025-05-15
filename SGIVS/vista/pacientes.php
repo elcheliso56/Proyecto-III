@@ -28,7 +28,6 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<th class="text-center">Edad</th>
 						<th class="text-center">Clasificación</th>
 						<th class="text-center">Género</th>
-						<th class="text-center">Grupo Sanguíneo</th>
 						<th class="text-center">Alergias</th>
 						<th class="text-center">Antecedentes</th>
 						<th class="text-center">Correo</th>
@@ -104,17 +103,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						</div>
 						<!-- Campos para alergias y antecedentes familiares -->
 						<div class="row mb-3">
-							<div class="col-md-4">
-								<label for="tipo_sangre">Grupo Sanguíneo</label>
-								<input class="form-control" type="text" id="tipo_sangre" title="Tipo de sangre del paciente" placeholder="Ejemplo: O+" requerid/>
-								<span id="stipo_sangre"></span>
-							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<label for="alergias">Alergia</label>
 								<input class="form-control" type="text" id="alergias" placeholder="Ejemplo: Penicilina" />
 								<span id="salergias"></span>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<label for="antecedentes">Antecendentes Familiares</label>
 								<input class="form-control" type="text" id="antecedentes" placeholder="Ejemplo: Diabetes"/>
 								<span id="santecedentes"></span>

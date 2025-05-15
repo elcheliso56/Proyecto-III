@@ -26,7 +26,6 @@ if(is_file("vista/".$pagina.".php")){
 			$o->set_apellido($_POST['apellido']);
             $o->set_fecha_nacimiento($_POST['fecha_nacimiento']);
             $o->set_genero($_POST['genero']);
-            $o->set_tipo_sangre($_POST['tipo_sangre']);
             $o->set_alergias($_POST['alergias']);
             $o->set_antecedentes($_POST['antecedentes']);
 			$o->set_email($_POST['email']);

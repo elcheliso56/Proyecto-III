@@ -32,11 +32,10 @@ CREATE TABLE `pacientes` (
   `apellido` varchar(50) NOT NULL,
   `fecha_nacimiento` date NOT NULL,
   `genero` enum('M','F','O') NOT NULL,
-  `tipo_sangre` varchar(10) NOT NULL,
   `alergias` varchar(20) DEFAULT NULL,
   `antecedentes` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `direccion` varchar(100) DEFAULT NULL,
-  `telefono` varchar(20) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
   `fecha_registro` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

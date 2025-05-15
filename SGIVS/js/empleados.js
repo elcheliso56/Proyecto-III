@@ -317,6 +317,24 @@ function validarenvio() {
         });    
         return false;
     }
+    // Validación de mayoría de edad (18+ años)
+    var fecha = $("#fecha_nacimiento").val();
+    var fechaActual = new Date();
+    var fechaNacimiento = new Date(fecha);
+    var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
+        edad--;
+    }
+    if (edad < 18) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El empleado debe ser mayor de edad (18 años o más)",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
     //validaciones para el genero
     if ($("#genero").val().trim() === "") {
         Swal.fire({
