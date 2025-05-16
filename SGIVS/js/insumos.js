@@ -44,8 +44,8 @@ function crearDT() {
 }
 
 $(document).ready(function () {
-    consultar(); // Llama a la función consultar al cargar el documento
-    cargarOpciones(); // Carga las opciones para selectores
+    consultar();
+    cargarOpciones();
 
     // Validaciones para el campo de código
     $("#codigo").on("keypress", function (e) {
@@ -416,6 +416,83 @@ function pone(pos, accion) {
     $("#modal1").modal("show");
 }
 
+function limpia() {
+    $("#codigo").val("");
+    $("#nombre").val("");
+    $("#marca").val("");
+    $("#stock_total").val("");
+    $("#stock_minimo").val("");        
+    $("#precio").val("");
+    $("#presentacion").val("").trigger('change'); 
+    $("#imagen").val("");
+    $("#imagen_actual").attr("src", "").hide();
+    $("#codigo").prop("disabled", false);
+    $("#nombre").prop("disabled", false);
+    $("#marca").prop("disabled", false);
+    $("#stock_total").prop("disabled", false);
+    $("#stock_minimo").prop("disabled", false);      
+    $("#precio").prop("disabled", false);
+    $("#presentacion").prop("disabled", false);
+    $("#imagen").prop("disabled", false);  
+}
+
+function verificarStock(stockTotal, stockMinimo) {
+    if (parseInt(stockTotal) <= parseInt(stockMinimo)) {
+        return '<span class="badge bg-danger">Stock bajo</span>';
+    }
+    return '';
+}
+
+function mostrarAlertaStockBajo(insumosBajoStock) {
+    let mensaje = "Los siguientes insumos tienen stock bajo:\n";
+    insumosBajoStock.forEach(insumo => {
+        mensaje += `- ${insumo.nombre} (Stock actual: ${insumo.stock_total}, Stock mínimo: ${insumo.stock_minimo})\n`;
+    });
+
+    Swal.fire({
+        title: "¡Alerta de Stock Bajo!",
+        text: mensaje,
+        icon: "warning",
+        confirmButtonText: "Entendido"
+    });
+}
+
+function cargarOpciones() {
+    $.ajax({
+        url: '',
+        type: 'POST',
+        data: { accion: 'cargarOpciones' },
+        success: function(respuesta) {
+            var datos = JSON.parse(respuesta);
+            
+            // Cargar presentaciones
+            datos.presentaciones.forEach(function(presentacion) {
+                $('#presentacion').append($('<option>', {
+                    value: presentacion.id,
+                    text: presentacion.nombre
+                }));
+            }); 
+        }
+    });
+}
+
+$("#imagen").on("change", function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            $("#imagen_actual")
+            .attr("src", e.target.result)
+            .show();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        $("#imagen_actual")
+        .attr("src", "")
+        .hide();
+    }
+});
+
 function enviaAjax(datos) {
     console.log("Enviando petición AJAX...");
     $.ajax({
@@ -503,83 +580,3 @@ function enviaAjax(datos) {
         }
     });
 }
-
-function limpia() {
-    $("#codigo").val("");
-    $("#nombre").val("");
-    $("#marca").val("");
-    $("#stock_total").val("");
-    $("#stock_minimo").val("");        
-    $("#precio").val("");
-    $("#presentacion").val("").trigger('change'); 
-    $("#imagen").val("");
-    $("#imagen_actual").attr("src", "").hide();
-    $("#codigo").prop("disabled", false);
-    $("#nombre").prop("disabled", false);
-    $("#marca").prop("disabled", false);
-    $("#stock_total").prop("disabled", false);
-    $("#stock_minimo").prop("disabled", false);      
-    $("#precio").prop("disabled", false);
-    $("#presentacion").prop("disabled", false);
-    $("#imagen").prop("disabled", false);  
-}
-
-function verificarStock(stockTotal, stockMinimo) {
-    if (parseInt(stockTotal) <= parseInt(stockMinimo)) {
-        return '<span class="badge bg-danger">Stock bajo</span>';
-    }
-    return '';
-}
-
-
-function mostrarAlertaStockBajo(insumosBajoStock) {
-    let mensaje = "Los siguientes insumos tienen stock bajo:\n";
-    insumosBajoStock.forEach(insumo => {
-        mensaje += `- ${insumo.nombre} (Stock actual: ${insumo.stock_total}, Stock mínimo: ${insumo.stock_minimo})\n`;
-    });
-
-    Swal.fire({
-        title: "¡Alerta de Stock Bajo!",
-        text: mensaje,
-        icon: "warning",
-        confirmButtonText: "Entendido"
-    });
-}
-
-
-
-function cargarOpciones() {
-    $.ajax({
-        url: '',
-        type: 'POST',
-        data: { accion: 'cargarOpciones' },
-        success: function(respuesta) {
-            var datos = JSON.parse(respuesta);
-            
-            // Cargar presentaciones
-            datos.presentaciones.forEach(function(presentacion) {
-                $('#presentacion').append($('<option>', {
-                    value: presentacion.id,
-                    text: presentacion.nombre
-                }));
-            }); 
-        }
-    });
-}
-
-$("#imagen").on("change", function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            $("#imagen_actual")
-            .attr("src", e.target.result)
-            .show();
-        };
-        reader.readAsDataURL(file);
-    } else {
-        $("#imagen_actual")
-        .attr("src", "")
-        .hide();
-    }
-});

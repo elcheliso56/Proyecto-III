@@ -37,8 +37,6 @@ class insumos extends datos{
 		$this->presentacion_id = $valor;
 	}
 
-
-	
 	function get_codigo(){
 		return $this->codigo;
 	}	
@@ -143,7 +141,6 @@ class insumos extends datos{
 		return $r;
 	}
 
-
     // Método para eliminar 
 	function eliminar(){
 		$co = $this->conecta();
@@ -213,12 +210,9 @@ class insumos extends datos{
 					$respuesta .= "<td>".$row['codigo']."</td>";
 					$respuesta .= "<td>".$row['nombre']."</td>";
 					$respuesta .= "<td>".$row['marca']."</td>";
-
-
 					$respuesta .= "<td>".$row['stock_total'].
 					($row['stock_total'] == 0 ? "<br><span class='badge bg-danger' title='Este producto esta agotado'>No disponible</span>" : " " . 
 							($row['stock_total'] <= $row['stock_minimo'] ? "<br><span class='badge bg-warning' title='Este producto llegó al nivel mínimo de stock'>Stock bajo</span>" : " ")) . "</td>";
-
 					$respuesta .= "<td>".$row['stock_minimo']."</td>";
 					$respuesta .= "<td data-presentacion-id='".$row['id_presentacion']."'>".$row['presentacion_nombre']."</td>";
 					if ($_SESSION['tipo_usuario'] == 'administrador'): 	
@@ -253,8 +247,6 @@ class insumos extends datos{
 		}
 		return $r;
 	}
-
-
 
     // Método privado para verificar si un producto existe	
 	private function existe($codigo){

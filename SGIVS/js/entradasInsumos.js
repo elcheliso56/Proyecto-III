@@ -195,7 +195,6 @@ function crearDT() {
 
 function limpia() {
     $("#codigoInsumos").val("");
-    $("#idInsumos").val("");
     $("#detalledeventa").empty();
     $("#datosdelcliente").html("");
 }
