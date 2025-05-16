@@ -2,15 +2,17 @@
 	<!-- Área de notificaciones -->
 	<section class="full-width container-notifications">
 		<!-- Fondo de notificaciones -->
-		<div class="full-width container-notifications-bg btn-Notification" ></div>
-		<section class="NotificationArea" >
+		<div class="full-width container-notifications-bg btn-Notification"></div>
+		<section class="NotificationArea">
 			<!-- Título de notificaciones -->
-			<div class="full-width text-center NotificationArea-title tittles">Notificaciones <i class="zmdi zmdi-close btn-Notification"></i></div>
+			<div class="full-width text-center NotificationArea-title tittles">Notificaciones <i
+					class="zmdi zmdi-close btn-Notification"></i></div>
 			<div id="notificacionesContenedor">
 				<!-- Las notificaciones se cargarán aquí dinámicamente -->
 			</div>
 		</section>
 	</section>
+	
 	<!-- Navegación lateral -->
 	<section class="full-width navLateral">
 		<!-- Fondo de la navegación lateral -->
@@ -18,12 +20,13 @@
 		<div class="full-width navLateral-body">
 			<!-- Logo y título de la navegación lateral -->
 			<div class="full-width navLateral-body-logo text-center tittles">
-				<i class="zmdi zmdi-close btn-menu"></i> MENU 
+				<i class="zmdi zmdi-close btn-menu"></i> MENU
 			</div>
 			<figure class="full-width navLateral-body-tittle-menu">
 				<div>
 					<!-- Imagen de usuario -->
-					<img src="<?php echo isset($_SESSION['imagen_usuario']) ? $_SESSION['imagen_usuario'] : 'otros/img/menu/avatar.jpg'; ?>" alt="Avatar" class="img-responsive navLateral-body-img">
+					<img src="<?php echo isset($_SESSION['imagen_usuario']) ? $_SESSION['imagen_usuario'] : 'otros/img/menu/avatar.jpg'; ?>"
+						alt="Avatar" class="img-responsive navLateral-body-img">
 				</div>
 				<figcaption>
 					<span>
@@ -74,70 +77,28 @@
 							<div class="navLateral-body-cl">
 								<i class="bi bi-clipboard2-pulse"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
+							<div class="navLateral-body-cr" style="color: white;">
 								Historiales
 							</div>
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					<!-- Enlaces a diferentes secciones del menú -->
+				<!-- Enlaces a diferentes secciones del menú -->
 					<li class="full-width">
-						<a href="?pagina=promociones" class="full-width">
-							<div class="navLateral-body-cl">
-								<i class="bi bi-tags-fill"></i>
-							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Categorías
-							</div>
-						</a>
+						
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
-						<a href="?pagina=proveedores" class="full-width">
-							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-truck"></i>
-							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Proveedores
-							</div>
-						</a>
+						
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
-						<a href="?pagina=productos" class="full-width">
-							<div class="navLateral-body-cl">
-								<i class="bi bi-box-seam-fill"></i>
-							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Productos
-							</div>
-						</a>
+
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
-						<a href="?pagina=clientes" class="full-width">
-							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-accounts"></i>
-							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Clientes
-							</div>
-						</a>
+						
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
@@ -146,7 +107,7 @@
 								<div class="navLateral-body-cl">
 									<i class="zmdi zmdi-account"></i>
 								</div>
-								<div class="navLateral-body-cr"style="color: white;">
+								<div class="navLateral-body-cr" style="color: white;">
 									Usuarios
 								</div>
 							</a>
@@ -158,42 +119,35 @@
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Movimientos
+							<div class="navLateral-body-cr" style="color: white;">
+								Recursos
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
 
 							<li class="full-width">
-								<a href="?pagina=apartados" class="full-width">
+								<a href="?pagina=insumos" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="bi bi-bag-check-fill"></i>
 									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Apartados
+									<div class="navLateral-body-cr" style="color: white;">
+										Insumos
 									</div>
 								</a>
 							</li>
 							<li class="full-width">
-								<a href="?pagina=entradas" class="full-width">
+								<a href="?pagina=equipos" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="bi bi-cart-plus-fill"></i>
 									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Entradas
+									<div class="navLateral-body-cr" style="color: white;">
+										Equipos
 									</div>
 								</a>
 							</li>
 							<li class="full-width">
-								<a href="?pagina=salidas" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-cart-dash-fill"></i>
-									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Salidas
-									</div>
-								</a>
+			
 							</li>
 						</ul>
 					</li>
@@ -204,7 +158,7 @@
 								<div class="navLateral-body-cl">
 									<i class="bi bi-file-text-fill"></i>
 								</div>
-								<div class="navLateral-body-cr"style="color: white;">
+								<div class="navLateral-body-cr" style="color: white;">
 									Reportes
 								</div>
 							</a>
@@ -220,13 +174,14 @@
 		<!-- Barra de navegación -->
 		<div class="full-width navBar">
 			<div class="full-width navBar-options">
-				<i class="zmdi zmdi-swap btn-menu" id="btn-menu"></i>	
+				<i class="zmdi zmdi-swap btn-menu" id="btn-menu"></i>
 				<div class="mdl-tooltip" for="btn-menu">MENU</div>
 				<nav class="navBar-options-list">
 					<ul class="list-unstyle">
 
 						<li class="manual" id="btn-manual">
-							<a href="otros/archivos/manual.pdf" target="_blank" style="color: white;" ><i class="bi bi-question-circle"></i></a>
+							<a href="otros/archivos/" target="_blank" style="color: white;"><i
+									class="bi bi-question-circle"></i></a>
 							<div class="mdl-tooltip" for="btn-manual">Manual de Ayuda</div>
 						</li>
 
@@ -238,16 +193,19 @@
 						<li class="btn-Perfil" id="btn-editar-perfil">
 							<a href="?pagina=perfil"><i class="zmdi zmdi-account-circle"></i></a>
 							<div class="mdl-tooltip" for="btn-editar-perfil">Editar Perfil</div>
-						</li>	
+						</li>
 						<li class="btn-exit" id="btn-exit">
 							<a href="#" id="cerrarSesion"><i class="zmdi zmdi-power"></i></a>
 							<div class="mdl-tooltip" for="btn-exit">Cerrar Sesión</div>
 						</li>
-						<li class="text-condensedLight noLink" ><small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small></li>
+						<li class="text-condensedLight noLink">
+							<small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small>
+						</li>
 						<li class="noLink">
 							<figure>
 								<!-- Imagen de usuario en la barra de navegación -->
-								<img src="<?php echo isset($_SESSION['imagen_usuario']) ? $_SESSION['imagen_usuario'] : 'otros/img/menu/avatar.jpg'; ?>" alt="Avatar" class="img-responsive navBar-options-img">
+								<img src="<?php echo isset($_SESSION['imagen_usuario']) ? $_SESSION['imagen_usuario'] : 'otros/img/menu/avatar.jpg'; ?>"
+									alt="Avatar" class="img-responsive navBar-options-img">
 							</figure>
 						</li>
 					</ul>

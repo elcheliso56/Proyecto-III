@@ -1,174 +1,191 @@
+<html lang="es">
 <?php
-require_once("comunes/encabezado.php");//Incluye el encabezado común
-require_once('comunes/menu.php');//Incluye el menú común 
+require_once("comunes/encabezado.php");
+require_once('comunes/menu.php');
 ?>
-<!-- html2canvas para capturar el contenido -->
+<!-- Librerías para captura y PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<!-- jsPDF para generar el PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<div class="container">
-	<center>
-		<h1>Historial de Pacientes</h1>
-	</center>
-	<br>
-	<!--<p style="text-align: justify;">"El módulo de Ubicaciones te permite organizar y controlar los diferentes espacios de almacenamiento en tu negocio. Aquí podrás crear y gestionar las distintas áreas donde se almacenan los productos, como almacenes, estantes, o depósitos. Una buena organización de
-		las ubicaciones facilita la localización rápida de productos y optimiza el proceso de inventario."</p>-->
-	<div class="container">
-		<div class="row mt-1 justify-content-center">
-			<div class="col-md-2 text-center">
-				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir"
-					title="Registrar Ubicación"><i
-						class="bi bi-plus-square"></i></button><!-- Botón para registrar una nueva Ubicación -->
-
-			</div>
-			<div class="col-md-2 text-center">
-				<button class="btn btn-outline-secondary" id="odontomodal" data-bs-toggle="modal"
-					data-bs-target="#miModal">Odontograma</button>
-			</div>
-		</div>
-
-	</div>
-	<div class="container">
-		<div class="table-responsive" id="tt"><!-- Tabla para mostrar las Ubicaciones -->
-			<table class="table table-striped table-hover table-center" id="tablaubicacion">
-				<thead class="tableh">
-					<tr>
-						<th class="text-center"></th>
-						<th class="text-center">Nombre</th>
-						<th class="text-center">Descripción</th>
-						<th class="text-center">Imagen</th>
-						<th class="text-center">Acciones</th>
-					</tr>
-				</thead>
-				<tbody id="resultadoconsulta">
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="miModal" tabindex="-1">
-
-	<div class="modal-dialog modal-lg">
-		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Odontograma</h5>
-			<button type="button" id="cierrate" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-				<i class="button">Cerrar</i>
+<div class="container-fluid">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i>Historial de Pacientes</h1>
+		<div>
+			<button type="button" class="btn btn-info me-2" id="incluir">
+				<i class="bi bi-plus-circle me-1"></i> Nuevo Paciente
+			</button>
+			<button class="btn btn-outline-info" id="odontomodal" data-bs-toggle="modal" data-bs-target="#miModal">
+				<i class="bi bi-tooth me-1"></i> Odontograma
 			</button>
 		</div>
+	</div>
 
-		<div id="generar-pdf" class="modal-content">
-
-			<div class="modal-body">
-				<!-- Carga el contenido HTML aquí -->
-				<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
-			</div>
-			<div class="modal-footer justify-content-between">
-				<!-- Botones del modal -->
-				<button type="button" class="btn btn-danger" id="generar-pdf">
-					<i class="bi bi-file-pdf"></i> Guardar como PDF
-				</button>
-
-
+	<!-- Panel de filtros -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3 d-flex justify-content-between align-items-center">
+			<h6 class="m-0 font-weight-bold text-info">Filtrar Pacientes</h6>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-4 mb-3">
+					<input type="text" class="form-control" id="filtroNombre" placeholder="Buscar por nombre...">
+				</div>
+				<div class="col-md-4 mb-3">
+					<input type="text" class="form-control" id="filtroApellido" placeholder="Buscar por Cedula...">
+				</div>
+				<div class="col-md-4 mb-3">
+					<button class="btn btn-info w-100" id="btnFiltrar">
+						<i class="bi bi-funnel me-1"></i> Filtrar
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
 
-</div>
-<div class="modal fade" tabindex="-1" role="dialog" id="modal1">
-	<div class="modal-dialog modal-lg" role="document" id="lm">
-		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Historial</h5>
+	<!-- Tabla de pacientes -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3 d-flex justify-content-between align-items-center">
+			<h6 class="m-0 font-weight-bold text-info">Listado de Pacientes</h6>
+			<div class="dropdown no-arrow">
+				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+					<i class="bi bi-three-dots-vertical"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right shadow">
+					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
+						Excel</a>
+					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
+						Listado</a>
+				</div>
+			</div>
 		</div>
-		<div class="modal-content">
-			<div class="container" id="mtm">
-				<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
-					<input autocomplete="off" type="text" class="form-control" name="accion" id="accion">
-					<div class="container">
-						<!-- Campos del formulario para nombre y descripción -->
-						<div class="row mb-3">
-							<div class="col-md-6">
-								<label for="nombre">Nombre</label>
-								<input class="form-control" type="text" id="nombre" name="nombre"
-									placeholder="Nombre obligatorio" title="El nombre no puede ser modificado..." />
-								<span id="snombre"></span>
-							</div>
-							<div class="col-md-6">
-								<label for="descripcion">Descripción</label>
-								<input class="form-control" type="text" id="descripcion" name="descripcion"
-									placeholder="Descripción de la ubicacion" />
-								<span id="sdescripcion"></span>
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-md-6">
-								<label for="Apellido">Apellido</label>
-								<input class="form-control" type="text" id="Apellido" name="Apellido"
-									placeholder="Apellido obligatorio" title="El Apellido no puede ser modificado..." />
-								<span id="sApellido"></span>
-							</div>
-							<div class="col-md-6">
-								<label for="Edad">Edad</label>
-								<input class="form-control" type="text" id="Edad" name="Edad" placeholder="Edad" />
-								<span id="sEdad"></span>
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-md-4">
-								<label for="telefono">telefono</label>
-								<input class="form-control" type="text" id="telefono" name="telefono"
-									placeholder="telefono obligatorio" title="" />
-								<span id="stelefono"></span>
-							</div>
-							<div class="col-md-4">
-								<label for="correo">correo</label>
-								<input class="form-control" type="text" id="correo" name="correo"
-									placeholder="correo  personal" />
-								<span id="scorreo"></span>
-							</div>
-							<div class="col-md-4">
-								<label for="antecedentes">Antecedentes Médicos</label>
-								<input class="form-control" type="text" id="antecedentes" name="antecedentes"
-									placeholder="breve descripcion" />
-								<span id="santecedentes"></span>
-							</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover" id="tablaPacientes" width="100%" cellspacing="0">
+					<thead class="table-light">
+						<tr>
+							<th>Nombre Completo</th>
+							<th class="text-center">Edad</th>
+							<th>Teléfono</th>
+							<th class="text-center">Última Visita</th>
+							<th class="text-center">Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="resultadoconsulta">
+						<!-- Datos se cargarán aquí mmm -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
+<!-- Modal Odontograma  -->
+<div class="card shadow mb-4">
+	<div class="container-fluid">
+	<div class="modal fade" id="miModal" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-header" id="hm">
+				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse"></i> Odontograma</h5>
+				<button type="button" id="cierrate" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+					<i class="button">Cerrar</i>
+				</button>
+			</div>
+
+			<div id="generar-pdf" class="modal-content">
+				<div class="modal-body">
+					<!-- Contenido del odontograma se mantiene igual -->
+					<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-danger" id="generar-pdf">
+						<i class="bi bi-file-pdf"></i> Guardar como PDF
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- Modal de Historial -->
+<div class="modal fade" id="modal1" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-info text-white">
+				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Historial del Paciente</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
+					<input type="hidden" name="accion" id="accion">
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="nombre" class="form-label">Nombre</label>
+							<input class="form-control" type="text" id="nombre" name="nombre" required>
+							<div class="invalid-feedback">El nombre es obligatorio</div>
 						</div>
-						<div class="row mb-3">
-							<!-- Campo para subir imagen y mostrar imagen actual -->
-							<div class="col-md-6">
-								<label for="imagen">Imagen</label>
-								<input class="col-md-11 inpImg" type="file" id="imagen" name="imagen"
-									accept=".png,.jpg,.jpeg" />
-							</div>
-							<div class="col-md-6">
-								<span id="simagen"></span>
-								<img id="imagen_actual" src="" alt="Imagen de la ubicación" class="img" />
-							</div>
+						<div class="col-md-6">
+							<label for="Apellido" class="form-label">Apellido</label>
+							<input class="form-control" type="text" id="Apellido" name="Apellido" required>
+							<div class="invalid-feedback">El apellido es obligatorio</div>
 						</div>
-						<div class="modal-footer justify-content-between">
-							<!-- Botones del modal -->
-							<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bc"><i
-									class="bi bi-x-square"></i> Cerrar</button>
-							<button type="button" class="btn btn-success bi bi-check-square" id="proceso"></button>
-							<!--	<button type="button" class="btn btn-secondary" onclick="window.open('index.html', '_blank')">Crear
-								Odontograma</button> -->
+					</div>
+
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="Edad" class="form-label">Edad</label>
+							<input class="form-control" type="number" id="Edad" name="Edad">
+						</div>
+						<div class="col-md-4">
+							<label for="telefono" class="form-label">Teléfono</label>
+							<input class="form-control" type="tel" id="telefono" name="telefono">
+						</div>
+						<div class="col-md-4">
+							<label for="correo" class="form-label">Correo</label>
+							<input class="form-control" type="email" id="correo" name="correo">
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="antecedentes" class="form-label">Antecedentes Médicos</label>
+						<textarea class="form-control" id="antecedentes" name="antecedentes" rows="3"></textarea>
+					</div>
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="imagen" class="form-label">Fotografía</label>
+							<input class="form-control" type="file" id="imagen" name="imagen" accept=".png,.jpg,.jpeg">
+						</div>
+						<div class="col-md-6 text-center">
+							<img id="imagen_actual" src="" alt="Foto del paciente" class="img-thumbnail mt-2"
+								style="max-height: 150px;">
 						</div>
 					</div>
 				</form>
 			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle me-1"></i> Cancelar
+				</button>
+				<button type="button" class="btn btn-info" id="proceso">
+					<i class="bi bi-check-circle me-1"></i> Guardar
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
-</section>
-</section>
+
 <script type="text/javascript" src="js/ubicaciones.js"></script>
+<!-- Loader mejorado -->
 <div id="loader" class="loader-container" style="display: none;">
-	<div class="loader"></div>
-	<p>Procesando solicitud...</p>
+	<div class="spinner-border text-info" role="status">
+		<span class="visually-hidden">Cargando...</span>
+	</div>
+	<p class="mt-2">Procesando solicitud...</p>
 </div>
+
 </body>
 
 </html>

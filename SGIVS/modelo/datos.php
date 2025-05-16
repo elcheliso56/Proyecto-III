@@ -2,7 +2,7 @@
 class datos {
     // Propiedades privadas para la conexión a la base de datos
 	private $ip = "localhost"; // Dirección IP del servidor de la base de datos
-    private $bd = "inventario"; // Nombre de la base de datos
+    private $bd = "sgivs(ULTIMA VERSION)"; // Nombre de la base de datos
     private $usuario = "root"; // Usuario de la base de datos
     private $contrasena = ""; // Contraseña del usuario
     // Método para establecer la conexión a la base de datos
