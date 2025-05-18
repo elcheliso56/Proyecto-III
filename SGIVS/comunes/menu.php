@@ -150,6 +150,61 @@
 			
 							</li>
 						</ul>
+
+
+						<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="bi bi-cash-stack"></i>
+							</div>
+							<div class="navLateral-body-cr"style="color: white;">
+								Transacciones
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+
+							<li class="full-width">
+								<a href="?pagina=ingresos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-arrow-down-circle-fill"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Ingresos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=egresos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-arrow-up-circle-fill"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Egresos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=movimientos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-arrow-left-right"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Movimientos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=dashboard" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-graph-up"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Dashboard
+									</div>
+								</a>
+							</li>
+						</ul>
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>

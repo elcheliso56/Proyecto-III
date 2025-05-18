@@ -4,7 +4,7 @@ require_once('comunes/menu.php');
 ?> 
 <div class="container"> 
 	<h1> Gestionar Insumos</h1> 
-	<p style="text-align: justify; color: red;">"El módulo de Gestión de Productos te permite administrar tu inventario. Cada producto debe tener un código único, información detallada (nombre, marca, modelo) y control de existencias (stock actual y mínimo). Los precios de compra y venta son fundamentales para el control financiero. Mantén actualizada esta información para evitar faltantes y optimizar tus ventas."</p>
+	
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">

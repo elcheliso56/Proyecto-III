@@ -21,27 +21,7 @@ require_once('comunes/menu.php');
 		</div>
 	</div>
 
-	<!-- Panel de filtros -->
-	<div class="card shadow mb-4">
-		<div class="card-header py-3 d-flex justify-content-between align-items-center">
-			<h6 class="m-0 font-weight-bold text-info">Filtrar Pacientes</h6>
-		</div>
-		<div class="card-body">
-			<div class="row">
-				<div class="col-md-4 mb-3">
-					<input type="text" class="form-control" id="filtroNombre" placeholder="Buscar por nombre...">
-				</div>
-				<div class="col-md-4 mb-3">
-					<input type="text" class="form-control" id="filtroApellido" placeholder="Buscar por Cedula...">
-				</div>
-				<div class="col-md-4 mb-3">
-					<button class="btn btn-info w-100" id="btnFiltrar">
-						<i class="bi bi-funnel me-1"></i> Filtrar
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 
 	<!-- Tabla de pacientes -->
 	<div class="card shadow mb-4">
@@ -64,10 +44,9 @@ require_once('comunes/menu.php');
 				<table class="table table-bordered table-hover" id="tablaPacientes" width="100%" cellspacing="0">
 					<thead class="table-light">
 						<tr>
-							<th>Nombre Completo</th>
+							<th>Nombre</th>
 							<th class="text-center">Edad</th>
 							<th>Teléfono</th>
-							<th class="text-center">Última Visita</th>
 							<th class="text-center">Acciones</th>
 						</tr>
 					</thead>
@@ -131,6 +110,20 @@ require_once('comunes/menu.php');
 							<input class="form-control" type="text" id="Apellido" name="Apellido" required>
 							<div class="invalid-feedback">El apellido es obligatorio</div>
 						</div>
+						<div class="col-md-6">
+							<label for="Ocupacion" class="form-label">Ocupación</label>
+							<input class="form-control" type="text" id="Ocupacion" name="Ocupacion" required>
+							<div class="invalid-feedback">La ocupación es obligatoria</div>
+						</div>
+					</div>
+					
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label  for="PersonaContacto" class="form-label">Persona de contacto (en emergencias)</label>
+							<input class="form-control" type="text" id="PersonaContacto" name="PersonaContacto" required>
+							<div class="invalid-feedback">La persona de contacto es obligatoria</div>
+						</div>
+						
 					</div>
 
 					<div class="row mb-3">

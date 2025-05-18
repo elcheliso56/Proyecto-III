@@ -4,7 +4,7 @@ require_once('comunes/menu.php');
 ?>
 <div class="container"> 
 	<h1> Gestionar Entradas de Insumos</h1> 
-	<p style="text-align: justify; color: red;">"El módulo de Entradas permite registrar todos los productos que ingresan al inventario. Selecciona el proveedor, ingresa los productos con sus cantidades y precios de compra. Puedes adjuntar la nota de entrega para mantener un respaldo de la operación. Esta información es vital para el control de inventario y costos."</p>
+	
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
