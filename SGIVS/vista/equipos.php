@@ -4,7 +4,10 @@ require_once('comunes/menu.php');
 ?> 
 <div class="container"> 
 	<h1> Gestionar Equipos</h1> 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -38,7 +41,7 @@ require_once('comunes/menu.php');
 <div class="modal fade" tabindex="-1" role="dialog"  id="modal1"> 
 	<div class="modal-dialog modal-lg" role="document"id="lm">
 		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="bi bi-box-seam-fill" style="color: red;"></i> Equipo</h5> 
+			<h5 class="modal-title"> Equipo</h5> 
 		</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
@@ -97,7 +100,7 @@ require_once('comunes/menu.php');
 </section>
 </section>
 <script type="text/javascript" src="js/equipos.js"></script> 
-<div id="loader" class="loader-container" style="display: none;">
+<div id="loader" class="loader-container">
 	<div class="loader"></div>
 	<p>Procesando solicitud...</p>
 </div>

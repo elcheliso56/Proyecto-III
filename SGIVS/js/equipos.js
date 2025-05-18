@@ -339,6 +339,61 @@ function pone(pos, accion) {
     $("#modal1").modal("show");
 }
 
+function limpia() {
+    $("#codigo").val("");
+    $("#nombre").val("");
+    $("#marca").val("");
+    $("#modelo").val("");    
+    $("#cantidad").val("");
+    $("#imagen").val("");
+    $("#imagen_actual").attr("src", "").hide();
+    $("#codigo").prop("disabled", false);
+    $("#nombre").prop("disabled", false);
+    $("#marca").prop("disabled", false);
+    $("#modelo").prop("disabled", false);
+    $("#cantidad").prop("disabled", false);    
+    $("#imagen").prop("disabled", false);
+    
+}
+
+function verificarStock(cantidad) {
+    if (parseInt(cantidad) === parseInt(0)) {
+        return '<span class="badge bg-danger">No disponible</span>';
+    }
+    return '';
+}
+
+function mostrarAlertaStockBajo(productosBajoStock) {
+    let mensaje = "Los siguientes equipos no están disponibles:\n";
+    productosBajoStock.forEach(equipo => {
+        mensaje += `- ${equipo.nombre} (Stock actual: ${equipo.cantidad})\n`;
+    });
+
+    Swal.fire({
+        title: "¡Alerta falta de stock!",
+        text: mensaje,
+        icon: "warning",
+        confirmButtonText: "Entendido"
+    });
+}
+
+$("#imagen").on("change", function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            $("#imagen_actual")
+            .attr("src", e.target.result)
+            .show();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        $("#imagen_actual")
+        .attr("src", "")
+        .hide();
+    }
+});
+
 function enviaAjax(datos) {
     $.ajax({
         async: true,
@@ -417,58 +472,3 @@ function enviaAjax(datos) {
         }
     });
 }
-
-function limpia() {
-    $("#codigo").val("");
-    $("#nombre").val("");
-    $("#marca").val("");
-    $("#modelo").val("");    
-    $("#cantidad").val("");
-    $("#imagen").val("");
-    $("#imagen_actual").attr("src", "").hide();
-    $("#codigo").prop("disabled", false);
-    $("#nombre").prop("disabled", false);
-    $("#marca").prop("disabled", false);
-    $("#modelo").prop("disabled", false);
-    $("#cantidad").prop("disabled", false);    
-    $("#imagen").prop("disabled", false);
-    
-}
-
-function verificarStock(cantidad) {
-    if (parseInt(cantidad) === parseInt(0)) {
-        return '<span class="badge bg-danger">No disponible</span>';
-    }
-    return '';
-}
-
-function mostrarAlertaStockBajo(productosBajoStock) {
-    let mensaje = "Los siguientes equipos no están disponibles:\n";
-    productosBajoStock.forEach(equipo => {
-        mensaje += `- ${equipo.nombre} (Stock actual: ${equipo.cantidad})\n`;
-    });
-
-    Swal.fire({
-        title: "¡Alerta falta de stock!",
-        text: mensaje,
-        icon: "warning",
-        confirmButtonText: "Entendido"
-    });
-}
-
-$("#imagen").on("change", function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            $("#imagen_actual")
-            .attr("src", e.target.result)
-            .show();
-        };
-        reader.readAsDataURL(file);
-    } else {
-        $("#imagen_actual")
-        .attr("src", "")
-        .hide();
-    }
-});

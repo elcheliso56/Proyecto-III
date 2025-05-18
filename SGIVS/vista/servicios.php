@@ -4,7 +4,6 @@ require_once('comunes/menu.php');
 ?> 
 <div class="container"> 
 	<h1> Gestionar Servicios</h1>
-	<p style="text-align: justify;">"En la sección de Categorías podrás crear y administrar las diferentes clasificaciones para tus productos. Una estructura bien organizada de categorías permite agrupar los productos de manera lógica, facilitando su búsqueda y gestión. Cada categoría puede tener una descripción detallada que ayude a identificar qué tipos de productos pertenecen a ella."</p> 
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -32,7 +31,7 @@ require_once('comunes/menu.php');
 <div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 	<div class=" modal-dialog modal-lg" role="document" id="lm">
 		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="zmdi zmdi-label"></i> Servicio</h5>
+			<h5 class="modal-title"><i></i> Servicio</h5>
 		</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
@@ -65,7 +64,7 @@ require_once('comunes/menu.php');
 </section>
 </section>
 <script type="text/javascript" src="js/servicios.js"></script>
-<div id="loader" class="loader-container" style="display: none;">
+<div id="loader" class="loader-container">
 	<div class="loader"></div>
 	<p>Procesando solicitud...</p>
 </div>

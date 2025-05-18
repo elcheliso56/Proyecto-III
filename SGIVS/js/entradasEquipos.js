@@ -190,7 +190,6 @@ function crearDT() {
 
 function limpia() {
     $("#codigoEquipos").val("");
-    $("#idEquipos").val("");
     $("#detalledeventa").empty();
     $("#nota_entrega").val("");
     $("#check_nota_entrega").hide();

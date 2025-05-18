@@ -4,7 +4,10 @@ require_once('comunes/menu.php');
 ?>
 <div class="container"> 
 	<h1> Gestionar Entradas de Equipos</h1> 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
@@ -33,7 +36,7 @@ require_once('comunes/menu.php');
 <div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 	<div class=" modal-dialog modal-xl" role="document" id="lm">
 		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="bi bi-cart-plus-fill"></i> Entrada de Equipos</h5>
+			<h5 class="modal-title"><i></i> Entrada de Equipos</h5>
 		</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
@@ -43,7 +46,6 @@ require_once('comunes/menu.php');
 						<div class="row">
 							<div class="col-md-12 input-group">
 								<input class="form-control" type="text" id="codigoEquipo" name="codigoEquipo" placeholder="Codigo de equipo..."  />
-								<input class="form-control" type="text" id="idEquipo" name="idEquipo" style="display:none"/> 
 								<button type="button" class="btn btn-primary" id="listadoDeEquipos" name="listadoDeEquipos"  title="Listado de equipo"><i class='bi bi-search'></i> Buscar Equipo</button>
 							</div>
 						</div>
@@ -53,7 +55,7 @@ require_once('comunes/menu.php');
 								<label for="nota_entrega"><strong>Nota de entrega</strong></label>
 								<div class="d-flex align-items-center">
 									<input class="col-md-11 inpImg" type="file"  id="nota_entrega" name="nota_entrega"/>
-									<i class="bi bi-check-circle-fill text-success ms-2" id="check_nota_entrega" style="display: none;"></i>
+									<i class="bi bi-check-circle-fill text-success ms-2" id="check_nota_entrega"></i>
 								</div>
 							</div>					
 						</div>
@@ -64,7 +66,6 @@ require_once('comunes/menu.php');
 								<table class="table table-striped table-hover table-center ">
 									<thead class="tableh">
 										<tr>
-											<th class="text-center"  style="display:none">Id</th>
 											<th class="text-center" >Codigo</th>
 											<th class="text-center" >Nombre</th>
 											<th class="text-center" >Cantidad</th>
@@ -93,8 +94,8 @@ require_once('comunes/menu.php');
 
 <div class="modal fade" tabindex="-1" role="dialog"  id="modalEquipos">
 	<div class="modal-dialog modal-lg" role="document" style="border: 1px solid black;">
-		<div class="modal-header text-light" style="border: 1px solid black; 	background-color: #14345a; ">
-			<h5 class="modal-title"><i class="bi bi-box-seam-fill"></i> Listado de equipos</h5>
+		<div class="modal-header text-light" style="border: 1px solid black; background-color: #14345a;">
+			<h5 class="modal-title"><i></i> Listado de equipos</h5>
 		</div>
 		<div class="modal-content" class="table-responsive" id="tt">
 			<div class="modal-body" style="background-color: #14345a; ">
@@ -129,7 +130,7 @@ require_once('comunes/menu.php');
 </section>
 </section>
 <script type="text/javascript" src="js/entradasEquipos.js"></script>
-<div id="loader" class="loader-container" style="display: none;">
+<div id="loader" class="loader-container">
 	<div class="loader"></div>
 	<p>Procesando solicitud...</p>
 </div>
