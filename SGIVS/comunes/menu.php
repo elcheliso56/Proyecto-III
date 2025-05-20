@@ -85,10 +85,6 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
-<<<<<<< HEAD
-				<!-- Enlaces a diferentes secciones del menú -->
-=======
-
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
@@ -148,7 +144,6 @@
 
 
 					<!-- Enlaces a diferentes secciones del menú -->
->>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
 					<li class="full-width">
 						
 					</li>
