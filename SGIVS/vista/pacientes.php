@@ -3,13 +3,12 @@ require_once("comunes/encabezado.php");//Incluye el encabezado común de la pág
 require_once('comunes/menu.php');//Incluye el menú común de la página 
 ?> 
 <div class="container"> 
-	<h1>Gestionar Pacientes</h1> <!-- Título principal de la página -->
-	<div class="container">
-		<div class="row mt-1 justify-content-center">
-			<div class="col-md-2 text-center">
-				<!-- Botón para registrar un nuevo cliente -->
-				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Paciente"><i class="bi bi-plus-square"></i></button>		    	
-			</div>				
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i> Gestionar Pacientes</h1>
+		<div>
+			<button type="button" class="btn btn-info me-2" id="incluir">
+				<i class="bi bi-plus-circle me-1"></i> Ingresar Paciente
+			</button>
 		</div>
 	</div>
 	<!-- Contenedor para la tabla de pacientes -->
@@ -17,7 +16,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 		<div class="table-responsive" id="tt">
 			<!-- Tabla para mostrar la lista de pacientes -->
 			<table class="table table-striped table-hover table-center" id="tablacliente">
-				<thead class="tableh">
+				<thead>
 					<tr>
 						<!-- Encabezados de la tabla -->
 						<th class="text-center">#</th>
@@ -47,9 +46,9 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 <!-- Modal para agregar o editar pacientes -->
 <div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 	<div class="modal-dialog modal-lg" role="document" id="lm">
-		<div class="modal-header" id="hm">
-			<h5 class="modal-title"><i class="zmdi zmdi-accounts"></i> Paciente</h5>
-		</div>
+			<div class="modal-header bg-info text-white">
+				<h5 class="modal-title"><i class="bi bi-people-fill me-2"></i> Paciente</h5>
+			</div>
 		<div class="modal-content">
 			<div class="container" id="mtm"> 
 				<!-- Formulario para los datos del paciente -->
@@ -146,8 +145,8 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						</div>
 						<!-- Botones del modal -->
 						<div class="modal-footer justify-content-between">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
-							<button type="button" class="btn btn-success bi bi-check-square" id="proceso"></button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="bi bi-x-circle"></i> Cerrar</button>
+							<button type="button" class="btn btn-info bi bi-plus-circle me-1" id="proceso"></button>
 						</div>
 					</div>	
 				</form>
