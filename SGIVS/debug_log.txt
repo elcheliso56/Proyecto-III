@@ -89,3 +89,11 @@ Array
 (
     [accion] => cargarOpciones
 )
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
