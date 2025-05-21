@@ -12,6 +12,7 @@ require_once('comunes/menu.php');
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
 	crossorigin="anonymous"></script>
+<br>
 <div class="container-fluid">
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i>Historial de Pacientes</h1>
@@ -45,12 +46,17 @@ require_once('comunes/menu.php');
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
+				<!-- Agrega esto antes de la tabla -->
+				<div class="mb-3">
+					<input type="text" id="buscadorPacientes" class="form-control" placeholder="Buscar paciente...">
+				</div>
 				<table class="table table-bordered table-hover" id="tablaPacientes" width="100%" cellspacing="0">
 					<thead class="table-light">
 						<tr>
-							<th>Nombre</th>
-							<th class="text-center">Edad</th>
-							<th>Teléfono</th>
+							<th>Numero</th>
+							<th class="text-center">Nombre</th>
+							<th class="text-center">Apellido</th>
+							<th class="text-center">Teléfono</th>
 							<th class="text-center">Acciones</th>
 						</tr>
 					</thead>
@@ -122,7 +128,7 @@ require_once('comunes/menu.php');
 							<div class="col-md-6">
 								<label for="Apellido" class="form-label">Apellido</label>
 								<input class="form-control" type="text" id="Apellido" name="Apellido" required>
-								<div class="invalid-feedback">El apellido es obligatorio</div>
+								<div class="invalid-feedback">El Apellido es obligatorio</div>
 							</div>
 							<div class="col-md-6">
 								<label for="Ocupacion" class="form-label">Ocupación</label>
@@ -212,7 +218,7 @@ require_once('comunes/menu.php');
 								<label for="observaciones" class="form-label">Observaciones</label>
 								<textarea class="form-control" id="observaciones" name="observaciones"
 									rows="3"></textarea>
-								<div class="row mb-3">
+								<!--<div class="row mb-3">
 									<div class="col-md-6">
 										<label for="imagen" class="form-label">Fotografía</label>
 										<input class="form-control" type="file" id="imagen" name="imagen"
@@ -222,7 +228,7 @@ require_once('comunes/menu.php');
 										<img id="imagen_actual" src="" alt="Foto del paciente"
 											class="img-thumbnail mt-2" style="max-height: 150px;">
 									</div>
-								</div>
+								</div> -->
 							</div>
 				</form>
 			</div>
