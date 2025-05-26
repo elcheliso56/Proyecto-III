@@ -51,6 +51,17 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
+						<a href="?pagina=consultas" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-view-dashboard"></i>
+							</div>
+							<div class="navLateral-body-cr" style="color: white;">
+								Consultas
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
 						<a href="?pagina=empleados" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-account"></i>
