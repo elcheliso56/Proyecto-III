@@ -287,18 +287,21 @@ function pone(pos, accion) {
         $("#nombre").prop("disabled", true); // Desactiva el campo nombre
         $("#Apellido").prop("disabled", true); // Activa el campo Apellido
         $("#telefono").prop("disabled", true); // Activa el campo telefono
+        $("#correo").prop("disabled", false);
+
         // $("#imagen").prop("disabled", false); // Activa el campo imagen
     } else {
         $("#proceso").text("ELIMINAR"); // Cambia el texto a ELIMINAR
         $("#nombre").prop("disabled", true); // Desactiva el campo nombre
         $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
         $("#telefono").prop("disabled", true); // Desactiva el campo telefono
+        $("#correo").prop("disabled", false);
         // $("#imagen").prop("disabled", true); // Desactiva el campo imagen
     }
     $("#nombre").val($(linea).find("td:eq(1)").text()); // Rellena el campo nombre
     $("#Apellido").val($(linea).find("td:eq(2)").text()); // Rellena el campo Apellido
     $("#telefono").val($(linea).find("td:eq(3)").text()); // Rellena el campo telefono
-    $("#Sexo").val($(linea).find("td:eq(4)").text()); // Rellena el campo Sexo
+    $("#Correo").val($(linea).find("td:eq(4)").text()); // Rellena el campo Sexo
 
 
     /*   var imagenSrc = $(linea).find("td:eq(3) img").attr("src"); // Obtiene la fuente de la imagen
@@ -318,7 +321,6 @@ function pone(pos, accion) {
            $("#imagen_url").val("");
        }*/
     $("#modal1").modal("show");
-     $("#modal1").modal("fade");
      // Muestra el modal
 }
 

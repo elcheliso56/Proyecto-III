@@ -196,7 +196,7 @@ class historial extends datos
 		}
 		return $r; // Retorna el resultado
 	}
-/*
+
 	// Método para modificar una ubicación existente
 	function modificar()
 	{
@@ -219,11 +219,7 @@ class historial extends datos
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] = '¡Registro actualizado con éxito!';
 				// Elimina la imagen anterior si es necesario
-				if ($imagen_actual && $imagen_actual != 'otros/img/historial/default.png') {
-					if (file_exists($imagen_actual)) {
-						unlink($imagen_actual);
-					}
-				}
+			
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage(); // Captura errores
@@ -234,7 +230,7 @@ class historial extends datos
 		}
 		return $r; // Retorna el resultado
 	}
-*/
+
 	// Método para eliminar una ubicación
 	function eliminar()
 	{
@@ -291,6 +287,7 @@ class historial extends datos
 					$respuesta .= "<td class='align-middle'>" . $r['nombre'] . "</td>"; // Nombre
 					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Descripción
 					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Ocupación
+					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Sexo
 					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
 					$respuesta .= "<td class='align-middle'>";
 					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ubicación'><i class='bi bi-arrow-repeat'></i></button><br/>";

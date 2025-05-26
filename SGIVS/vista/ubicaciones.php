@@ -57,6 +57,7 @@ require_once('comunes/menu.php');
 							<th class="text-center">Nombre</th>
 							<th class="text-center">Apellido</th>
 							<th class="text-center">Teléfono</th>
+							<th class="text-center">Correo</th>
 							<th class="text-center">Acciones</th>
 						</tr>
 					</thead>

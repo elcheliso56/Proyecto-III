@@ -67,7 +67,7 @@ $datos = $conteos->obtenerConteos();
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Historiales</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['ubicaciones']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['historial']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-clipboard2-pulse fa-2x text-gray-300"></i>
