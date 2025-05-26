@@ -10,9 +10,6 @@ class consultas extends datos{
     private $fechaconsulta;
 
     // Métodos para establecer los valores de las propiedades	
-	function set_tipo_documento($valor){
-		$this->tipo_documento = $valor; 
-	}
 	function set_cedula($valor){
 		$this->cedula = $valor;
 	}	
@@ -22,15 +19,12 @@ class consultas extends datos{
 	function set_apellido($valor){
 		$this->apellido = $valor;
 	}	
-	function set_correo($valor){
-		$this->correo = $valor;
 	}	
 	function set_telefono($valor){
 		$this->telefono = $valor;
 	}	
-	function set_direccion($valor){
-		$this->direccion = $valor;
-	}
+    
+
 
     // Métodos para obtener los valores de las propiedades		
 	function get_tipo_documento(){
