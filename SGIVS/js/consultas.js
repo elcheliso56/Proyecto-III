@@ -42,8 +42,62 @@ function crearDT() {
             responsive: true,
         });
     }
+    $(window).resize(function() {
+        $('#tablacliente').DataTable().columns.adjust().draw();
+    });
+}
 
-     // Manejo de clic en el botón de proceso
+$(document).ready(function() {
+    // Llama a la función consultar al cargar el documento
+	consultar();
+/*
+    // Validaciones para el campo de número de documento
+    $("#cedula").on("keypress", function(e) {
+        if ($("#tipo_documento").val() === "RIF") {
+            validarkeypress(/^[VEJ0-9-\b]*$/, e);
+        } else {
+            validarkeypress(/^[0-9-V\b]*$/, e);
+        }
+    });*/
+
+    // Validaciones para el campo de número de documento al soltar la tecla
+    $("#cedula").on("keyup", function() {
+        var tipoDocumento = $("#tipo_documento").val();
+        if (tipoDocumento === "Cédula") {
+            validarkeyup(/^[0-9]{7,8}$/, $(this), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
+        } else if (tipoDocumento === "RIF") {
+            validarkeyup(/^[VJE]{1}-[0-9]{9}$/, $(this), $("#scedula"), "El formato de RIF debe ser V/J/E-123456789");
+        }else { validarkeyup(/^[0]{0}[0]{0}$/, $(this), $("#scedula"), "Debe seleccionar el tipo de documento");}
+    });
+
+    // Validaciones para el campo de nombre
+    $("#nombre").on("keypress", function(e) {
+        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    });
+    $("#nombre").on("keyup", function() {
+        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{3,30}$/, $(this), $("#snombre"), "Solo letras entre 3 y 30 caracteres");
+    });
+
+    // Validaciones para el campo de apellido
+    $("#apellido").on("keypress", function(e) {
+        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    });	
+    $("#apellido").on("keyup", function() {
+        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{3,30}$/, $(this), $("#sapellido"), "Solo letras entre 3 y 30 caracteres");
+    });
+
+
+    // Validaciones para el campo de teléfono
+    $("#telefono").on("keypress", function(e) {
+        validarkeypress(/^[0-9\b]*$/, e);
+    });
+    $("#telefono").on("keyup", function() {
+        validarkeyup(/^0[0-9]{10}$/, $(this), $("#stelefono"), "El formato de teléfono debe ser 04120000000");
+    });
+
+   
+
+    // Manejo de clic en el botón de proceso
     $("#proceso").on("click", function() {
         if ($(this).text() == "INCLUIR") {
             if (validarenvio()) {
@@ -62,20 +116,111 @@ function crearDT() {
                     if (validarenvio()) {
                         var datos = new FormData();
                         datos.append('accion', 'incluir');
-                        datos.append('tipo_documento', $("#tipo_documento").val());
-                        datos.append('numero_documento', $("#numero_documento").val());
+                        datos.append('cedula', $("#cedula").val());
                         datos.append('nombre', $("#nombre").val());
                         datos.append('apellido', $("#apellido").val());
-                        datos.append('correo', $("#correo").val());
                         datos.append('telefono', $("#telefono").val());
-                        datos.append('direccion', $("#direccion").val());
+                        datos.append('tratamiento', $("#tratamiento").val());
+                        datos.append('fechaconsulta', $("#fechaconsulta").val());
+                        datos.append('doctor', $("#doctor").val());
+
                         enviaAjax(datos);
                     }
                 }
             });
         }
     }
-      // Manejo del clic en el botón incluir
+         else if ($(this).text() == "MODIFICAR") {
+            if (validarenvio()) {
+            // Confirmación para modificar un cliente existente
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "¿Estás seguro?",
+                text: "¿Deseas modificar la información de este cliente?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sí, modificar",
+                cancelButtonText: "No, cancelar",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (validarenvio()) {
+                        var datos = new FormData();
+                        datos.append('accion', 'modificar');
+                        datos.append('cedula', $("#cedula").val());
+                        datos.append('nombre', $("#nombre").val());
+                        datos.append('apellido', $("#apellido").val());
+                        datos.append('telefono', $("#telefono").val());
+                        datos.append('tratamiento', $("#tratamiento").val());
+                        datos.append('fechaconsulta', $("#fechaconsulta").val());
+                        datos.append('doctor', $("#doctor").val());						           
+                        enviaAjax(datos);
+                    }
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelado",
+                        text: "La información de este cliente no ha sido modificada",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    }
+
+        // Manejo de eliminación de un cliente
+        if ($(this).text() == "ELIMINAR") {
+            var tipoDocumento = $("#tipo_documento").val();
+            var numeroDocumento = $("#cedula").val();
+            var validacion;
+            if (tipoDocumento === "Cédula") {
+                validacion = validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
+            } else if (tipoDocumento === "RIF") {
+                validacion = validarkeyup(/^[VJE]{1}-[0-9]{9}$/, $("#cedula"), $("#scedula"), "El formato de RIF debe ser V/J/E-123456789");
+            }
+
+            if (validacion == 0) {
+                muestraMensaje("El documento debe coincidir con el formato solicitado <br/>" + "99999999");
+            } else {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success",
+                        cancelButton: "btn btn-danger"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "¿Estás seguro?",
+                    text: "No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar!",
+                    cancelButtonText: "No, cancelar!",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var datos = new FormData();
+                        datos.append('accion', 'eliminar');
+                        datos.append('cedula', numeroDocumento);
+                        enviaAjax(datos);
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire({
+                            title: "Cancelado",
+                            text: "Cliente no eliminado",
+                            icon: "error"
+                        });
+                    }
+                });
+            }
+        }
+    });
+
+    // Manejo del clic en el botón incluir
 $("#incluir").on("click", function() {
         limpia(); // Limpia los campos
         $("#proceso").text("INCLUIR"); // Cambia el texto del botón
@@ -87,7 +232,7 @@ $("#incluir").on("click", function() {
 function validarenvio() {
     // Validaciones para el tipo de documento
     if ($("#tipo_documento").val() === "Cédula") {
-        if (validarkeyup(/^[0-9]{7,8}$/, $("#numero_documento"), $("#snumero_documento"), "El formato de CI debe ser 1234567 o 12345678") == 0) {
+        if (validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678") == 0) {
             Swal.fire({
                 title: "¡ERROR!",
                 text: "La Cedula del cliente es obligatoria",
@@ -97,7 +242,7 @@ function validarenvio() {
             return false;
         }
     } else if ($("#tipo_documento").val() === "RIF") {
-        if (validarkeyup(/^[VJE]{1}-[0-9]{9}$/, $("#numero_documento"), $("#snumero_documento"), "El formato de RIF debe ser V/J/E-123456789") == 0) {
+        if (validarkeyup(/^[VJE]{1}-[0-9]{9}$/, $("#cedula"), $("#scedula"), "El formato de RIF debe ser V/J/E-123456789") == 0) {
             Swal.fire({
                 title: "¡ERROR!",
                 text: "El RIF del cliente es obligatorio",
@@ -212,6 +357,47 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 		etiquetamensaje.text(mensaje); // Muestra el mensaje de error
 		return 0; // Retorna 0 si no es válido
 	}
+}
+
+function pone(pos, accion) {
+    // Función para llenar el formulario con los datos del cliente seleccionado
+	linea = $(pos).closest('tr');
+	if (accion == 0) {
+		$("#proceso").text("MODIFICAR");
+		$("#tipo_documento").prop("disabled", true);
+		$("#cedula").prop("disabled", true);
+		$("#nombre").prop("disabled", false);
+		$("#apellido").prop("disabled", false);
+		$("#correo").prop("disabled", false);
+		$("#telefono").prop("disabled", false);
+		$("#direccion").prop("disabled", false);
+	} else {
+		$("#proceso").text("ELIMINAR");
+		$("#tipo_documento").prop("disabled", true);
+		$("#cedula").prop("disabled", true);
+		$("#nombre").prop("disabled", true);
+		$("#apellido").prop("disabled", true);
+		$("#correo").prop("disabled", true);
+		$("#telefono").prop("disabled", true);
+		$("#direccion").prop("disabled", true);		
+	}
+
+
+    // Separar el tipo de documento y el número de documento
+    var documentoCompleto = $(linea).find("td:eq(1)").text().trim();
+    var partes = documentoCompleto.split(":");
+    var tipoDocumento = partes[0];
+    var numeroDocumento = partes[1];
+
+	// Llena los campos del formulario con los datos de la fila seleccionada
+    $("#tipo_documento").val(tipoDocumento);
+    $("#cedula").val(numeroDocumento);
+    $("#nombre").val($(linea).find("td:eq(2)").text());
+    $("#apellido").val($(linea).find("td:eq(3)").text());
+    $("#correo").val($(linea).find("td:eq(4)").text());
+    $("#telefono").val($(linea).find("td:eq(5)").text());
+    $("#direccion").val($(linea).find("td:eq(6)").text());				
+	$("#modal1").modal("show"); // Muestra el modal
 }
 
 function enviaAjax(datos) {
@@ -402,9 +588,16 @@ complete: function () {
 
 function limpia() {
     // Función para limpiar los campos del formulario
-    $("#tipo_documento").prop("selectedIndex", 0);
-    $("#numero_documento").val("");
+    $("#cedula").val("");
     $("#nombre").val("");
     $("#apellido").val("");
-    $("#correo").val("");            
+    $("#telefono").val("");
+    // Habilita los campos del formulario
+    $("#tipo_documento").prop("disabled", false);
+    $("#cedula").prop("disabled", false); 
+    $("#nombre").prop("disabled", false);   
+    $("#apellido").prop("disabled", false); 
+    $("#correo").prop("disabled", false);   
+    $("#telefono").prop("disabled", false); 
+    $("#direccion").prop("disabled", false);                    
 }

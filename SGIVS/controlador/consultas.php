@@ -9,7 +9,7 @@ require_once("modelo/".$pagina.".php"); // Incluye el archivo del modelo
 // Verifica si el archivo de vista existe
 if(is_file("vista/".$pagina.".php")){	    
 	if(!empty($_POST)){ // Comprueba si hay datos enviados por POST
-		$o = new clientes(); // Crea una instancia de la clase clientes
+		$o = new consultas(); // Crea una instancia de la clase clientes
 		$accion = $_POST['accion']; // Obtiene la acción a realizar
 
 		// Acción para consultar datos
@@ -18,14 +18,19 @@ if(is_file("vista/".$pagina.".php")){
 		}
 		// Acción para eliminar un cliente
 		elseif($accion=='eliminar'){
-			$o->set_numero_documento($_POST['numero_documento']); // Establece el número de documento
+			$o->set_cedula($_POST['cedula']); // Establece el número de documento
 			echo  json_encode($o->eliminar()); // Elimina y devuelve el resultado en JSON
 		}
 		else{		  
 			// Establece los datos del cliente
+            $o->set_cedula($_POST['cedula']);
 			$o->set_nombre($_POST['nombre']);
 			$o->set_apellido($_POST['apellido']);
 			$o->set_telefono($_POST['telefono']);
+            $o->set_telefono($_POST['tratamiento']);
+            $o->set_fechaconsulta($_POST['fechaconsulta']);
+            $o->set_doctor($_POST['doctor']);
+
 
 			// Acción para incluir un nuevo cliente
 			if($accion=='incluir'){

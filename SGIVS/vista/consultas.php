@@ -10,7 +10,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
 				<!-- Botón para registrar un nuevo cliente -->
-				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Cliente"><i class="bi bi-plus-square"></i></button>		    	
+				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Consulta"><i class="bi bi-plus-square"></i></button>		    	
 			</div>				
 		</div>
 	</div>
@@ -26,9 +26,10 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<th class="text-center">Documento</th>
 						<th class="text-center">Nombre</th>
 						<th class="text-center">Apellido</th>
-						<th class="text-center">Correo</th>
 						<th class="text-center">Telefono</th>
-						<th class="text-center">Dirección</th>
+                        <th class="text-center">Tratamientos</th>
+                        <th class="text-center">Fecha Consulta</th>
+                        <th class="text-center">Doctor</th>
 						<th class="text-center">Acciones</th>
 					</tr>
 				</thead>
@@ -118,7 +119,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 </div>
 </section>
 </section>
-<script type="text/javascript" src="js/cansultas.js"></script><!-- Inclusión del archivo JavaScript de clientes -->
+<script type="text/javascript" src="js/consultas.js"></script><!-- Inclusión del archivo JavaScript de clientes -->
 <div id="loader" class="loader-container" style="display: none;">
 	<div class="loader"></div>
 	<p>Procesando solicitud...</p>

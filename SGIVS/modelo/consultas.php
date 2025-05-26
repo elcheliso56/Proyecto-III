@@ -8,6 +8,8 @@ class consultas extends datos{
 	private $telefono;
 	private $tratamiento;
     private $fechaconsulta;
+    private $doctor;
+
 
     // Métodos para establecer los valores de las propiedades	
 	function set_cedula($valor){
@@ -19,17 +21,21 @@ class consultas extends datos{
 	function set_apellido($valor){
 		$this->apellido = $valor;
 	}	
-	}	
 	function set_telefono($valor){
 		$this->telefono = $valor;
 	}	
-    
-
+    function set_tratamiento($valor){
+        $this->tratamiento = $valor;
+    }
+	function set_fechaconsulta($valor){
+		$this->fechaconsulta = $valor;
+	}
+    function set_doctor($valor){
+        $this->doctor = $valor;
+    }
 
     // Métodos para obtener los valores de las propiedades		
-	function get_tipo_documento(){
-		return $this->tipo_documento;
-	}	
+	
 	function get_cedula(){
 		return $this->cedula;
 	}
@@ -39,15 +45,19 @@ class consultas extends datos{
 	function get_apellido(){
 		return $this->apellido;
 	}
-	function get_correo(){
-		return $this->correo;
-	}	
 	function get_telefono(){
 		return $this->telefono;
 	}	
-	function get_direccion(){
-		return $this->direccion;
-	}
+    function get_tratamiento(){
+        return $this->tratamiento;
+    }
+    function get_fechaconsulta(){
+        return $this->fechaconsulta;
+    }
+    function get_doctor(){
+        return $this->doctor;
+    }
+	
 
     // Método para incluir un nuevo cliente en la base de datos
 	function incluir(){
@@ -58,15 +68,15 @@ class consultas extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo cliente			
-				$co->query("Insert into clientes(tipo_documento, cedula,nombre,apellido,correo,telefono,direccion)
+				$co->query("Insert into consultas(cedula,nombre,apellido,telefono,tratamiento,fechaconsulta,doctor)
 					Values(
-					'$this->tipo_documento',
 					'$this->cedula',
 					'$this->nombre',
 					'$this->apellido',
-					'$this->correo',
 					'$this->telefono',
-					'$this->direccion')");
+                    '$this->tratamiento',
+                    '$this->fechaconsulta',
+                    '$this->doctor')");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  '¡Registro guardado con exito!';
 			} catch(Exception $e) {
@@ -90,14 +100,14 @@ class consultas extends datos{
 		if($this->existe($this->cedula)){
 			try {
                 // Actualiza los datos del cliente				
-				$co->query("Update clientes set 
-					tipo_documento = '$this->tipo_documento',
+				$co->query("Update consultas set 
 					cedula = '$this->cedula',
 					nombre = '$this->nombre',
 					apellido = '$this->apellido',
-					correo = '$this->correo',
 					telefono = '$this->telefono',
-					direccion = '$this->direccion'
+                    tratamiento = '$this->tratamiento',
+                    fechaconsulta = '$this->fechaconsulta',
+                    doctor = '$this->doctor'
 					where
 					cedula = '$this->cedula'
 					");
@@ -124,7 +134,7 @@ class consultas extends datos{
 		if($this->existe($this->cedula)){
 			try {
 				// Elimina el cliente de la base de datos
-				$co->query("delete from clientes 
+				$co->query("delete from consultas 
 					where
 					cedula = '$this->cedula'
 					");
@@ -146,13 +156,13 @@ class consultas extends datos{
 		return $r;
 	}	
 
-    // Método para consultar todos los clientes	
+    // Método para consultar todos los consultas	
 	function consultar(){
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try{		
-			$resultado = $co->query("Select * from clientes  ORDER BY id DESC");
+			$resultado = $co->query("Select * from consultas  ORDER BY id DESC");
 			if($resultado){	
 				$respuesta = '';
 				$n=1;
@@ -160,12 +170,13 @@ class consultas extends datos{
 				foreach($resultado as $r){
 					$respuesta = $respuesta."<tr class='text-center'>";
 					$respuesta = $respuesta."<td class='align-middle'>$n</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['tipo_documento'].":".$r['cedula']."</td>";					
+					$respuesta = $respuesta."<td class='align-middle'>".$r['cedula'].":".$r['cedula']."</td>";					
 					$respuesta = $respuesta."<td class='align-middle'>".$r['nombre']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['apellido']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['correo']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['telefono']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['direccion']."</td>";									
+                    $respuesta = $respuesta."<td class='align-middle'>".$r['tratamiento']."</td>";
+                    $respuesta = $respuesta."<td class='align-middle'>".$r['fechaconsulta']."</td>";
+                    $respuesta = $respuesta."<td class='align-middle'>".$r['doctor']."</td>";								
 					$respuesta = $respuesta."<td class='align-middle'>";
 					$respuesta = $respuesta.
 					"<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cliente'><i class='bi bi-arrow-repeat'></i></button><br/>";
@@ -197,7 +208,7 @@ class consultas extends datos{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			$resultado = $co->query("Select * from clientes where cedula='$cedula'");
+			$resultado = $co->query("Select * from consultas where cedula='$cedula'");
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			if($fila){
 				return true;  
