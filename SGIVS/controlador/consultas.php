@@ -25,9 +25,9 @@ if(is_file("vista/".$pagina.".php")){
 			// Establece los datos del cliente
             $o->set_cedula($_POST['cedula']);
 			$o->set_nombre($_POST['nombre']);
-			$o->set_apellido($_POST['apellido']);
+			$o->set_Apellido($_POST['Apellido']);
 			$o->set_telefono($_POST['telefono']);
-            $o->set_telefono($_POST['tratamiento']);
+            $o->set_tratamiento($_POST['tratamiento']);
             $o->set_fechaconsulta($_POST['fechaconsulta']);
             $o->set_doctor($_POST['doctor']);
 

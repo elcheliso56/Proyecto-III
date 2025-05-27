@@ -4,7 +4,7 @@ class consultas extends datos{
     // Propiedades del cliente	
 	private $cedula;
 	private $nombre;
-	private $apellido;
+	private $Apellido;
 	private $telefono;
 	private $tratamiento;
     private $fechaconsulta;
@@ -18,8 +18,8 @@ class consultas extends datos{
 	function set_nombre($valor){
 		$this->nombre = $valor;
 	}	
-	function set_apellido($valor){
-		$this->apellido = $valor;
+	function set_Apellido($valor){
+		$this->Apellido = $valor;
 	}	
 	function set_telefono($valor){
 		$this->telefono = $valor;
@@ -42,8 +42,8 @@ class consultas extends datos{
 	function get_nombre(){
 		return $this->nombre;
 	}
-	function get_apellido(){
-		return $this->apellido;
+	function get_Apellido(){
+		return $this->Apellido;
 	}
 	function get_telefono(){
 		return $this->telefono;
@@ -68,11 +68,11 @@ class consultas extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo cliente			
-				$co->query("Insert into consultas(cedula,nombre,apellido,telefono,tratamiento,fechaconsulta,doctor)
+				$co->query("Insert into consultas(cedula,nombre,Apellido,telefono,tratamiento,fechaconsulta,doctor)
 					Values(
 					'$this->cedula',
 					'$this->nombre',
-					'$this->apellido',
+					'$this->Apellido',
 					'$this->telefono',
                     '$this->tratamiento',
                     '$this->fechaconsulta',
@@ -103,7 +103,7 @@ class consultas extends datos{
 				$co->query("Update consultas set 
 					cedula = '$this->cedula',
 					nombre = '$this->nombre',
-					apellido = '$this->apellido',
+					Apellido = '$this->Apellido',
 					telefono = '$this->telefono',
                     tratamiento = '$this->tratamiento',
                     fechaconsulta = '$this->fechaconsulta',
@@ -170,9 +170,9 @@ class consultas extends datos{
 				foreach($resultado as $r){
 					$respuesta = $respuesta."<tr class='text-center'>";
 					$respuesta = $respuesta."<td class='align-middle'>$n</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['cedula'].":".$r['cedula']."</td>";					
+					$respuesta = $respuesta."<td class='align-middle'>".$r['cedula']."</td>";					
 					$respuesta = $respuesta."<td class='align-middle'>".$r['nombre']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['apellido']."</td>";
+					$respuesta = $respuesta."<td class='align-middle'>".$r['Apellido']."</td>";
 					$respuesta = $respuesta."<td class='align-middle'>".$r['telefono']."</td>";
                     $respuesta = $respuesta."<td class='align-middle'>".$r['tratamiento']."</td>";
                     $respuesta = $respuesta."<td class='align-middle'>".$r['fechaconsulta']."</td>";
