@@ -21,6 +21,9 @@ if(is_file("vista/".$pagina.".php")){
 			$o->set_cedula($_POST['cedula']); // Establece el número de documento
 			echo  json_encode($o->eliminar()); // Elimina y devuelve el resultado en JSON
 		}
+		else if ($accion == 'modalpaciente') {
+			echo  json_encode($o->listadopaciente());
+		}
 		else{		  
 			// Establece los datos del cliente
             $o->set_cedula($_POST['cedula']);

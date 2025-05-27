@@ -1,3 +1,19 @@
+var datos = new FormData();
+datos.append("accion", "modalpaciente");
+enviaAjax(datos);
+
+$("#listadopaciente").on("click", function () {
+  $("#modalpaciente").modal("show");
+});
+
+function colocapa(linea) {
+  $("#cedula").val($(linea).find("td:eq(0)").text());
+  $("#nombre").val($(linea).find("td:eq(1)").text());
+  $("#Apellido").val($(linea).find("td:eq(2)").text());
+  $("#telefono").val($(linea).find("td:eq(3)").text());
+  $("#modalpaciente").modal("hide");
+}
+
 function consultar() {
   // Crea un nuevo objeto FormData y agrega la acción 'consultar'
   var datos = new FormData();
@@ -444,14 +460,13 @@ function pone(pos, accion) {
   if (accion == 0) {
     $("#proceso").text("MODIFICAR");
     $("#cedula").prop("disabled", true);
-    $("#nombre").prop("disabled", false);
-    $("#Apellido").prop("disabled", false);
+    $("#nombre").prop("disabled", true);
+    $("#Apellido").prop("disabled", true);
     $("#tratamieto").prop("disabled", false);
-    $("#telefono").prop("disabled", false);
+    $("#telefono").prop("disabled", true);
     $("#fechaconsulta").prop("disabled", false);
-    $("#doctor").prop("disabled", false);
+    $("#doctor").prop("disabled", true);
   } else {
-
     // Si la acción es eliminar, deshabilita todos los campos
     $("#proceso").text("ELIMINAR");
     $("#cedula").prop("disabled", true);
@@ -462,7 +477,7 @@ function pone(pos, accion) {
     $("#fechaconsulta").prop("disabled", true);
     $("#doctor").prop("disabled", true);
   }
-  
+
   $("#cedula").val($(linea).find("td:eq(1)").text());
   $("#nombre").val($(linea).find("td:eq(2)").text());
   $("#Apellido").val($(linea).find("td:eq(3)").text());
@@ -540,6 +555,9 @@ function enviaAjax(datos) {
             text: lee.mensaje,
             icon: "error",
           });
+        }
+        if (lee.resultado == "modalpaciente") {
+          $("#tablapaciente").html(lee.mensaje);
         }
       } catch (e) {
         Swal.fire({
