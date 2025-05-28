@@ -59,20 +59,19 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="cedula" class="form-label">Cédula</label>
+                                        <label for="cedula" class="form-label"></label>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <button class="btn btn-outline-info flex-shrink-0" type="button" id="listadopaciente" name="listadopaciente">
-                                                Listado de Cédulas
+                                            <button class="btn btn-outline-info flex-shrink-0" type="button" id="listadopaciente" name="listadopaciente" title="Listado de Cédulas">
+                                                <i class="bi bi-card-list"></i>
                                             </button>
-                                            <input 
-                                                type="text" 
-                                                class="form-control flex-grow-1" 
-                                                id="cedula" 
-                                                name="cedula" 
-                                                placeholder="Cédula" 
-                                                aria-label="Cédula" 
-                                                disabled
-                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control flex-grow-1"
+                                                id="cedula"
+                                                name="cedula"
+                                                placeholder="Cédula"
+                                                aria-label="Cédula"
+                                                disabled>
                                         </div>
                                     </div>
 
@@ -198,12 +197,16 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
 
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="doctor">Doctor</label>
-                                <input class="form-control" type="text" id="doctor" name="doctor" placeholder="Doctor" />
+                            <div class="col-sm-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary w-100" id="listadoc" name="listadoc" title="Listado de Doctores">
+                                    <i class="bi bi-card-list"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-5 d-flex align-items-end">
+                                <input class="form-control me-2" type="text" id="doctor" name="doctor" placeholder="Doctor" />
                                 <span id="sdoctor"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label for="fechaconsulta">fecha de consulta</label>
                                 <input class="form-control" type="date" id="fechaconsulta" name="fechaconsulta" placeholder="la fecha es obligatorio" />
                                 <span id="sfechaconsulta"></span>
@@ -222,7 +225,7 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
 </div>
 </section>
 </section>
-<!-- Modal de ejemplo adicional -->
+<!-- Modal de pacintes -->
 <div class="modal fade" id="modalpaciente" tabindex="-1">
     <div class="modal-dialog modal-lg" role="dialog">
         <div class="modal-content">
@@ -255,41 +258,50 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary">Guardar cambios</button>
         </div>
     </div>
 
 </div>
-<div class="modal fade" id="empleados" tabindex="-1" role="dialog" aria-labelledby="modalEjemploLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+
+
+<div class="modal fade" id="modaldoc" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalEjemploLabel">Doctores</h5>
+                <h5 class="modal-title" id="">Doctor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
-                <table class="table table-striped table-hover table-center" id="tablacliente">
-                    <thead class="table">
-                        <tr>
-                            <!-- Encabezados de la tabla -->
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Apellido</th>
-                        </tr>
-                    </thead>
-                    <tbody id="">
-                        <!-- Aquí se cargarán dinámicamente los datos de los clientes -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Guardar cambios</button>
+                <div class="table-responsive" id="">
+                    <!-- Tabla para mostrar la lista de clientes -->
+                    <table class="table table-striped-columns table-hover">
+                        <thead>
+                            <tr>
+                                <!-- Encabezados de la tabla -->
+                                <th class="text-center">Nombres</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabladoc">
+                            <!-- Aquí se cargarán dinámicamente los datos de los clientes -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+           
+        </div>
     </div>
+
 </div>
+
+
+
+
 <script type="text/javascript" src="js/consultas.js"></script><!-- Inclusión del archivo JavaScript de clientes -->
 <div id="loader" class="loader-container" style="display: none;">
     <div class="loader"></div>

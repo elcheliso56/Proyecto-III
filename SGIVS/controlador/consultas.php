@@ -24,6 +24,10 @@ if(is_file("vista/".$pagina.".php")){
 		else if ($accion == 'modalpaciente') {
 			echo  json_encode($o->listadopaciente());
 		}
+		elseif ($accion == 'modaldoc') {
+			echo  json_encode($o->listadodoc());
+		}
+
 		else{		  
 			// Establece los datos del cliente
             $o->set_cedula($_POST['cedula']);

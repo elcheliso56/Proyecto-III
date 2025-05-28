@@ -14,6 +14,19 @@ function colocapa(linea) {
   $("#modalpaciente").modal("hide");
 }
 
+var datos = new FormData();
+datos.append("accion", "modaldoc");
+enviaAjax(datos);
+
+$("#listadoc").on("click", function () {
+  $("#modaldoc").modal("show");
+});
+
+function colocadoc(linea) {
+  $("#doctor").val($(linea).find("td:eq(0)").text());
+  $("#modaldoc").modal("hide");
+}
+
 function consultar() {
   // Crea un nuevo objeto FormData y agrega la acción 'consultar'
   var datos = new FormData();
@@ -454,6 +467,19 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
   }
 }
 
+function limpia() {
+  // Función para limpiar los campos del formulario
+  $("#cedula").val("");
+  $("#nombre").val("");
+  $("#Apellido").val("");
+  $("#telefono").val("");
+  $("#tratamiento").prop("selectedIndex", 0);
+  $("#fechaconsulta").val("");
+   $("#fechaconsulta").prop("disabled", false); // Limpia el textarea de tratamientos
+  $("#doctor").val(""); // Limpia el campo del doctor
+  // Habilita los campos del formulario
+}
+
 function pone(pos, accion) {
   // Función para llenar el formulario con los datos del cliente seleccionado
   linea = $(pos).closest("tr");
@@ -559,6 +585,10 @@ function enviaAjax(datos) {
         if (lee.resultado == "modalpaciente") {
           $("#tablapaciente").html(lee.mensaje);
         }
+         if (lee.resultado == "modaldoc") {
+          $("#tabladoc").html(lee.mensaje);
+        }
+       
       } catch (e) {
         Swal.fire({
           title: "Error",
@@ -566,6 +596,7 @@ function enviaAjax(datos) {
           icon: "error",
         });
       }
+      
     },
     error: function (request, status, err) {
       if (status == "timeout") {
@@ -586,17 +617,6 @@ function enviaAjax(datos) {
   });
 }
 
-function limpia() {
-  // Función para limpiar los campos del formulario
-  $("#cedula").val("");
-  $("#nombre").val("");
-  $("#Apellido").val("");
-  $("#telefono").val("");
-  $("#tratamiento").prop("selectedIndex", 0);
-  $("#fechaconsulta").val(""); // Limpia el textarea de tratamientos
-  $("#doctor").val(""); // Limpia el campo del doctor
-  // Habilita los campos del formulario
-}
 
 // Función para añadir el tratamiento seleccionado al textarea
 $("#btn_add_tratamiento").on("click", function () {

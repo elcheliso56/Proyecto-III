@@ -10,7 +10,7 @@ class consultas extends datos
 	private $tratamiento;
 	private $fechaconsulta;
 	private $doctor;
-	
+
 
 
 	// Métodos para establecer los valores de las propiedades	
@@ -80,7 +80,7 @@ class consultas extends datos
 	{
 		$r = array();
 		// Verifica si el número de documento ya existe		
-		if (!$this->existe($this->cedula)) {
+		if (!$this->existe1($this->cedula)) {
 			$co = $this->conecta();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
@@ -114,7 +114,7 @@ class consultas extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		// Verifica si el número de documento existe		
-		if ($this->existe($this->cedula)) {
+		if ($this->existe1($this->cedula)) {
 			try {
 				// Actualiza los datos del cliente				
 				$co->query("Update consultas set 
@@ -151,10 +151,7 @@ class consultas extends datos
 		if ($this->existe($this->cedula)) {
 			try {
 				// Elimina el cliente de la base de datos
-				$co->query("delete from consultas 
-					where
-					cedula = '$this->cedula'
-					");
+				$co->query("DELETE FROM consultas WHERE cedula = '$this->cedula' LIMIT 1");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  '¡Registro eliminado con exito!';
 			} catch (Exception $e) {
@@ -247,7 +244,7 @@ class consultas extends datos
 					$respuesta = $respuesta . "<td>";
 					$respuesta = $respuesta . $r['telefono'];
 					$respuesta = $respuesta . "</td>";
-					$respuesta = $respuesta."</tr>";
+					$respuesta = $respuesta . "</tr>";
 				}
 				$r['resultado'] = 'modalpaciente';
 				$r['mensaje'] =  $respuesta;
@@ -261,61 +258,68 @@ class consultas extends datos
 		}
 		return $r;
 	}
-	/*
-	function listadoemp(){
+
+	function listadodoc()
+	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		try{
-			
-			$resultado = $co->query("Select * from tatletas");
-			
-			if($resultado){
-				
+		try {
+
+			$resultado = $co->query("Select * from empleados
+			where
+					cargo = 'Doctor'
+					");
+
+			if ($resultado) {
+
 				$respuesta = '';
-				foreach($resultado as $r){
-					$respuesta = $respuesta."<tr style='cursor:pointer' onclick='colocacliente(this);'>";
-						
-						$respuesta = $respuesta."<td>";
-							$respuesta = $respuesta.$r['cedula'];
-						$respuesta = $respuesta."</td>";
-						$respuesta = $respuesta."<td>";
-							$respuesta = $respuesta.$r['apellidos'];
-						$respuesta = $respuesta."</td>";
-						$respuesta = $respuesta."<td>";
-							$respuesta = $respuesta.$r['nombres'];
-						$respuesta = $respuesta."</td>";
-						$respuesta = $respuesta."<td>";
-						$respuesta = $respuesta.$r['Numerodeaccion'];
-						$respuesta = $respuesta."</td>";
-						$respuesta = $respuesta."<td>";
-							$respuesta = $respuesta.$r['id'];
-						$respuesta = $respuesta."</td>";
-					$respuesta = $respuesta."</tr>";
+				foreach ($resultado as $r) {
+					$respuesta = $respuesta . "<tr style='cursor:pointer' onclick='colocadoc(this);'>";
+
+
+					$respuesta = $respuesta . "<td>";
+					$respuesta = $respuesta . $r['nombre'] .' '. $r['apellido'];
+					$respuesta = $respuesta . "</td>";
+
+					$respuesta = $respuesta . "</tr>";
 				}
-				$r['resultado'] = 'modalclientes';
+				$r['resultado'] = 'modaldoc';
 				$r['mensaje'] =  $respuesta;
-			    
-			}
-			else{
-				$r['resultado'] = 'modalclientes';
+			} else {
+				$r['resultado'] = 'modaldoc';
 				$r['mensaje'] =  '';
 			}
-			
-		}catch(Exception $e){
+		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
 		return $r;
 	}
-*/
+
 	// Método privado para verificar si un número de documento ya existe
-	private function existe($id)
+	private function existe1($id)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try {
 			$resultado = $co->query("Select * from consultas where id='$id'");
+			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
+			if ($fila) {
+				return true;
+			} else {
+				return false;;
+			}
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+	private function existe($cedula)
+	{
+		$co = $this->conecta();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try {
+			$resultado = $co->query("Select * from consultas where cedula='$cedula'");
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			if ($fila) {
 				return true;
