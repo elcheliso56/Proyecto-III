@@ -83,6 +83,8 @@
 						</a>
 					</li>
 
+
+
 					
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
@@ -95,6 +97,21 @@
 							</div>
 						</a>
 					</li>
+
+										<li class="full-width divider-menu-h"></li>
+
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="?pagina=citas" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-calendar"></i>
+							</div>
+							<div class="navLateral-body-cr" style="color: white;">
+								Citas
+							</div>
+						</a>
+				
+
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -107,6 +124,18 @@
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
+						
+						<li class="full-width">
+								<a href="?pagina=cuentas" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-credit-card-fill"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Cuentas
+									</div>
+								</a>
+							</li>
+
 
 							<li class="full-width">
 								<a href="?pagina=ingresos" class="full-width">
