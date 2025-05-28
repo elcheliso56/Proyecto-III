@@ -56,17 +56,44 @@ $("#descripcion").on("keypress", function (e) {
 
 // Valida que el texto tenga entre 3 y 90 letras al soltar teclas
 $("#descripcion").on("keyup", function () {
-    validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#snombre"), "Solo letras entre 3 y 90 caracteres");
+    validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras entre 3 y 90 caracteres");
 });
 
 // Solo permite números al presionar teclas
 $("#monto").on("keypress", function (e) {
-    validarkeypress(/^[0-9]*$/, e);
+    validarkeypress(/^[0-9.]*$/, e);
 });
 
 // Valida que tenga entre 1 y 9 dígitos al soltar teclas
 $("#monto").on("keyup", function () {
-    validarkeyup(/^[0-9]{1,9}$/, $(this), $("#sprecio_venta"), "Solo números, máximo 9 dígitos");
+    validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
+});
+
+// Validaciones para el campo de fecha
+$("#fecha").on("change", function () {
+    if ($(this).val() === "") {
+        $("#sfecha").text("La fecha es obligatoria");
+    } else {
+        $("#sfecha").text("");
+    }
+});
+
+// Validaciones para el campo de origen
+$("#origen").on("change", function () {
+    if ($(this).val() === null) {
+        $("#sorigen").text("El origen es obligatorio");
+    } else {
+        $("#sorigen").text("");
+    }
+});
+
+// Validaciones para el campo de cuenta
+$("#cuenta_id").on("change", function () {
+    if ($(this).val() === null) {
+        $("#scuenta_id").text("La cuenta es obligatoria");
+    } else {
+        $("#scuenta_id").text("");
+    }
 });
 
 
@@ -80,12 +107,12 @@ $("#monto").on("keyup", function () {
             // Confirmación para incluir un nuevo registro
                 Swal.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas incluir este nuevo producto?",
+                    text: "¿Deseas registrar este ingreso?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Sí, incluir",
+                    confirmButtonText: "Sí, registrar",
                     cancelButtonText: "No, Cancelar"
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -97,6 +124,7 @@ $("#monto").on("keyup", function () {
                         datos.append('monto', $("#monto").val());
                         datos.append('fecha', $("#fecha").val());
                         datos.append('origen', $("#origen").val());
+                        datos.append('cuenta_id', $("#cuenta_id").val());
 
                         
                         enviaAjax(datos); // Envía los datos al servidor
@@ -117,7 +145,7 @@ $("#monto").on("keyup", function () {
                     });
                     swalWithBootstrapButtons.fire({
                         title: "¿Estás seguro?",
-                        text: "¿Deseas modificar este producto?",
+                        text: "¿Deseas modificar este ingreso?",
                         icon: "question",
                         showCancelButton: true,
                         confirmButtonText: "Sí, modificar",
@@ -134,6 +162,7 @@ $("#monto").on("keyup", function () {
                         datos.append('monto', $("#monto").val());
                         datos.append('origen', $("#origen").val());
                         datos.append('fecha', $("#fecha").val());
+                        datos.append('cuenta_id', $("#cuenta_id").val());
                        
                         enviaAjax(datos); // Envía los datos al servidor
                     }
@@ -226,7 +255,6 @@ $('#categoria').select2({
 
 // Función para validar el envío de datos
 function validarenvio() {
-
     return true;
 }
 
@@ -255,7 +283,7 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 // y habilitar o deshabilitar campos según la acción (modificar o eliminar)
 function pone(pos, accion) {
     linea = $(pos).closest('tr');
-    $("#id").val($(linea).attr("data-id")); // Leer el ID del atributo data-id de la fila
+    $("#id").val($(linea).attr("data-id"));
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
         $("#id").prop("disabled", true);
@@ -263,7 +291,7 @@ function pone(pos, accion) {
         $("#monto").prop("disabled", false);
         $("#fecha").prop("disabled", false);       
         $("#origen").prop("disabled", false);
-
+        $("#cuenta_id").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
         $("#id").prop("disabled", true);
@@ -271,35 +299,17 @@ function pone(pos, accion) {
         $("#monto").prop("disabled", true);
         $("#fecha").prop("disabled", true);
         $("#origen").prop("disabled", true);
-
+        $("#cuenta_id").prop("disabled", true);
     }
 
-    var pc = $(linea).find("td:eq(3)").text().trim();
-    var pcp = pc.split("$");
-    var precio_compra = pcp[1];
-    var pv = $(linea).find("td:eq(4)").text().trim();
-    var pvp = pc.split("$");
-    var precio_venta = pcp[1];
-
-
     $("#descripcion").val($(linea).find("td:eq(1)").text());
-    $("#monto").val($(linea).find("td:eq(2)").text().replace(/\D/g, ''));
-    $("#origen").val($(linea).find("td:eq(4)").text()).trigger('change');
+    $("#monto").val($(linea).find("td:eq(2)").text().replace(/[^0-9.]/g, ''));
     $("#fecha").val($(linea).find("td:eq(3)").text());
-
-
- 
+    $("#origen").val($(linea).find("td:eq(4)").text()).trigger('change');
     
-    // Seleccionar la categoría correcta
-    var categoriaId = $(linea).find("td:eq(10)").attr("data-categoria-id");
-    $("#categoria").val(categoriaId).trigger('change');
-    
-    // Seleccionar la ubicación correcta
-    var ubicacionId = $(linea).find("td:eq(11)").attr("data-ubicacion-id");
-    $("#ubicacion").val(ubicacionId).trigger('change');
-    
-
-    // Cargar imagen
+    // Get the cuenta_id from the data attribute of the 6th cell (index 5)
+    var cuentaId = $(linea).find("td:eq(5)").attr("data-cuenta-id");
+    $("#cuenta_id").val(cuentaId).trigger('change');
     
     $("#modal1").modal("show");
 }
@@ -341,11 +351,11 @@ function enviaAjax(datos) {
                     }
                 } else if (lee.resultado == "eliminar") {
                     Swal.fire({
-                        title: lee.mensaje == '¡Registro eliminado con exito!' ? "¡Eliminado!" : "Error",
+                        title: lee.mensaje.includes('éxito') ? "¡Eliminado!" : "Error",
                         text: lee.mensaje,
-                        icon: lee.mensaje == '¡Registro eliminado con exito!' ? "success" : "error"
+                        icon: lee.mensaje.includes('éxito') ? "success" : "error"
                     });
-                    if (lee.mensaje == '¡Registro eliminado con exito!') {
+                    if (lee.mensaje.includes('éxito')) {
                         $("#modal1").modal("hide");
                         consultar();
                     }
@@ -389,15 +399,14 @@ function limpia() {
     $("#descripcion").val("");
     $("#monto").val("");
     $("#fecha").val("");
-    $("#origen").val("");
-
+    $("#origen").val("").trigger('change');
+    $("#cuenta_id").val("").trigger('change');
 
     $("#descripcion").prop("disabled", false);
     $("#monto").prop("disabled", false);
     $("#fecha").prop("disabled", false);
     $("#origen").prop("disabled", false);
-
-    
+    $("#cuenta_id").prop("disabled", false);
 }
 
 function verificarStock(stockTotal, stockMinimo) {
@@ -427,26 +436,74 @@ function cargarOpciones() {
         type: 'POST',
         data: { accion: 'cargarOpciones' },
         success: function(respuesta) {
-            var datos = JSON.parse(respuesta);
-            
-            // Cargar categorías
-            datos.categorias.forEach(function(categoria) {
-                $('#categoria').append($('<option>', {
-                    value: categoria.id,
-                    text: categoria.nombre
+            try {
+                var datos = JSON.parse(respuesta);
+                console.log("Datos recibidos:", datos);
+                
+                // Limpiar el select antes de agregar las opciones
+                $('#cuenta_id').empty();
+                
+                // Agregar la opción por defecto
+                $('#cuenta_id').append($('<option>', {
+                    value: '',
+                    text: 'Seleccione una cuenta',
+                    selected: true,
+                    disabled: true
                 }));
+                
+                // Verificar si hay cuentas y agregarlas al select
+                if (datos.cuentas && datos.cuentas.length > 0) {
+                    datos.cuentas.forEach(function(cuenta) {
+                        $('#cuenta_id').append($('<option>', {
+                            value: cuenta.id,
+                            text: cuenta.nombre + ' (' + cuenta.tipo + ' - ' + cuenta.moneda + ')'
+                        }));
+                    });
+                    
+                    // Inicializar Select2 después de agregar las opciones
+                    $('#cuenta_id').select2({
+                        placeholder: "Seleccione una cuenta",
+                        allowClear: true,
+                        width: '100%',
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                } else {
+                    console.log("No hay cuentas disponibles");
+                }
+            } catch (e) {
+                console.error("Error al procesar la respuesta:", e);
+                console.error("Respuesta recibida:", respuesta);
+            }
+        },
+        error: function(request, status, err) {
+            console.error("Error en la petición AJAX:", {
+                status: status,
+                error: err,
+                request: request
             });
-            
-            datos.ubicaciones.forEach(function(ubicacion) {
-                $('#ubicacion').append($('<option>', {
-                    value: ubicacion.id,
-                    text: ubicacion.nombre
-                }));
-            });
-            
         }
     });
 }
+
+// Asegurarse de que cargarOpciones se ejecute cuando el documento esté listo
+$(document).ready(function () {
+    consultar();
+    cargarOpciones();
+    
+    // Reinicializar Select2 cuando se abra el modal
+    $('#modal1').on('shown.bs.modal', function () {
+        $('.select2').select2({
+            dropdownParent: $('#modal1')
+        });
+    });
+});
 
 $("#imagen").on("change", function() {
     const file = this.files[0];

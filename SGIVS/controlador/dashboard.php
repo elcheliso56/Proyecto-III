@@ -14,21 +14,21 @@ if(is_file("vista/".$pagina.".php")){
 
         if($accion=='obtenerDatos'){
             try {
-                $datos = array(
-                    'ingresosPorMes' => $o->obtenerIngresosPorMes(),
-                    'egresosPorMes' => $o->obtenerEgresosPorMes(),
-                    'totalIngresos' => $o->obtenerTotalIngresos(),
-                    'totalEgresos' => $o->obtenerTotalEgresos(),
-                    'ingresosPorOrigen' => $o->obtenerIngresosPorOrigen(),
-                    'egresosPorOrigen' => $o->obtenerEgresosPorOrigen(),
-                    'ultimosIngresos' => $o->obtenerUltimosIngresos(),
-                    'ultimosEgresos' => $o->obtenerUltimosEgresos()
-                );
+                $cuenta = $_POST['cuenta'] ?? '';
+                $fechaInicio = $_POST['fechaInicio'] ?? '';
+                $fechaFin = $_POST['fechaFin'] ?? '';
 
-                // Verificar si hay datos de egresos
-                if (empty($datos['egresosPorMes']) && empty($datos['egresosPorOrigen'])) {
-                    error_log("No se encontraron datos de egresos en la base de datos");
-                }
+                $datos = array(
+                    'error' => false,
+                    'ingresosPorMes' => $o->obtenerIngresosPorMes($cuenta, $fechaInicio, $fechaFin),
+                    'egresosPorMes' => $o->obtenerEgresosPorMes($cuenta, $fechaInicio, $fechaFin),
+                    'totalIngresos' => $o->obtenerTotalIngresos($cuenta, $fechaInicio, $fechaFin),
+                    'totalEgresos' => $o->obtenerTotalEgresos($cuenta, $fechaInicio, $fechaFin),
+                    'ingresosPorOrigen' => $o->obtenerIngresosPorOrigen($cuenta, $fechaInicio, $fechaFin),
+                    'egresosPorOrigen' => $o->obtenerEgresosPorOrigen($cuenta, $fechaInicio, $fechaFin),
+                    'ultimosIngresos' => $o->obtenerUltimosIngresos($cuenta, $fechaInicio, $fechaFin),
+                    'ultimosEgresos' => $o->obtenerUltimosEgresos($cuenta, $fechaInicio, $fechaFin)
+                );
 
                 echo json_encode($datos);
             } catch (Exception $e) {
@@ -37,6 +37,14 @@ if(is_file("vista/".$pagina.".php")){
                     'error' => true,
                     'mensaje' => 'Error al obtener los datos: ' . $e->getMessage()
                 ));
+            }
+        } elseif($accion=='obtenerCuentas') {
+            try {
+                $cuentas = $o->obtenerCuentas();
+                echo json_encode(['error' => false, 'cuentas' => $cuentas]);
+            } catch (Exception $e) {
+                error_log("Error al obtener cuentas: " . $e->getMessage());
+                echo json_encode(['error' => true, 'mensaje' => $e->getMessage()]);
             }
         }
         exit;

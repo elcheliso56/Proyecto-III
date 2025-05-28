@@ -5,22 +5,22 @@ function consultar() {
 }
 
 function destruyeDT() {
-    if ($.fn.DataTable.isDataTable("#tablaegresos")) {
-        $("#tablaegresos").DataTable().destroy();
+    if ($.fn.DataTable.isDataTable("#tablacuentas")) {
+        $("#tablacuentas").DataTable().destroy();
     }
 }
 
 function crearDT() {
-    if (!$.fn.DataTable.isDataTable("#tablaegresos")) {
-        $("#tablaegresos").DataTable({
+    if (!$.fn.DataTable.isDataTable("#tablacuentas")) {
+        $("#tablacuentas").DataTable({
             language: {
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron egresos",
+                zeroRecords: "No se encontraron cuentas",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay egresos registrados",
+                infoEmpty: "No hay cuentas registradas",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar egreso...",
+                searchPlaceholder: "Buscar cuenta...",
                 paginate: {
                     first: "Primera",
                     last: "Última",
@@ -40,33 +40,46 @@ function crearDT() {
 
 $(document).ready(function () {
     consultar();
-    cargarOpciones();
 
-    // Validaciones para el campo de descripción
-    $("#descripcion").on("keypress", function (e) {
+    // Validaciones para el campo de nombre
+    $("#nombre").on("keypress", function (e) {
+        validarkeypress(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    });
+
+    $("#nombre").on("keyup", function () {
+        validarkeyup(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]{3,50}$/, $(this), $("#snombre"), "Solo letras y números entre 3 y 50 caracteres");
+    });
+
+    // Manejo del tipo de cuenta
+    $("#tipo").on("change", function() {
+        var tipo = $(this).val();
+        if (tipo === 'bancaria') {
+            $("#entidad_bancaria_group").show();
+            $("#numero_cuenta_group").show();
+        } else {
+            $("#entidad_bancaria_group").hide();
+            $("#numero_cuenta_group").hide();
+            $("#entidad_bancaria").val("");
+            $("#numero_cuenta").val("");
+        }
+    });
+
+    // Validaciones para entidad bancaria
+    $("#entidad_bancaria").on("keypress", function (e) {
         validarkeypress(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
 
-    $("#descripcion").on("keyup", function () {
-        validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras entre 3 y 90 caracteres");
+    $("#entidad_bancaria").on("keyup", function () {
+        validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,50}$/, $(this), $("#sentidad_bancaria"), "Solo letras entre 3 y 50 caracteres");
     });
 
-    // Validaciones para el campo de monto
-    $("#monto").on("keypress", function (e) {
-        validarkeypress(/^[0-9.]*$/, e);
+    // Validaciones para número de cuenta
+    $("#numero_cuenta").on("keypress", function (e) {
+        validarkeypress(/^[0-9]*$/, e);
     });
 
-    $("#monto").on("keyup", function () {
-        validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
-    });
-
-    // Validaciones para el campo de cuenta
-    $("#cuenta_id").on("change", function () {
-        if ($(this).val() === null) {
-            $("#scuenta_id").text("La cuenta es obligatoria");
-        } else {
-            $("#scuenta_id").text("");
-        }
+    $("#numero_cuenta").on("keyup", function () {
+        validarkeyup(/^[0-9]{10,20}$/, $(this), $("#snumero_cuenta"), "Solo números entre 10 y 20 dígitos");
     });
 
     // Manejo de clics en el botón de proceso
@@ -75,11 +88,11 @@ $(document).ready(function () {
             if (validarenvio()) {
                 Swal.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas registrar este nuevo egreso?",
+                    text: "¿Deseas registrar esta cuenta?",
                     icon: "question",
                     showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
                     confirmButtonText: "Sí, registrar",
                     cancelButtonText: "No, Cancelar"
                 }).then((result) => {
@@ -87,29 +100,29 @@ $(document).ready(function () {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'incluir');
-                            datos.append('descripcion', $("#descripcion").val());
-                            datos.append('monto', $("#monto").val());
-                            datos.append('fecha', $("#fecha").val());
-                            datos.append('origen', $("#origen").val());
-                            datos.append('cuenta_id', $("#cuenta_id").val());
+                            datos.append('nombre', $("#nombre").val());
+                            datos.append('tipo', $("#tipo").val());
+                            datos.append('moneda', $("#moneda").val());
+                            datos.append('activa', $("#activa").val());
+                            datos.append('entidad_bancaria', $("#entidad_bancaria").val());
+                            datos.append('numero_cuenta', $("#numero_cuenta").val());
                             enviaAjax(datos);
                         }
                     }
                 });
             }
-        }
-        else if ($(this).text() == "MODIFICAR") {
+        } else if ($(this).text() == "MODIFICAR") {
             if (validarenvio()) {
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
-                        confirmButton: "btn btn-danger",
-                        cancelButton: "btn btn-secondary"
+                        confirmButton: "btn btn-success",
+                        cancelButton: "btn btn-danger"
                     },
                     buttonsStyling: false
                 });
                 swalWithBootstrapButtons.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas modificar este egreso?",
+                    text: "¿Deseas modificar esta cuenta?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonText: "Sí, modificar",
@@ -121,28 +134,28 @@ $(document).ready(function () {
                             var datos = new FormData();
                             datos.append('accion', 'modificar');
                             datos.append('id', $("#id").val());
-                            datos.append('descripcion', $("#descripcion").val());
-                            datos.append('monto', $("#monto").val());
-                            datos.append('origen', $("#origen").val());
-                            datos.append('fecha', $("#fecha").val());
-                            datos.append('cuenta_id', $("#cuenta_id").val());
+                            datos.append('nombre', $("#nombre").val());
+                            datos.append('tipo', $("#tipo").val());
+                            datos.append('moneda', $("#moneda").val());
+                            datos.append('activa', $("#activa").val());
+                            datos.append('entidad_bancaria', $("#entidad_bancaria").val());
+                            datos.append('numero_cuenta', $("#numero_cuenta").val());
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "El registro no ha sido modificado",
+                            text: "La cuenta no ha sido modificada",
                             icon: "error"
                         });
                     }
                 });
             }
-        }
-        else if ($(this).text() == "ELIMINAR") {
+        } else if ($(this).text() == "ELIMINAR") {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
-                    confirmButton: "btn btn-danger",
-                    cancelButton: "btn btn-secondary"
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
                 },
                 buttonsStyling: false
             });
@@ -163,7 +176,7 @@ $(document).ready(function () {
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     swalWithBootstrapButtons.fire({
                         title: "Cancelado",
-                        text: "Registro no eliminado",
+                        text: "Cuenta no eliminada",
                         icon: "error"
                     });
                 }
@@ -178,8 +191,8 @@ $(document).ready(function () {
         $("#modal1").modal("show");
     });
 
-    // Inicializar Select2 en el select de origen
-    $('#origen').select2({
+    // Inicializar Select2 en los selects
+    $('.select2').select2({
         placeholder: "Seleccione una opción",
         allowClear: true,
         width: '100%',
@@ -224,29 +237,25 @@ function pone(pos, accion) {
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
         $("#id").prop("disabled", true);
-        $("#descripcion").prop("disabled", false);
-        $("#monto").prop("disabled", false);
-        $("#fecha").prop("disabled", false);       
-        $("#origen").prop("disabled", false);
-        $("#cuenta_id").prop("disabled", false);
+        $("#nombre").prop("disabled", false);
+        $("#tipo").prop("disabled", false);
+        $("#moneda").prop("disabled", false);
+        $("#activa").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
         $("#id").prop("disabled", true);
-        $("#descripcion").prop("disabled", true);
-        $("#monto").prop("disabled", true);
-        $("#fecha").prop("disabled", true);
-        $("#origen").prop("disabled", true);
-        $("#cuenta_id").prop("disabled", true);
+        $("#nombre").prop("disabled", true);
+        $("#tipo").prop("disabled", true);
+        $("#moneda").prop("disabled", true);
+        $("#activa").prop("disabled", true);
     }
 
-    $("#descripcion").val($(linea).find("td:eq(1)").text());
-    $("#monto").val($(linea).find("td:eq(2)").text().replace(/[^0-9.]/g, ''));
-    $("#fecha").val($(linea).find("td:eq(3)").text());
-    $("#origen").val($(linea).find("td:eq(4)").text()).trigger('change');
-    
-    // Get the cuenta_id from the data attribute of the 6th cell (index 5)
-    var cuentaId = $(linea).find("td:eq(5)").attr("data-cuenta-id");
-    $("#cuenta_id").val(cuentaId).trigger('change');
+    $("#nombre").val($(linea).find("td:eq(1)").text());
+    $("#tipo").val($(linea).find("td:eq(2)").text()).trigger('change');
+    $("#moneda").val($(linea).find("td:eq(3)").text()).trigger('change');
+    $("#activa").val($(linea).find("td:eq(4)").text() === "Activa" ? "1" : "0").trigger('change');
+    $("#entidad_bancaria").val($(linea).find("td:eq(5)").text());
+    $("#numero_cuenta").val($(linea).find("td:eq(6)").text());
     
     $("#modal1").modal("show");
 }
@@ -265,9 +274,12 @@ function enviaAjax(datos) {
         },
         timeout: 10000,
         success: function (respuesta) {
-            console.log("Respuesta cruda del servidor:", respuesta);
-
             try {
+                // Verificar si la respuesta está vacía
+                if (!respuesta || respuesta.trim() === '') {
+                    throw new Error('La respuesta del servidor está vacía');
+                }
+
                 var lee = JSON.parse(respuesta);
                 if (lee.resultado == "consultar") {
                     destruyeDT();
@@ -285,11 +297,11 @@ function enviaAjax(datos) {
                     }
                 } else if (lee.resultado == "eliminar") {
                     Swal.fire({
-                        title: lee.mensaje == '¡Registro eliminado con éxito!' ? "¡Eliminado!" : "Error",
+                        title: lee.mensaje.includes('éxito') ? "¡Eliminado!" : "Error",
                         text: lee.mensaje,
-                        icon: lee.mensaje == '¡Registro eliminado con éxito!' ? "success" : "error"
+                        icon: lee.mensaje.includes('éxito') ? "success" : "error"
                     });
-                    if (lee.mensaje == '¡Registro eliminado con éxito!') {
+                    if (lee.mensaje.includes('éxito')) {
                         $("#modal1").modal("hide");
                         consultar();
                     }
@@ -301,14 +313,17 @@ function enviaAjax(datos) {
                     });
                 }
             } catch (e) {
+                console.error('Error al procesar la respuesta:', e);
+                console.error('Respuesta recibida:', respuesta);
                 Swal.fire({
                     title: "Error",
-                    text: "Error en JSON: " + e.name,
+                    text: "Error al procesar la respuesta del servidor: " + e.message,
                     icon: "error"
                 });
             }
         },
         error: function (request, status, err) {
+            console.error('Error en la petición AJAX:', {request, status, err});
             if (status == "timeout") {
                 Swal.fire({
                     title: "Error",
@@ -318,96 +333,27 @@ function enviaAjax(datos) {
             } else {
                 Swal.fire({
                     title: "Error",
-                    text: "ERROR: " + request + status + err,
+                    text: "Error en la comunicación con el servidor: " + err,
                     icon: "error"
                 });
             }
         },
-        complete: function () { 
+        complete: function () {
             $("#loader").hide();
         }
     });
 }
 
 function limpia() {
-    $("#descripcion").val("");
-    $("#monto").val("");
-    $("#fecha").val("");
-    $("#origen").val("").trigger('change');
-    $("#cuenta_id").val("").trigger('change');
+    $("#nombre").val("");
+    $("#tipo").val("").trigger('change');
+    $("#moneda").val("");
+    $("#activa").val("1");
+    $("#entidad_bancaria").val("");
+    $("#numero_cuenta").val("");
 
-    $("#descripcion").prop("disabled", false);
-    $("#monto").prop("disabled", false);
-    $("#fecha").prop("disabled", false);
-    $("#origen").prop("disabled", false);
-    $("#cuenta_id").prop("disabled", false);
-}
-
-function cargarOpciones() {
-    $.ajax({
-        url: '',
-        type: 'POST',
-        data: { accion: 'cargarOpciones' },
-        success: function(respuesta) {
-            try {
-                var datos = JSON.parse(respuesta);
-                console.log("Datos recibidos:", datos);
-                
-                // Limpiar el select antes de agregar las opciones
-                $('#cuenta_id').empty();
-                
-                // Agregar la opción por defecto
-                $('#cuenta_id').append($('<option>', {
-                    value: '',
-                    text: 'Seleccione una cuenta',
-                    selected: true,
-                    disabled: true
-                }));
-                
-                // Verificar si hay cuentas y agregarlas al select
-                if (datos.cuentas && datos.cuentas.length > 0) {
-                    datos.cuentas.forEach(function(cuenta) {
-                        $('#cuenta_id').append($('<option>', {
-                            value: cuenta.id,
-                            text: cuenta.nombre + ' (' + cuenta.tipo + ' - ' + cuenta.moneda + ')'
-                        }));
-                    });
-                    
-                    // Inicializar Select2 después de agregar las opciones
-                    $('#cuenta_id').select2({
-                        placeholder: "Seleccione una cuenta",
-                        allowClear: true,
-                        width: '100%',
-                        language: {
-                            noResults: function() {
-                                return "No se encontraron resultados";
-                            },
-                            searching: function() {
-                                return "Buscando...";
-                            }
-                        }
-                    });
-                } else {
-                    console.log("No hay cuentas disponibles");
-                }
-            } catch (e) {
-                console.error("Error al procesar la respuesta:", e);
-                console.error("Respuesta recibida:", respuesta);
-            }
-        },
-        error: function(request, status, err) {
-            console.error("Error en la petición AJAX:", {
-                status: status,
-                error: err,
-                request: request
-            });
-        }
-    });
-}
-
-// Reinicializar Select2 cuando se abra el modal
-$('#modal1').on('shown.bs.modal', function () {
-    $('.select2').select2({
-        dropdownParent: $('#modal1')
-    });
-});
+    $("#nombre").prop("disabled", false);
+    $("#tipo").prop("disabled", false);
+    $("#moneda").prop("disabled", false);
+    $("#activa").prop("disabled", false);
+} 
