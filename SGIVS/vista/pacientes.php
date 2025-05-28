@@ -2,44 +2,63 @@
 require_once("comunes/encabezado.php");//Incluye el encabezado común de la página 
 require_once('comunes/menu.php');//Incluye el menú común de la página 
 ?> 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 <div class="container"> 
-	<div class="d-flex justify-content-between align-items-center mb-4">
-		<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i> Gestionar Pacientes</h1>
-		<div>
-			<button type="button" class="btn btn-info me-2" id="incluir">
-				<i class="bi bi-plus-circle me-1"></i> Ingresar Paciente
-			</button>
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i> Gestionar Pacientes</h1>
+			<div>
+				<button type="button" class="btn btn-info me-2" id="incluir">
+					<i class="bi bi-plus-circle me-1"></i> Ingresar Paciente
+				</button>
+			</div>
 		</div>
 	</div>
-	<!-- Contenedor para la tabla de pacientes -->
-	<div class="container">
-		<div class="table-responsive" id="tt">
-			<!-- Tabla para mostrar la lista de pacientes -->
-			<table class="table table-striped table-hover table-center" id="tablacliente">
-				<thead>
-					<tr>
-						<!-- Encabezados de la tabla -->
-						<th class="text-center">#</th>
-						<th class="text-center">Cédula</th>
-						<th class="text-center">Nombre</th>
-						<th class="text-center">Apellido</th>
-						<th class="text-center">Fecha de Nacimiento</th>
-						<th class="text-center">Edad</th>
-						<th class="text-center">Clasificación</th>
-						<th class="text-center">Género</th>
-						<th class="text-center">Alergias</th>
-						<th class="text-center">Antecedentes</th>
-						<th class="text-center">Correo</th>
-						<th class="text-center">Telefono</th>
-						<th class="text-center">Dirección</th>
-						<th class="text-center">Fecha_de Registro</th>
-						<th class="text-center">Acciones</th>
-					</tr>
-				</thead>
-				<tbody id="resultadoconsulta">
-					<!-- Aquí se cargarán dinámicamente los datos de los pacientes -->
-				</tbody>
-			</table>
+	<!-- Tabla de pacientes -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3 d-flex justify-content-between align-items-center">
+			<h6 class="m-0 font-weight-bold text-info">Listado de Pacientes</h6>
+			<div class="dropdown no-arrow">
+				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+					<i class="bi bi-three-dots-vertical"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right shadow">
+					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
+						Excel</a>
+					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
+						Listado</a>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover table-center" id="tablacliente">
+					<thead class="table-light">
+						<tr>
+							<!-- Encabezados de la tabla -->
+							<th class="text-center">#</th>
+							<th class="text-center">Cédula</th>
+							<th class="text-center">Nombre</th>
+							<th class="text-center">Apellido</th>
+							<th class="text-center">Fecha Nacimiento</th>
+							<th class="text-center">Edad</th>
+							<th class="text-center">Clasificación</th>
+							<th class="text-center">Género</th>
+							<th class="text-center">Alergias</th>
+							<th class="text-center">Antecedentes</th>
+							<th class="text-center">Correo</th>
+							<th class="text-center">Telefono</th>
+							<th class="text-center">Dirección</th>
+							<th class="text-center">Fecha Registro</th>
+							<th class="text-center">Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="resultadoconsulta">
+						<!-- Aquí se cargarán dinámicamente los datos de los pacientes -->
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div> 
@@ -73,7 +92,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<span id="sapellido"></span>
 							</div>
 						</div>
-						<!-- Campos para fecha de nacimiento, genero y tipo de sangre-->
+						<!-- Campos para fecha de nacimiento, genero -->
 						<div class="row mb-3">
 							<div class="col-md-3">
 								<label for="fecha_nacimiento">Fecha de Nacimiento</label>

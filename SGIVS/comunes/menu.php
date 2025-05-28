@@ -51,6 +51,51 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-settings"></i>
+							</div>
+							<div class="navLateral-body-cr" style="color: white;">
+								Administrador
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="?pagina=user" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-person-fill-gear"></i>
+									</div>
+									<div class="navLateral-body-cr" style="color: white;">
+										Usuarios
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=equipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-person-fill-gear"></i>
+									</div>
+									<div class="navLateral-body-cr" style="color: white;">
+										Roles
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=equipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-person-fill-gear"></i>
+									</div>
+									<div class="navLateral-body-cr" style="color: white;">
+										Permisos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+						</ul>
+					</li>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
 						<a href="?pagina=empleados" class="full-width">
 							<div class="navLateral-body-cl">
 								<i class="zmdi zmdi-account"></i>
@@ -85,70 +130,7 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
-<<<<<<< HEAD
 				<!-- Enlaces a diferentes secciones del menú -->
-=======
-
-					<li class="full-width">
-						<a href="#!" class="full-width btn-subMenu">
-							<div class="navLateral-body-cl">
-								<i class="bi bi-cash-stack"></i>
-							</div>
-							<div class="navLateral-body-cr"style="color: white;">
-								Transacciones
-							</div>
-							<span class="zmdi zmdi-chevron-left"></span>
-						</a>
-						<ul class="full-width menu-principal sub-menu-options">
-
-							<li class="full-width">
-								<a href="?pagina=ingresos" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-arrow-down-circle-fill"></i>
-									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Ingresos
-									</div>
-								</a>
-							</li>
-							<li class="full-width">
-								<a href="?pagina=egresos" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-arrow-up-circle-fill"></i>
-									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Egresos
-									</div>
-								</a>
-							</li>
-							<li class="full-width">
-								<a href="?pagina=movimientos" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-arrow-left-right"></i>
-									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Movimientos
-									</div>
-								</a>
-							</li>
-							<li class="full-width">
-								<a href="?pagina=dashboard" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-graph-up"></i>
-									</div>
-									<div class="navLateral-body-cr"style="color: white;">
-										Dashboard
-									</div>
-								</a>
-							</li>
-						</ul>
-					</li>
-
-
-
-
-					<!-- Enlaces a diferentes secciones del menú -->
->>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
 					<li class="full-width">
 						
 					</li>

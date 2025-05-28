@@ -28,7 +28,6 @@ Array
 )
 Array
 (
-<<<<<<< HEAD
     [accion] => cargarOpciones
 )
 Array
@@ -73,8 +72,6 @@ Array
 )
 Array
 (
-=======
->>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
     [accion] => consultar
 )
 Array
@@ -91,9 +88,45 @@ Array
 )
 Array
 (
+    [accion] => consultar
+)
+Array
+(
     [accion] => cargarOpciones
 )
 Array
 (
     [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
 )

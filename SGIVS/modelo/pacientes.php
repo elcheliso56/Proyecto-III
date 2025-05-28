@@ -1,7 +1,7 @@
 <?php
 require_once('modelo/datos.php');
 class pacientes extends datos{
-    // Propiedades del cliente	
+    // Propiedades del paciente	
 	private $cedula;
 	private $nombre;
 	private $apellido;
@@ -83,7 +83,7 @@ class pacientes extends datos{
 		return $this->fecha_registro;
 	}
 
-    // Método para incluir un nuevo cliente en la base de datos
+    // Método para incluir un nuevo paciente en la base de datos
 	function incluir(){
 		$r = array();
         // Verifica si el número de documento ya existe		
@@ -91,7 +91,7 @@ class pacientes extends datos{
 			$co = $this->conecta();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
-                // Inserta el nuevo cliente			
+                // Inserta el nuevo paciente			
 				$co->query("Insert into pacientes(cedula,nombre,apellido,fecha_nacimiento,genero,alergias,antecedentes,email,telefono,direccion,fecha_registro)
 					Values(
 					'$this->cedula',
@@ -120,7 +120,7 @@ class pacientes extends datos{
 		return $r;
 	}
 
-    // Método para modificar un cliente existente	
+    // Método para modificar un paciente existente	
 	function modificar(){
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -128,7 +128,7 @@ class pacientes extends datos{
         // Verifica si el número de documento existe		
 		if($this->existe($this->cedula)){
 			try {
-                // Actualiza los datos del cliente				
+                // Actualiza los datos del paciente				
 				$co->query("Update pacientes set 
 					nombre = '$this->nombre',
 					apellido = '$this->apellido',
@@ -156,7 +156,7 @@ class pacientes extends datos{
 		return $r;
 	}
 
-    // Método para eliminar un cliente	
+    // Método para eliminar un paciente	
 	function eliminar(){
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -164,7 +164,7 @@ class pacientes extends datos{
         // Verifica si el número de documento existe		
 		if($this->existe($this->cedula)){
 			try {
-				// Elimina el cliente de la base de datos
+				// Elimina el paciente de la base de datos
 				$co->query("delete from pacientes where	cedula = '$this->cedula'");
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  '¡Registro eliminado con exito!';
@@ -184,60 +184,32 @@ class pacientes extends datos{
 		return $r;
 	}	
 
-    // Método para consultar todos los clientes	
+    // Método para consultar todos los paciente	
 	function consultar(){
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		try{		
-			$resultado = $co->query("Select * from pacientes  ORDER BY id_paciente DESC");
-			if($resultado){	
-				$respuesta = '';
-				$n=1;
-				// Recorre los resultados y genera la tabla HTML
-				foreach($resultado as $r){
-					// Calcular edad
-					$fecha_nacimiento = new DateTime($r['fecha_nacimiento']);
-					$hoy = new DateTime();
-					$edad = $hoy->diff($fecha_nacimiento)->y;
-					// Clasificación por edad
-					if ($edad <= 12) {
-						$clasificacion = "Niño";
-					} elseif ($edad <= 17) {
-						$clasificacion = "Adolescente";
-					} else {
-						$clasificacion = "Adulto";
-					}
-					// Generar fila de la tabla
-					$respuesta .= "<tr class='text-center'>";
-					$respuesta .= "<td class='align-middle'>$n</td>";
-					$respuesta .= "<td class='align-middle'>".$r['cedula']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['nombre']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['apellido']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['fecha_nacimiento']."</td>";
-					$respuesta .= "<td class='align-middle'>".$edad."</td>";
-					$respuesta .= "<td class='align-middle'>".$clasificacion."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['genero']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['alergias']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['antecedentes']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['email']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['telefono']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['direccion']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['fecha_registro']."</td>";
-					$respuesta .= "<td class='align-middle' style='display:flex;'>";
-					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>";
-					$respuesta .= "</td>";
-					$respuesta .= "</tr>";
-					$n++;
+		try{
+			$resultado = $co->query("Select * from pacientes ORDER BY id_paciente DESC");
+			$pacientes = [];
+			foreach($resultado->fetchAll(PDO::FETCH_ASSOC) as $row){
+				// Calcular edad y clasificación
+				$fecha_nacimiento = new DateTime($row['fecha_nacimiento']);
+				$hoy = new DateTime();
+				$edad = $hoy->diff($fecha_nacimiento)->y;
+				if ($edad <= 12) {
+					$clasificacion = "Niño";
+				} elseif ($edad <= 17) {
+					$clasificacion = "Adolescente";
+				} else {
+					$clasificacion = "Adulto";
 				}
-				$r['resultado'] = 'consultar';
-				$r['mensaje'] =  $respuesta;
+				$row['edad'] = $edad;
+				$row['clasificacion'] = $clasificacion;
+				$pacientes[] = $row;
 			}
-			else{
-				$r['resultado'] = 'consultar';
-				$r['mensaje'] =  '';
-			}	
+			$r['resultado'] = 'consultar';
+			$r['mensaje'] = $pacientes;
 		}catch(Exception $e){
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();

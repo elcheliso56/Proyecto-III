@@ -216,9 +216,9 @@ class empleados extends datos{
 					$respuesta .= "<td class='align-middle'>".$r['fecha_contratacion']."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['cargo']."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['salario']."</td>";
-					$respuesta .= "<td class='align-middle' style='display:flex;'>";
-					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>";
+					$respuesta .= "<td class='align-middle'>";
+					$respuesta .= "<button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar empleado' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>";
+					$respuesta .= "<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar empleado' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>";
 					$respuesta = $respuesta."</td>";
 					$respuesta = $respuesta."</tr>";
 					$n++;
