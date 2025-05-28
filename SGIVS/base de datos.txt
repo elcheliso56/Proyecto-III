@@ -1,0 +1,24 @@
+
+
+CREATE TABLE `historial` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `Apellido` varchar(100) NOT NULL,
+  `Ocupacion` varchar(100) DEFAULT NULL,
+  `Sexo` enum('Masculino','Femenino') DEFAULT NULL,
+  `PersonaContacto` int(20) DEFAULT NULL,
+  `telefono` int(20) DEFAULT NULL,
+  `Edad` int(11) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `motivo` varchar(255) DEFAULT NULL,
+  `diagnostico` varchar(255) DEFAULT NULL,
+  `tratamiento` varchar(255) DEFAULT NULL,
+  `medicamentos` varchar(255) DEFAULT NULL,
+  `dientesafectados` int(20) DEFAULT NULL,
+  `antecedentes` text DEFAULT NULL,
+  `fechaconsulta` date DEFAULT NULL,
+  `proximacita` date DEFAULT NULL,
+  `observaciones` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--

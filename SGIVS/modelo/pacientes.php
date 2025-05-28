@@ -209,12 +209,12 @@ class pacientes extends datos{
 						$clasificacion = "Adulto";
 					}
 					// Generar fila de la tabla
-					$respuesta = $respuesta."<tr class='text-center'>";
-					$respuesta = $respuesta."<td class='align-middle'>$n</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['cedula']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['nombre']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['apellido']."</td>";
-					$respuesta = $respuesta."<td class='align-middle'>".$r['fecha_nacimiento']."</td>";
+					$respuesta .= "<tr class='text-center'>";
+					$respuesta .= "<td class='align-middle'>$n</td>";
+					$respuesta .= "<td class='align-middle'>".$r['cedula']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['nombre']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['apellido']."</td>";
+					$respuesta .= "<td class='align-middle'>".$r['fecha_nacimiento']."</td>";
 					$respuesta .= "<td class='align-middle'>".$edad."</td>";
 					$respuesta .= "<td class='align-middle'>".$clasificacion."</td>";
 					$respuesta .= "<td class='align-middle'>".$r['genero']."</td>";
