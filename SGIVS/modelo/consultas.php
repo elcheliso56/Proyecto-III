@@ -114,20 +114,18 @@ class consultas extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		// Verifica si el número de documento existe		
-		if ($this->existe1($this->cedula)) {
+		if ($this->existe2($this->cedula)) {
 			try {
 				// Actualiza los datos del cliente				
-				$co->query("Update consultas set 
-					cedula = '$this->cedula',
+				$co->query("UPDATE consultas SET 
 					nombre = '$this->nombre',
 					Apellido = '$this->Apellido',
 					telefono = '$this->telefono',
-                    tratamiento = '$this->tratamiento',
-                    fechaconsulta = '$this->fechaconsulta',
-                    doctor = '$this->doctor'
-					where
-					cedula = '$this->cedula'
-					");
+					tratamiento = '$this->tratamiento',
+					fechaconsulta = '$this->fechaconsulta',
+					doctor = '$this->doctor'
+					WHERE cedula = '$this->cedula' LIMIT 1
+				");
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  '¡Registro modificado con éxito!';
 			} catch (Exception $e) {
@@ -303,7 +301,7 @@ class consultas extends datos
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try {
-			$resultado = $co->query("Select * from consultas where id='$id'");
+			$resultado = $co->query("Select * from consultas where id ='$id'");
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			if ($fila) {
 				return true;
@@ -320,6 +318,23 @@ class consultas extends datos
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try {
 			$resultado = $co->query("Select * from consultas where cedula='$cedula'");
+			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
+			if ($fila) {
+				return true;
+			} else {
+				return false;;
+			}
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+	
+	private function existe2($id)
+	{
+		$co = $this->conecta();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try {
+			$resultado = $co->query("Select * from consultas where cedula ='$id'");
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			if ($fila) {
 				return true;
