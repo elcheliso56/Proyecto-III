@@ -189,15 +189,15 @@ class consultas extends datos
 					$respuesta = $respuesta . "<td class='align-middle'>" . $r['tratamiento'] . "</td>";
 					$respuesta = $respuesta . "<td class='align-middle'>" . $r['fechaconsulta'] . "</td>";
 					$respuesta = $respuesta . "<td class='align-middle'>" . $r['doctor'] . "</td>";
-					$respuesta = $respuesta . "<td class='align-middle'>";
-					$respuesta = $respuesta .
+					/* $respuesta = $respuesta . "<td class='align-middle'>";
+				$respuesta = $respuesta .
 						"<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cliente'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta = $respuesta . "<button type='button'
+					$respuesta = $respuesta . "<button  type='button'
 					class='btn-sm btn-danger w-50 small-width mt-1' 
 					onclick='pone(this,1)'
 					title='Eliminar cliente'
 					><i class='bi bi-trash'></i></button><br/>";
-					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "</td>";*/
 					$respuesta = $respuesta . "</tr>";
 					$n++;
 				}
@@ -277,7 +277,7 @@ class consultas extends datos
 
 
 					$respuesta = $respuesta . "<td>";
-					$respuesta = $respuesta . $r['nombre'] .' '. $r['apellido'];
+					$respuesta = $respuesta . $r['nombre'] . ' ' . $r['apellido'];
 					$respuesta = $respuesta . "</td>";
 
 					$respuesta = $respuesta . "</tr>";
@@ -328,7 +328,7 @@ class consultas extends datos
 			return false;
 		}
 	}
-	
+
 	private function existe2($id)
 	{
 		$co = $this->conecta();

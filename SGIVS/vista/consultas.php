@@ -33,7 +33,6 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
                         <th class="text-center">Tratamientos</th>
                         <th class="text-center">Fecha Consulta</th>
                         <th class="text-center">Doctor</th>
-                        <th class="text-center">Acciones</th>
                     </tr>
 
                 </thead>
@@ -48,7 +47,7 @@ require_once('comunes/menu.php'); //Incluye el menú común de la página
     <div class="modal fade" tabindex="-1" role="dialog" id="modal1">
         <div class="modal-dialog modal-lg" role="document" id="lm">
             <div class="modal-header" id="hm">
-                <h5 class="modal-title"><i class="zmdi zmdi-accounts"></i> Consulta</h5>
+                <h5 class="modal-title"><i class="zmdi zmdi-accounts"></i> Servicios</h5>
             </div>
             <div class="modal-content">
                 <div class="container" id="mtm">
