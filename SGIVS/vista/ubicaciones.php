@@ -25,9 +25,6 @@ require_once('comunes/menu.php');
 			</button>
 		</div>
 	</div>
-
-
-
 	<!-- Tabla de pacientes -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -87,9 +84,28 @@ require_once('comunes/menu.php');
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 				</div>
 			</div>
-
+			<form class="row g-3 mb-3">
+				<div class="col-md-3">
+					<label for="cedula_odontograma" class="form-label">Cédula</label>
+					<input type="text" class="form-control" id="cedula_odontograma" name="cedula_odontograma">
+				</div>
+				<div class="col-md-3">
+					<label for="nombre_odontograma" class="form-label">Nombre</label>
+					<input type="text" class="form-control" id="nombre_odontograma" name="nombre_odontograma">
+				</div>
+				<div class="col-md-3">
+					<label for="apellido_odontograma" class="form-label">Apellido</label>
+					<input type="text" class="form-control" id="apellido_odontograma" name="apellido_odontograma">
+				</div>
+				<div class="col-md-3">
+					<label for="fecha_odontograma" class="form-label">Fecha</label>
+					<input type="date" class="form-control" id="fecha_odontograma" name="fecha_odontograma">
+				</div>
+			</form>
 			<div id="generar-pdf" class="modal-content">
 				<div class="modal-body">
+					<!-- Datos del paciente para el odontograma -->
+
 					<!-- Contenido del odontograma se mantiene igual -->
 					<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
 				</div>
@@ -102,10 +118,9 @@ require_once('comunes/menu.php');
 		</div>
 	</div>
 </div>
-
 <!-- Modal de Historial -->
 <div class="modal fade" id="modal1" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header bg-info text-white">
 				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Historial del Paciente</h5>
@@ -113,8 +128,7 @@ require_once('comunes/menu.php');
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 				</div>
 			</div>
-			<div class="modal-body">
-
+			<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 				<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
 					<input type="hidden" name="accion" id="accion">
 					<div class="card shadow mb-4" class="card-mb" name="Datos de paciente" id="pacientecard">
@@ -234,15 +248,12 @@ require_once('comunes/menu.php');
 				</form>
 			</div>
 			<div class="modal-footer">
-
 				<div class="row mb-3">
-
 					<div class="col-md-3">
 						<button type="button" class="btn btn-info" id="proceso">
 							<i class="bi bi-check-circle me-1"></i> Guardar
 						</button>
 					</div>
-
 				</div>
 			</div>
 		</div>

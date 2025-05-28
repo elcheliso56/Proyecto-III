@@ -40,8 +40,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-
-        <!-- Tarjeta de Pacientes -->
+    <!-- Tarjeta de Pacientes -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -177,7 +176,6 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
             </div>
         </div>
     </div>
-
     <!-- Tarjeta de Usuarios (solo para administradores) -->
     <?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
     <div class="row justify-content-center">
@@ -199,36 +197,58 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
             </div>
         </div>
     </div>
+      <!-- Tarjeta de Historiales -->
     <?php endif; ?>
+  
 
     <!-- Sección de gráficos (opcional) -->
+    <!-- Ejemplo de Bitácora -->
     <div class="row mt-4">
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-12 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Actividad Reciente</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Bitácora de Actividad</h6>
                 </div>
                 <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="img/undraw_medical_care_movn.svg" alt="Actividad">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Acción</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-06-10 09:15</td>
+                                    <td>admin</td>
+                                    <td>Inicio de sesión</td>
+                                    <td>El usuario accedió al sistema.</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-06-10 09:20</td>
+                                    <td>jlopez</td>
+                                    <td>Registro de paciente</td>
+                                    <td>Se registró un nuevo paciente: Juan Pérez.</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-06-10 09:30</td>
+                                    <td>admin</td>
+                                    <td>Actualización</td>
+                                    <td>Se actualizó la información de un producto.</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-06-10 09:45</td>
+                                    <td>mgarcia</td>
+                                    <td>Eliminación</td>
+                                    <td>Se eliminó un registro de proveedor.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <p>Visualización de la actividad reciente en el sistema. Próximamente se incluirán gráficos interactivos.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Recordatorios</h6>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="img/undraw_Calendar_re_ki49.svg" alt="Recordatorios">
-                    </div>
-                    <p>Próximamente: recordatorios de citas y actividades pendientes.</p>
+                    <small class="text-muted">bitácora. Para ver la bitácora completa, acceda al módulo correspondiente.</small>
                 </div>
             </div>
         </div>

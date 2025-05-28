@@ -50,6 +50,19 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
+					
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="?pagina=consultas" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-view-dashboard"></i>
+							</div>
+							<div class="navLateral-body-cr" style="color: white;">
+								Consultas
+							</div>
+						</a>
+					</li>
+					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
@@ -239,7 +252,6 @@
 								</a>
 							</li>
 						</ul>
->>>>>>> af4b9a49c16b6cb3ca5a268baf597d1817e12827
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
