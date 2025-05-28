@@ -3,14 +3,26 @@ require_once('modelo/datos.php');
 class dashboard extends datos {
     
     // Método para obtener datos de ingresos por mes
-    function obtenerIngresosPorMes() {
+    function obtenerIngresosPorMes($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 DATE_FORMAT(fecha, '%Y-%m') as mes,
                 SUM(monto) as total
                 FROM ingresos 
+                $where
                 GROUP BY DATE_FORMAT(fecha, '%Y-%m')
                 ORDER BY mes DESC
                 LIMIT 12");
@@ -22,16 +34,26 @@ class dashboard extends datos {
     }
 
     // Método para obtener datos de egresos por mes
-    function obtenerEgresosPorMes() {
+    function obtenerEgresosPorMes($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 DATE_FORMAT(fecha, '%Y-%m') as mes,
                 SUM(monto) as total
                 FROM egresos 
-                WHERE fecha IS NOT NULL 
-                AND monto > 0
+                $where
                 GROUP BY DATE_FORMAT(fecha, '%Y-%m')
                 ORDER BY mes DESC
                 LIMIT 12");
@@ -43,11 +65,22 @@ class dashboard extends datos {
     }
 
     // Método para obtener total de ingresos
-    function obtenerTotalIngresos() {
+    function obtenerTotalIngresos($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
-            $resultado = $co->query("SELECT SUM(monto) as total FROM ingresos WHERE monto > 0");
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
+            $resultado = $co->query("SELECT SUM(monto) as total FROM ingresos $where");
             $row = $resultado->fetch(PDO::FETCH_ASSOC);
             return $row['total'] ?? 0;
         } catch(Exception $e) {
@@ -57,11 +90,22 @@ class dashboard extends datos {
     }
 
     // Método para obtener total de egresos
-    function obtenerTotalEgresos() {
+    function obtenerTotalEgresos($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
-            $resultado = $co->query("SELECT SUM(monto) as total FROM egresos WHERE monto > 0");
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
+            $resultado = $co->query("SELECT SUM(monto) as total FROM egresos $where");
             $row = $resultado->fetch(PDO::FETCH_ASSOC);
             return $row['total'] ?? 0;
         } catch(Exception $e) {
@@ -71,15 +115,26 @@ class dashboard extends datos {
     }
 
     // Método para obtener ingresos por origen
-    function obtenerIngresosPorOrigen() {
+    function obtenerIngresosPorOrigen($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 origen,
                 SUM(monto) as total
                 FROM ingresos 
-                WHERE monto > 0
+                $where
                 GROUP BY origen
                 HAVING total > 0");
             return $resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -90,15 +145,26 @@ class dashboard extends datos {
     }
 
     // Método para obtener egresos por origen
-    function obtenerEgresosPorOrigen() {
+    function obtenerEgresosPorOrigen($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 origen,
                 SUM(monto) as total
                 FROM egresos 
-                WHERE monto > 0
+                $where
                 GROUP BY origen
                 HAVING total > 0");
             return $resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -109,17 +175,28 @@ class dashboard extends datos {
     }
 
     // Método para obtener últimos ingresos
-    function obtenerUltimosIngresos() {
+    function obtenerUltimosIngresos($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 descripcion,
                 monto,
                 fecha,
                 origen
                 FROM ingresos 
-                WHERE monto > 0
+                $where
                 ORDER BY fecha DESC
                 LIMIT 5");
             return $resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -130,22 +207,46 @@ class dashboard extends datos {
     }
 
     // Método para obtener últimos egresos
-    function obtenerUltimosEgresos() {
+    function obtenerUltimosEgresos($cuenta = '', $fechaInicio = '', $fechaFin = '') {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
+            $where = "WHERE monto > 0";
+            if (!empty($cuenta)) {
+                $where .= " AND cuenta_id = '$cuenta'";
+            }
+            if (!empty($fechaInicio)) {
+                $where .= " AND fecha >= '$fechaInicio'";
+            }
+            if (!empty($fechaFin)) {
+                $where .= " AND fecha <= '$fechaFin'";
+            }
+
             $resultado = $co->query("SELECT 
                 descripcion,
                 monto,
                 fecha,
                 origen
                 FROM egresos 
-                WHERE monto > 0
+                $where
                 ORDER BY fecha DESC
                 LIMIT 5");
             return $resultado->fetchAll(PDO::FETCH_ASSOC);
         } catch(Exception $e) {
             error_log("Error en obtenerUltimosEgresos: " . $e->getMessage());
+            return array();
+        }
+    }
+
+    // Método para obtener lista de cuentas
+    function obtenerCuentas() {
+        $co = $this->conecta();
+        $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try {
+            $resultado = $co->query("SELECT id, nombre FROM cuentas WHERE activa = 1 ORDER BY nombre");
+            return $resultado->fetchAll(PDO::FETCH_ASSOC);
+        } catch(Exception $e) {
+            error_log("Error en obtenerCuentas: " . $e->getMessage());
             return array();
         }
     }

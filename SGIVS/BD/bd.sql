@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2025 a las 03:45:40
+-- Tiempo de generación: 28-05-2025 a las 04:25:02
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -20,31 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `inventario`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `apartados`
---
-
-CREATE TABLE `apartados` (
-  `id` int(11) NOT NULL,
-  `fecha_apartado` datetime NOT NULL,
-  `cliente_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `apartados_detalles`
---
-
-CREATE TABLE `apartados_detalles` (
-  `apartado_id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -111,49 +86,6 @@ CREATE TABLE `citas` (
 
 INSERT INTO `citas` (`id_cita`, `nombre_paciente`, `numero_contacto`, `id_medico`, `motivo_cita`, `fecha_cita`, `hora_cita`, `estado_cita`, `fecha_registro`, `observaciones`, `id_solicitud`) VALUES
 (1, 'PEDRO', '0451851848', 28, 'Ortodoncia', '2025-05-31', '12:17:00', 'pendiente', '2025-05-27 02:55:20', 'dolor de muela', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `clientes`
---
-
-CREATE TABLE `clientes` (
-  `id` int(11) NOT NULL,
-  `tipo_documento` varchar(10) NOT NULL,
-  `numero_documento` varchar(15) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `correo` varchar(25) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `direccion` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `clientes`
---
-
-INSERT INTO `clientes` (`id`, `tipo_documento`, `numero_documento`, `nombre`, `apellido`, `correo`, `telefono`, `direccion`) VALUES
-(1, 'Cédula', '12345678', 'Juan', 'Perez', 'juan@email.com', '04141234567', 'Calle Principal 123'),
-(2, 'Cédula', '98765432', 'Maria', 'Gonzalez', 'maria@email.com', '04242345678', 'Avenida Central 456'),
-(3, 'Cédula', '45678912', 'Pedro', 'Ramirez', 'pedro@email.com', '04163456789', 'Carrera 7 #89'),
-(4, 'Cédula', '78912345', 'Ana', 'Martinez', 'ana@email.com', '04124567890', 'Calle 15 #45-67'),
-(5, 'Cédula', '32165498', 'Luis', 'Garcia', 'luis@email.com', '04145678901', 'Avenida 5 #12-34'),
-(6, 'Cédula', '65498732', 'Carmen', 'Lopez', 'carmen@email.com', '04166789012', 'Carrera 23 #56'),
-(7, 'Cédula', '95175384', 'Jose', 'Torres', 'jose@email.com', '04127890123', 'Calle 8 #90-12'),
-(8, 'Cédula', '75395146', 'Rosa', 'Diaz', 'rosa@email.com', '04148901234', 'Avenida 12 #34-56'),
-(9, 'Cédula', '85296374', 'Miguel', 'Sanchez', 'miguel@email.com', '04169012345', 'Carrera 45 #78'),
-(10, 'Cédula', '14725836', 'Laura', 'Hernandez', 'laura@email.com', '04123456789', 'Calle 67 #89-12'),
-(11, 'Cédula', '23456789', 'Carlos', 'Mendoza', 'carlos@email.com', '04141234568', 'Calle 10 #20-30'),
-(12, 'Cédula', '34567890', 'Sofia', 'Martinez', 'sofia@email.com', '04242345679', 'Avenida 20 #40-50'),
-(13, 'Cédula', '45678901', 'Andres', 'Gonzalez', 'andres@email.com', '04163456780', 'Carrera 30 #60-70'),
-(14, 'Cédula', '56789012', 'Lucia', 'Hernandez', 'lucia@email.com', '04124567891', 'Calle 40 #80-90'),
-(15, 'Cédula', '67890123', 'Fernando', 'Lopez', 'fernando@email.com', '04145678902', 'Avenida 50 #100-110'),
-(16, 'Cédula', '78901234', 'Patricia', 'Diaz', 'patricia@email.com', '04166789013', 'Carrera 60 #120-130'),
-(17, 'Cédula', '89012345', 'Javier', 'Torres', 'javier@email.com', '04127890124', 'Calle 70 #140-150'),
-(18, 'Cédula', '90123456', 'Claudia', 'Sanchez', 'claudia@email.com', '04148901235', 'Avenida 80 #160-170'),
-(19, 'Cédula', '01234567', 'Diego', 'Ramirez', 'diego@email.com', '04169012346', 'Carrera 90 #180-190'),
-(20, 'Cédula', '1234567', 'Valeria', 'García', 'valeria@email.com', '04123456789', 'Calle 100 #200-210');
 
 -- --------------------------------------------------------
 
@@ -674,57 +606,6 @@ CREATE TABLE `recordatorios_citas` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `salidas`
---
-
-CREATE TABLE `salidas` (
-  `id` int(11) NOT NULL,
-  `fecha_salida` datetime NOT NULL,
-  `cliente_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
---
--- Volcado de datos para la tabla `salidas`
---
-
-INSERT INTO `salidas` (`id`, `fecha_salida`, `cliente_id`) VALUES
-(1, '2024-03-11 10:00:00', 1),
-(2, '2024-03-12 11:00:00', 2),
-(3, '2024-03-13 12:00:00', 3),
-(4, '2024-03-14 13:00:00', 4),
-(5, '2024-03-15 14:00:00', 5),
-(6, '2024-03-16 15:00:00', 6),
-(7, '2024-03-17 16:00:00', 7),
-(8, '2024-03-18 17:00:00', 8),
-(9, '2024-03-19 18:00:00', 9),
-(10, '2024-03-20 19:00:00', 10),
-(11, '2024-04-11 10:00:00', 11),
-(12, '2024-04-12 11:00:00', 12),
-(13, '2024-04-13 12:00:00', 13),
-(14, '2024-04-14 13:00:00', 14),
-(15, '2024-04-15 14:00:00', 15),
-(16, '2024-04-16 15:00:00', 16),
-(17, '2024-04-17 16:00:00', 17),
-(18, '2024-04-18 17:00:00', 18),
-(19, '2024-04-19 18:00:00', 19),
-(20, '2024-04-20 19:00:00', 20);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `salidas_detalles`
---
-
-CREATE TABLE `salidas_detalles` (
-  `salida_id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `solicitud_citas`
 --
 
@@ -823,20 +704,6 @@ INSERT INTO `usuarios` (`id`, `cedula`, `nombre`, `apellido`, `telefono`, `corre
 --
 
 --
--- Indices de la tabla `apartados`
---
-ALTER TABLE `apartados`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cliente_id` (`cliente_id`);
-
---
--- Indices de la tabla `apartados_detalles`
---
-ALTER TABLE `apartados_detalles`
-  ADD KEY `apartado_id` (`apartado_id`),
-  ADD KEY `producto_id` (`producto_id`);
-
---
 -- Indices de la tabla `categorias`
 --
 ALTER TABLE `categorias`
@@ -853,13 +720,6 @@ ALTER TABLE `citas`
   ADD KEY `estado_cita` (`estado_cita`),
   ADD KEY `fecha_cita_2` (`fecha_cita`),
   ADD KEY `estado_cita_2` (`estado_cita`);
-
---
--- Indices de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `numero_documento` (`numero_documento`);
 
 --
 -- Indices de la tabla `consultas`
@@ -968,20 +828,6 @@ ALTER TABLE `recordatorios_citas`
   ADD KEY `id_cita` (`id_cita`);
 
 --
--- Indices de la tabla `salidas`
---
-ALTER TABLE `salidas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cliente_id` (`cliente_id`) USING BTREE;
-
---
--- Indices de la tabla `salidas_detalles`
---
-ALTER TABLE `salidas_detalles`
-  ADD KEY `producto_id` (`producto_id`) USING BTREE,
-  ADD KEY `salida_id` (`salida_id`) USING BTREE;
-
---
 -- Indices de la tabla `solicitud_citas`
 --
 ALTER TABLE `solicitud_citas`
@@ -1019,12 +865,6 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `apartados`
---
-ALTER TABLE `apartados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
@@ -1035,12 +875,6 @@ ALTER TABLE `categorias`
 --
 ALTER TABLE `citas`
   MODIFY `id_cita` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `consultas`
@@ -1127,12 +961,6 @@ ALTER TABLE `recordatorios_citas`
   MODIFY `id_recordatorio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `salidas`
---
-ALTER TABLE `salidas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
 -- AUTO_INCREMENT de la tabla `solicitud_citas`
 --
 ALTER TABLE `solicitud_citas`
@@ -1159,19 +987,6 @@ ALTER TABLE `usuarios`
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `apartados`
---
-ALTER TABLE `apartados`
-  ADD CONSTRAINT `apartados_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`);
-
---
--- Filtros para la tabla `apartados_detalles`
---
-ALTER TABLE `apartados_detalles`
-  ADD CONSTRAINT `apartados_productos_ibfk_1` FOREIGN KEY (`apartado_id`) REFERENCES `apartados` (`id`),
-  ADD CONSTRAINT `apartados_productos_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`);
 
 --
 -- Filtros para la tabla `citas`
@@ -1234,19 +1049,6 @@ ALTER TABLE `productos`
 --
 ALTER TABLE `recordatorios_citas`
   ADD CONSTRAINT `recordatorios_citas_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `salidas`
---
-ALTER TABLE `salidas`
-  ADD CONSTRAINT `salidas_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`);
-
---
--- Filtros para la tabla `salidas_detalles`
---
-ALTER TABLE `salidas_detalles`
-  ADD CONSTRAINT `salidas_detalles_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`),
-  ADD CONSTRAINT `salidas_detalles_ibfk_2` FOREIGN KEY (`salida_id`) REFERENCES `salidas` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
