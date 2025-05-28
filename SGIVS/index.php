@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+// Definir la ruta base del proyecto
+
+define('BASE_PATH', __DIR__);
+
+
 if(!isset($_SESSION['usuario_id']) && (!isset($_GET['pagina']) || $_GET['pagina'] != 'login')){
     header("Location: ?pagina=login");
     exit;
