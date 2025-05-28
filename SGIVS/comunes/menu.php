@@ -190,27 +190,6 @@
 							</li>
 						</ul>
 					</li>
-
-
-
-
-					<!-- Enlaces a diferentes secciones del menú -->
-					<li class="full-width">
-						
-					</li>
-					<li class="full-width divider-menu-h"></li>
-					<li class="full-width divider-menu-h"></li>
-					<li class="full-width">
-						
-					</li>
-					<li class="full-width divider-menu-h"></li>
-					<li class="full-width">
-
-					</li>
-					<li class="full-width divider-menu-h"></li>
-					<li class="full-width">
-						
-					</li>
 					<li class="full-width divider-menu-h"></li>
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
 						<li class="full-width">
@@ -225,6 +204,67 @@
 						</li>
 						<li class="full-width divider-menu-h"></li>
 					<?php endif; ?>
+
+
+
+
+
+
+
+
+
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i></i>
+							</div>
+							<div class="navLateral-body-cr">
+								Recursos
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="?pagina=gestionarInsumos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Gestionar Insumos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=gestionarEquipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Gestionar Equipos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=servicios" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										servicios
+									</div>
+								</a>
+							</li>																													
+						</ul>
+					</li>
+
+
+
+
+
+
+
+
 					
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
 						<li class="full-width">
