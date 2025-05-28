@@ -23,6 +23,20 @@ if(is_file("vista/".$pagina.".php")){
         if($accion=='consultar'){
             echo json_encode($o->consultar());  
         }
+        // Acción para cargar opciones (cuentas)
+        elseif($accion=='cargarOpciones'){
+            try {
+                $cuentas = $o->obtenerCuentas();
+                if ($cuentas === false) {
+                    echo json_encode(['error' => true, 'mensaje' => 'Error al obtener las cuentas']);
+                } else {
+                    echo json_encode(['cuentas' => $cuentas]);
+                }
+            } catch (Exception $e) {
+                echo json_encode(['error' => true, 'mensaje' => $e->getMessage()]);
+            }
+            exit;
+        }
         // Acción para eliminar un egreso
         elseif($accion=='eliminar'){
             $o->set_id($_POST['id']); // Establece el id del registro
@@ -31,20 +45,28 @@ if(is_file("vista/".$pagina.".php")){
         else{		  
             // Acciones para incluir o modificar un egreso
             if($accion=='incluir' || $accion=='modificar'){
-                // Establece los atributos del egreso
-                $o->set_descripcion(valor: $_POST['descripcion']);
-                $o->set_monto($_POST['monto']);
-                $o->set_fecha($_POST['fecha']);
-                $o->set_origen($_POST['origen']);
+                try {
+                    // Establece los atributos del egreso
+                    $o->set_descripcion($_POST['descripcion']);
+                    $o->set_monto($_POST['monto']);
+                    $o->set_fecha($_POST['fecha']);
+                    $o->set_origen($_POST['origen']);
+                    $o->set_cuenta_id($_POST['cuenta_id']);
 
-                if($accion == 'modificar'){
-                    $o->set_id($_POST['id']);
-                }
-                // Ejecuta la acción de incluir o modificar
-                if($accion == 'incluir'){
-                    echo json_encode($o->incluir()); // Incluye el egreso y devuelve el resultado
-                } elseif($accion == 'modificar'){
-                    echo json_encode($o->modificar()); // Modifica el egreso y devuelve el resultado
+                    if($accion == 'modificar'){
+                        $o->set_id($_POST['id']);
+                    }
+                    // Ejecuta la acción de incluir o modificar
+                    if($accion == 'incluir'){
+                        echo json_encode($o->incluir()); // Incluye el egreso y devuelve el resultado
+                    } elseif($accion == 'modificar'){
+                        echo json_encode($o->modificar()); // Modifica el egreso y devuelve el resultado
+                    }
+                } catch (Exception $e) {
+                    echo json_encode([
+                        'resultado' => 'error',
+                        'mensaje' => 'Error al procesar la solicitud: ' . $e->getMessage()
+                    ]);
                 }
             }
         }

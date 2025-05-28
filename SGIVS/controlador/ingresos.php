@@ -28,29 +28,42 @@ if(is_file("vista/".$pagina.".php")){
             
             
         }
-        // Acción para eliminar un producto
+        // Acción para cargar opciones (cuentas)
+        elseif($accion=='cargarOpciones'){
+            $cuentas = $o->obtenerCuentas();
+            echo json_encode(['cuentas' => $cuentas]);
+            exit;
+        }
+        // Acción para eliminar un ingreso
         elseif($accion=='eliminar'){
             $o->set_id($_POST['id']); // Establece el id del registro
-            echo json_encode($o->eliminar()); // Elimina el producto y devuelve el resultado
+            echo json_encode($o->eliminar()); // Elimina el ingreso y devuelve el resultado
         }
         else{		  
-            // Acciones para incluir o modificar un producto
+            // Acciones para incluir o modificar un ingreso
             if($accion=='incluir' || $accion=='modificar'){
-                // Establece los atributos del producto
-                $o->set_descripcion(valor: $_POST['descripcion']);
-                $o->set_monto($_POST['monto']);
-                $o->set_fecha($_POST['fecha']);
-                $o->set_origen($_POST['origen']);
+                try {
+                    // Establece los atributos del ingreso
+                    $o->set_descripcion($_POST['descripcion']);
+                    $o->set_monto($_POST['monto']);
+                    $o->set_fecha($_POST['fecha']);
+                    $o->set_origen($_POST['origen']);
+                    $o->set_cuenta_id($_POST['cuenta_id']);
 
-
-                if($accion == 'modificar'){
-                    $o->set_id($_POST['id']);
-                }
-                // Ejecuta la acción de incluir o modificar
-                if($accion == 'incluir'){
-                    echo json_encode($o->incluir()); // Incluye el producto y devuelve el resultado
-                } elseif($accion == 'modificar'){
-                    echo json_encode($o->modificar()); // Modifica el producto y devuelve el resultado
+                    if($accion == 'modificar'){
+                        $o->set_id($_POST['id']);
+                    }
+                    // Ejecuta la acción de incluir o modificar
+                    if($accion == 'incluir'){
+                        echo json_encode($o->incluir()); // Incluye el ingreso y devuelve el resultado
+                    } elseif($accion == 'modificar'){
+                        echo json_encode($o->modificar()); // Modifica el ingreso y devuelve el resultado
+                    }
+                } catch (Exception $e) {
+                    echo json_encode([
+                        'resultado' => 'error',
+                        'mensaje' => 'Error al procesar la solicitud: ' . $e->getMessage()
+                    ]);
                 }
             }
         }

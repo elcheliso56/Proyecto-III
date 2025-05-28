@@ -60,6 +60,15 @@ $(document).ready(function () {
         validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
     });
 
+    // Validaciones para el campo de cuenta
+    $("#cuenta_id").on("change", function () {
+        if ($(this).val() === null) {
+            $("#scuenta_id").text("La cuenta es obligatoria");
+        } else {
+            $("#scuenta_id").text("");
+        }
+    });
+
     // Manejo de clics en el botón de proceso
     $("#proceso").on("click", function () {
         if ($(this).text() == "INCLUIR") {
@@ -82,6 +91,7 @@ $(document).ready(function () {
                             datos.append('monto', $("#monto").val());
                             datos.append('fecha', $("#fecha").val());
                             datos.append('origen', $("#origen").val());
+                            datos.append('cuenta_id', $("#cuenta_id").val());
                             enviaAjax(datos);
                         }
                     }
@@ -115,6 +125,7 @@ $(document).ready(function () {
                             datos.append('monto', $("#monto").val());
                             datos.append('origen', $("#origen").val());
                             datos.append('fecha', $("#fecha").val());
+                            datos.append('cuenta_id', $("#cuenta_id").val());
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -217,6 +228,7 @@ function pone(pos, accion) {
         $("#monto").prop("disabled", false);
         $("#fecha").prop("disabled", false);       
         $("#origen").prop("disabled", false);
+        $("#cuenta_id").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
         $("#id").prop("disabled", true);
@@ -224,12 +236,17 @@ function pone(pos, accion) {
         $("#monto").prop("disabled", true);
         $("#fecha").prop("disabled", true);
         $("#origen").prop("disabled", true);
+        $("#cuenta_id").prop("disabled", true);
     }
 
     $("#descripcion").val($(linea).find("td:eq(1)").text());
-    $("#monto").val($(linea).find("td:eq(2)").text().replace(/\D/g, ''));
-    $("#origen").val($(linea).find("td:eq(4)").text()).trigger('change');
+    $("#monto").val($(linea).find("td:eq(2)").text().replace(/[^0-9.]/g, ''));
     $("#fecha").val($(linea).find("td:eq(3)").text());
+    $("#origen").val($(linea).find("td:eq(4)").text()).trigger('change');
+    
+    // Get the cuenta_id from the data attribute of the 6th cell (index 5)
+    var cuentaId = $(linea).find("td:eq(5)").attr("data-cuenta-id");
+    $("#cuenta_id").val(cuentaId).trigger('change');
     
     $("#modal1").modal("show");
 }
@@ -316,27 +333,81 @@ function limpia() {
     $("#descripcion").val("");
     $("#monto").val("");
     $("#fecha").val("");
-    $("#origen").val("");
+    $("#origen").val("").trigger('change');
+    $("#cuenta_id").val("").trigger('change');
 
     $("#descripcion").prop("disabled", false);
     $("#monto").prop("disabled", false);
     $("#fecha").prop("disabled", false);
     $("#origen").prop("disabled", false);
+    $("#cuenta_id").prop("disabled", false);
 }
 
 function cargarOpciones() {
-    // Función simplificada ya que no necesitamos cargar categorías ni ubicaciones
-    $('#origen').select2({
-        placeholder: "Seleccione una opción",
-        allowClear: true,
-        width: '100%',
-        language: {
-            noResults: function() {
-                return "No se encontraron resultados";
-            },
-            searching: function() {
-                return "Buscando...";
+    $.ajax({
+        url: '',
+        type: 'POST',
+        data: { accion: 'cargarOpciones' },
+        success: function(respuesta) {
+            try {
+                var datos = JSON.parse(respuesta);
+                console.log("Datos recibidos:", datos);
+                
+                // Limpiar el select antes de agregar las opciones
+                $('#cuenta_id').empty();
+                
+                // Agregar la opción por defecto
+                $('#cuenta_id').append($('<option>', {
+                    value: '',
+                    text: 'Seleccione una cuenta',
+                    selected: true,
+                    disabled: true
+                }));
+                
+                // Verificar si hay cuentas y agregarlas al select
+                if (datos.cuentas && datos.cuentas.length > 0) {
+                    datos.cuentas.forEach(function(cuenta) {
+                        $('#cuenta_id').append($('<option>', {
+                            value: cuenta.id,
+                            text: cuenta.nombre + ' (' + cuenta.tipo + ' - ' + cuenta.moneda + ')'
+                        }));
+                    });
+                    
+                    // Inicializar Select2 después de agregar las opciones
+                    $('#cuenta_id').select2({
+                        placeholder: "Seleccione una cuenta",
+                        allowClear: true,
+                        width: '100%',
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                } else {
+                    console.log("No hay cuentas disponibles");
+                }
+            } catch (e) {
+                console.error("Error al procesar la respuesta:", e);
+                console.error("Respuesta recibida:", respuesta);
             }
+        },
+        error: function(request, status, err) {
+            console.error("Error en la petición AJAX:", {
+                status: status,
+                error: err,
+                request: request
+            });
         }
     });
 }
+
+// Reinicializar Select2 cuando se abra el modal
+$('#modal1').on('shown.bs.modal', function () {
+    $('.select2').select2({
+        dropdownParent: $('#modal1')
+    });
+});

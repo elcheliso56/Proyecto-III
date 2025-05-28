@@ -19,9 +19,10 @@ require_once('comunes/menu.php');
                 <tr>
                     <th>#</th>
                     <th>Descripción</th>
-                    <th>Monto (Bs)</th>
+                    <th>Monto</th>
                     <th>Fecha</th>
                     <th>Origen</th>
+                    <th>Cuenta</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -48,18 +49,19 @@ require_once('comunes/menu.php');
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="descripcion" placeholder="Descripción del ingreso">
                     <label for="descripcion">Descripción del ingreso</label>
-                    <span id="sdescripcion"></span>
+                    <span id="sdescripcion" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input type="number" step="0.01" class="form-control" id="monto" placeholder="Monto en bolívares">
                     <label for="monto">Monto (Bs)</label>
-                    <span id="smonto"></span>
+                    <span id="smonto" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input type="date" class="form-control" id="fecha" placeholder="Fecha del ingreso">
                     <label for="fecha">Fecha</label>
+                    <span id="sfecha" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -70,6 +72,15 @@ require_once('comunes/menu.php');
                         <option value="servicio">Servicio</option>
                     </select>
                     <label for="origen">Origen del ingreso</label>
+                    <span id="sorigen" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select select2" id="cuenta_id">
+                        <option value="" selected disabled>Seleccione una cuenta</option>
+                    </select>
+                    <label for="cuenta_id">Cuenta</label>
+                    <span id="scuenta_id" class="text-danger"></span>
                 </div>
             </div>
 

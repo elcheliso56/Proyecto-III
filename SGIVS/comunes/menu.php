@@ -117,6 +117,8 @@
 						</a>
 					</li>
 
+
+
 					
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
@@ -146,60 +148,22 @@
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						
-					</li>
+										<li class="full-width divider-menu-h"></li>
+
 					<li class="full-width divider-menu-h"></li>
-					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
-						<li class="full-width">
-							<a href="?pagina=usuarios" class="full-width">
-								<div class="navLateral-body-cl">
-									<i class="zmdi zmdi-account"></i>
-								</div>
-								<div class="navLateral-body-cr" style="color: white;">
-									Usuarios
-								</div>
-							</a>
-						</li>
-						<li class="full-width divider-menu-h"></li>
-					<?php endif; ?>
 					<li class="full-width">
-						<a href="#!" class="full-width btn-subMenu">
+						<a href="?pagina=citas" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-shopping-cart"></i>
+								<i class="zmdi zmdi-calendar"></i>
 							</div>
 							<div class="navLateral-body-cr" style="color: white;">
-								Recursos
+								Citas
 							</div>
-							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
-						<ul class="full-width menu-principal sub-menu-options">
+				
 
-							<li class="full-width">
-								<a href="?pagina=insumos" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-bag-check-fill"></i>
-									</div>
-									<div class="navLateral-body-cr" style="color: white;">
-										Insumos
-									</div>
-								</a>
-							</li>
-							<li class="full-width">
-								<a href="?pagina=equipos" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-cart-plus-fill"></i>
-									</div>
-									<div class="navLateral-body-cr" style="color: white;">
-										Equipos
-									</div>
-								</a>
-							</li>
-							<li class="full-width">
-			
-							</li>
-						</ul>
-
-
-						<li class="full-width">
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
 								<i class="bi bi-cash-stack"></i>
@@ -210,6 +174,18 @@
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
+						
+						<li class="full-width">
+								<a href="?pagina=cuentas" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-credit-card-fill"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Cuentas
+									</div>
+								</a>
+							</li>
+
 
 							<li class="full-width">
 								<a href="?pagina=ingresos" class="full-width">
@@ -228,6 +204,17 @@
 									</div>
 									<div class="navLateral-body-cr"style="color: white;">
 										Egresos
+									</div>
+								</a>
+							</li>
+
+							<li class="full-width">
+								<a href="?pagina=cxc" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-wallet2"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										Cuentas por Cobrar
 									</div>
 								</a>
 							</li>
@@ -252,8 +239,84 @@
 								</a>
 							</li>
 						</ul>
+>>>>>>> af4b9a49c16b6cb3ca5a268baf597d1817e12827
 					</li>
 					<li class="full-width divider-menu-h"></li>
+					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
+						<li class="full-width">
+							<a href="?pagina=usuarios" class="full-width">
+								<div class="navLateral-body-cl">
+									<i class="zmdi zmdi-account"></i>
+								</div>
+								<div class="navLateral-body-cr" style="color: white;">
+									Usuarios
+								</div>
+							</a>
+						</li>
+						<li class="full-width divider-menu-h"></li>
+					<?php endif; ?>
+
+
+
+
+
+
+
+
+
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i></i>
+							</div>
+							<div class="navLateral-body-cr">
+								Recursos
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<li class="full-width">
+								<a href="?pagina=gestionarInsumos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Gestionar Insumos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=gestionarEquipos" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Gestionar Equipos
+									</div>
+								</a>
+							</li>
+							<li class="full-width">
+								<a href="?pagina=servicios" class="full-width">
+									<div class="navLateral-body-cl">
+										<i></i>
+									</div>
+									<div class="navLateral-body-cr">
+										servicios
+									</div>
+								</a>
+							</li>																													
+						</ul>
+					</li>
+
+
+
+
+
+
+
+
+					
 					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
 						<li class="full-width">
 							<a href="?pagina=reportes" class="full-width">

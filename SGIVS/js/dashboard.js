@@ -1,10 +1,30 @@
 $(document).ready(function() {
+    cargarCuentas();
     cargarDatos();
+    inicializarFechas();
 });
 
-function cargarDatos() {
+// Variables globales para los gráficos
+let graficoComparativo = null;
+let graficoIngresosOrigen = null;
+let graficoEgresosOrigen = null;
+
+function inicializarFechas() {
+    // Establecer fecha fin como hoy
+    const hoy = new Date();
+    const fechaFin = hoy.toISOString().split('T')[0];
+    $("#fechaFin").val(fechaFin);
+
+    // Establecer fecha inicio como hace 6 meses
+    const seisMesesAtras = new Date();
+    seisMesesAtras.setMonth(hoy.getMonth() - 6);
+    const fechaInicio = seisMesesAtras.toISOString().split('T')[0];
+    $("#fechaInicio").val(fechaInicio);
+}
+
+function cargarCuentas() {
     var datos = new FormData();
-    datos.append('accion', 'obtenerDatos');
+    datos.append('accion', 'obtenerCuentas');
     
     $.ajax({
         async: true,
@@ -20,35 +40,97 @@ function cargarDatos() {
         success: function(respuesta) {
             try {
                 // Verificar si la respuesta ya es un objeto
-                var datos = typeof respuesta === 'string' ? JSON.parse(respuesta) : respuesta;
+                const datos = typeof respuesta === 'string' ? JSON.parse(respuesta) : respuesta;
                 
-                // Verificar si hay error en la respuesta
+                if (!datos.error) {
+                    const select = $("#cuenta");
+                    select.empty(); // Limpiar opciones existentes
+                    select.append(new Option("Todas las cuentas", ""));
+                    
+                    if (datos.cuentas && datos.cuentas.length > 0) {
+                        datos.cuentas.forEach(cuenta => {
+                            select.append(new Option(cuenta.nombre, cuenta.id));
+                        });
+                    }
+                } else {
+                    console.error("Error al cargar cuentas:", datos.mensaje);
+                    Swal.fire({
+                        title: "Error",
+                        text: datos.mensaje || "Error al cargar las cuentas",
+                        icon: "error"
+                    });
+                }
+            } catch (e) {
+                console.error("Error al procesar la respuesta de cuentas:", e);
+                Swal.fire({
+                    title: "Error",
+                    text: "Error al procesar la respuesta del servidor",
+                    icon: "error"
+                });
+            }
+        },
+        error: function(request, status, err) {
+            console.error("Error en la petición AJAX de cuentas:", err);
+            Swal.fire({
+                title: "Error",
+                text: "Error al cargar las cuentas: " + err,
+                icon: "error"
+            });
+        },
+        complete: function() {
+            $("#loader").hide();
+        }
+    });
+}
+
+function cargarDatos() {
+    var datos = new FormData();
+    datos.append('accion', 'obtenerDatos');
+    datos.append('cuenta', $("#cuenta").val());
+    datos.append('fechaInicio', $("#fechaInicio").val());
+    datos.append('fechaFin', $("#fechaFin").val());
+    
+    $.ajax({
+        async: true,
+        url: "",
+        type: "POST",
+        contentType: false,
+        data: datos,
+        processData: false,
+        cache: false,
+        beforeSend: function() {
+            $("#loader").show();
+        },
+        success: function(respuesta) {
+            try {
+                // Verificar si la respuesta ya es un objeto
+                const datos = typeof respuesta === 'string' ? JSON.parse(respuesta) : respuesta;
+                
                 if (datos.error) {
                     Swal.fire({
                         title: "Error",
-                        text: datos.mensaje,
+                        text: datos.mensaje || "Error al cargar los datos",
                         icon: "error"
                     });
                     return;
                 }
-
-                // Verificar si hay datos de egresos
-                if (datos.egresosPorMes.length === 0 && datos.egresosPorOrigen.length === 0) {
-                    console.log("No hay datos de egresos disponibles");
-                }
                 
                 // Actualizar totales
-                $("#totalIngresos").text("Bs. " + formatearNumero(datos.totalIngresos));
-                $("#totalEgresos").text("Bs. " + formatearNumero(datos.totalEgresos));
+                $("#totalIngresos").text("Bs. " + formatearNumero(datos.totalIngresos || 0));
+                $("#totalEgresos").text("Bs. " + formatearNumero(datos.totalEgresos || 0));
                 
-                // Crear gráficos
-                crearGraficoComparativo(datos.ingresosPorMes, datos.egresosPorMes);
-                crearGraficoIngresosOrigen(datos.ingresosPorOrigen);
-                crearGraficoEgresosOrigen(datos.egresosPorOrigen);
+                // Calcular y actualizar ganancias
+                const totalGanancias = (datos.totalIngresos || 0) - (datos.totalEgresos || 0);
+                $("#totalGanancias").text("Bs. " + formatearNumero(totalGanancias));
+
+                // Actualizar gráficos
+                actualizarGraficoComparativo(datos.ingresosPorMes || [], datos.egresosPorMes || []);
+                actualizarGraficoIngresosOrigen(datos.ingresosPorOrigen || []);
+                actualizarGraficoEgresosOrigen(datos.egresosPorOrigen || []);
                 
                 // Actualizar tablas
-                actualizarUltimosIngresos(datos.ultimosIngresos);
-                actualizarUltimosEgresos(datos.ultimosEgresos);
+                actualizarUltimosIngresos(datos.ultimosIngresos || []);
+                actualizarUltimosEgresos(datos.ultimosEgresos || []);
                 
             } catch (e) {
                 console.error("Error al procesar los datos:", e);
@@ -73,32 +155,41 @@ function cargarDatos() {
     });
 }
 
-function crearGraficoComparativo(ingresos, egresos) {
+function actualizarGraficoComparativo(ingresos, egresos) {
     const ctx = document.getElementById('graficoComparativo').getContext('2d');
+    
+    // Destruir gráfico existente si existe
+    if (graficoComparativo) {
+        graficoComparativo.destroy();
+    }
     
     // Preparar datos para el gráfico
     const meses = ingresos.map(item => item.mes);
     const valoresIngresos = ingresos.map(item => item.total);
-    const valoresEgresos = egresos && egresos.length > 0 ? egresos.map(item => item.total) : Array(ingresos.length).fill(0);
+    // Asegurarse de que egresos tenga la misma longitud que ingresos para la alineación de datos
+    const valoresEgresos = meses.map(mes => {
+        const egresoMes = egresos.find(item => item.mes === mes);
+        return egresoMes ? egresoMes.total : 0;
+    });
     
-    new Chart(ctx, {
-        type: 'line',
+    graficoComparativo = new Chart(ctx, {
+        type: 'bar',
         data: {
             labels: meses,
             datasets: [
                 {
                     label: 'Ingresos',
                     data: valoresIngresos,
+                    backgroundColor: 'rgb(75, 192, 192)', // Color para ingresos
                     borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1,
-                    fill: false
+                    borderWidth: 1
                 },
                 {
                     label: 'Egresos',
                     data: valoresEgresos,
+                    backgroundColor: 'rgb(255, 99, 132)', // Color para egresos
                     borderColor: 'rgb(255, 99, 132)',
-                    tension: 0.1,
-                    fill: false
+                    borderWidth: 1
                 }
             ]
         },
@@ -114,7 +205,11 @@ function crearGraficoComparativo(ingresos, egresos) {
                 }
             },
             scales: {
+                x: {
+                    stacked: true,
+                },
                 y: {
+                    stacked: true,
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
@@ -127,12 +222,16 @@ function crearGraficoComparativo(ingresos, egresos) {
     });
 }
 
-function crearGraficoIngresosOrigen(datos) {
+function actualizarGraficoIngresosOrigen(datos) {
     const ctx = document.getElementById('graficoIngresosOrigen').getContext('2d');
+    
+    // Destruir gráfico existente si existe
+    if (graficoIngresosOrigen) {
+        graficoIngresosOrigen.destroy();
+    }
     
     // Verificar si hay datos
     if (!datos || datos.length === 0) {
-        // Mostrar mensaje en el canvas
         const canvas = document.getElementById('graficoIngresosOrigen');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -147,7 +246,7 @@ function crearGraficoIngresosOrigen(datos) {
     const labels = datos.map(item => item.origen);
     const valores = datos.map(item => item.total);
     
-    new Chart(ctx, {
+    graficoIngresosOrigen = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -175,12 +274,16 @@ function crearGraficoIngresosOrigen(datos) {
     });
 }
 
-function crearGraficoEgresosOrigen(datos) {
+function actualizarGraficoEgresosOrigen(datos) {
     const ctx = document.getElementById('graficoEgresosCategoria').getContext('2d');
+    
+    // Destruir gráfico existente si existe
+    if (graficoEgresosOrigen) {
+        graficoEgresosOrigen.destroy();
+    }
     
     // Verificar si hay datos
     if (!datos || datos.length === 0) {
-        // Mostrar mensaje en el canvas
         const canvas = document.getElementById('graficoEgresosCategoria');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -195,7 +298,7 @@ function crearGraficoEgresosOrigen(datos) {
     const labels = datos.map(item => item.origen);
     const valores = datos.map(item => item.total);
     
-    new Chart(ctx, {
+    graficoEgresosOrigen = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -269,6 +372,10 @@ function actualizarUltimosEgresos(datos) {
         `;
     }
     $("#ultimosEgresos").html(html);
+}
+
+function aplicarFiltros() {
+    cargarDatos();
 }
 
 function formatearNumero(numero) {

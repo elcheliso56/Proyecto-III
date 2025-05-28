@@ -1,10 +1,11 @@
 <?php 
-require_once("comunes/encabezado.php");
-require_once('comunes/menu.php');
-require_once('modelo/principal.php');
-$conteos = new principal();
-$datos = $conteos->obtenerConteos();
+require_once("comunes/encabezado.php"); // Incluye el encabezado de la página
+require_once('comunes/menu.php'); // Incluye el menú de navegación
+require_once('modelo/principal.php'); // Incluye el modelo principal para obtener datos
+$conteos = new principal(); // Crea una instancia de la clase principal
+$datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes categorías
 ?>
+
 
 <div class="container-fluid px-4">
     <!-- Encabezado con bienvenida -->
@@ -67,7 +68,7 @@ $datos = $conteos->obtenerConteos();
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Historiales</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['ubicaciones']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['historial']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-clipboard2-pulse fa-2x text-gray-300"></i>
@@ -233,3 +234,8 @@ $datos = $conteos->obtenerConteos();
         </div>
     </div>
 </div>
+</div>
+</section>
+</section>
+</body>
+</html>

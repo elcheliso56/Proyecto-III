@@ -22,6 +22,7 @@ require_once('comunes/menu.php');
                     <th>Monto (Bs)</th>
                     <th>Fecha</th>
                     <th>Origen</th>
+                    <th>Cuenta</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -65,12 +66,19 @@ require_once('comunes/menu.php');
                 <div class="form-floating mb-3">
                     <select class="form-select select2" id="origen">
                         <option value="" selected disabled>Seleccione un origen</option>
-                        <option value="servicios">Servicios</option>
-                        <option value="mantenimiento">Mantenimiento</option>
-                        <option value="suministros">Suministros</option>
-                        <option value="otros">Otros</option>
+                        <option value="servicio">servicio</option>
+                        <option value="proveedor">proveedor</option>
+                        <option value="otro">otro</option>
                     </select>
                     <label for="origen">Origen del egreso</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select select2" id="cuenta_id">
+                        <option value="" selected disabled>Seleccione una cuenta</option>
+                    </select>
+                    <label for="cuenta_id">Cuenta</label>
+                    <span id="scuenta_id" class="text-danger"></span>
                 </div>
             </div>
 

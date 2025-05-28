@@ -4,10 +4,6 @@ require_once('comunes/menu.php');
 ?> 
 <div class="container"> 
 	<h1> Gestionar Equipos</h1> 
-<<<<<<< HEAD
-	
-=======
->>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">

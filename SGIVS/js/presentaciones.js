@@ -47,6 +47,9 @@ function crearDT() {
 
 $(document).ready(function() {
     consultar(); // Llama a la función consultar al cargar el documento
+     $("#proceso").text("INCLUIR");
+     $("#modal1").modal("show");
+
 
     // Validaciones para el campo nombre
     $("#nombre").on("keypress", function(e) {
