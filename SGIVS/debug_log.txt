@@ -28,6 +28,7 @@ Array
 )
 Array
 (
+<<<<<<< HEAD
     [accion] => cargarOpciones
 )
 Array
@@ -41,86 +42,6 @@ Array
 Array
 (
     [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => incluir
-    [descripcion] => 
-    [monto] => 40000
-    [fecha] => 2025-05-27
-    [origen] => consulta
-    [cuenta_id] => 9
-)
-Array
-(
-    [accion] => incluir
-    [descripcion] => PAGO ANUAL
-    [monto] => 40000
-    [fecha] => 2025-05-27
-    [origen] => consulta
-    [cuenta_id] => 9
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => incluir
-    [descripcion] => PAGO de agua
-    [monto] => 19000
-    [fecha] => 2025-05-28
-    [origen] => proveedor
-    [cuenta_id] => 9
-)
-Array
-(
-    [accion] => incluir
-    [descripcion] => PAGO de agua
-    [monto] => 19000
-    [fecha] => 2025-05-27
-    [origen] => proveedor
-    [cuenta_id] => 9
 )
 Array
 (
@@ -152,6 +73,8 @@ Array
 )
 Array
 (
+=======
+>>>>>>> ea554ffb6fb98083fa2cb439cf12b1742c07ee3b
     [accion] => consultar
 )
 Array
@@ -169,138 +92,6 @@ Array
 Array
 (
     [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
-    [accion] => cargarOpciones
 )
 Array
 (
