@@ -1,7 +1,7 @@
 <?php 
 require_once("comunes/encabezado.php");
 ?>
- 
+
 <div style="">
 	<i class="bi bi-ban"></i>	
 	<h2>Error 404</h2>

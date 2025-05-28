@@ -1,0 +1,26 @@
+.modal-servicios {
+    border: 1px solid black;
+}
+
+.modal-servicios-header {
+    border: 1px solid black;
+    background-color: #14345a;
+    color: #ffffff;
+}
+
+.modal-servicios-content {
+    background-color: #14345a;
+}
+
+.modal-servicios-table-header {
+    background-color: #f1c40f;
+}
+
+.modal-servicios-footer {
+    background-color: #f8f9fa;
+}
+
+/* Estilos para campos ocultos */
+.hidden-field {
+    display: none;
+} 
