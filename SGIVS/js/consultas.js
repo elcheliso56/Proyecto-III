@@ -5,12 +5,12 @@ enviaAjax(datos);
 $("#listadopaciente").on("click", function () {
   $("#modalpaciente").modal("show");
 });
-
 function colocapa(linea) {
-  $("#cedula").val($(linea).find("td:eq(0)").text());
-  $("#nombre").val($(linea).find("td:eq(1)").text());
-  $("#Apellido").val($(linea).find("td:eq(2)").text());
-  $("#telefono").val($(linea).find("td:eq(3)").text());
+  // Centra los valores en los campos de entrada
+  $("#cedula").val($(linea).find("td:eq(0)").text()).css("text-align", "center");
+  $("#nombre").val($(linea).find("td:eq(1)").text()).css("text-align", "center");
+  $("#Apellido").val($(linea).find("td:eq(2)").text()).css("text-align", "center");
+  $("#telefono").val($(linea).find("td:eq(3)").text()).css("text-align", "center");
   $("#modalpaciente").modal("hide");
 }
 
@@ -562,7 +562,6 @@ function enviaAjax(datos) {
   });
 }
 
-
 // Función para añadir el tratamiento seleccionado al textarea
 $("#btn_add_tratamiento").on("click", function () {
   var selectedTreatment = $("#select_tratamiento_add").val(); // Obtiene el valor del select
@@ -589,6 +588,12 @@ $("#modal1").on("hidden.bs.modal", function () {
   // $('#nombre_paciente').val(''); etc.
 
   // Limpiar el textarea de tratamiento y el select de añadir tratamientos
+  $("#tratamiento").val("");
+  $("#select_tratamiento_add").val(null).trigger("change");
+});
+
+// Función para limpiar el textarea de tratamientos y el select de tratamientos
+$("#btn_clear_tratamiento").on("click", function () {
   $("#tratamiento").val("");
   $("#select_tratamiento_add").val(null).trigger("change");
 });

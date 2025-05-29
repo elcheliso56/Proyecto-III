@@ -11,6 +11,11 @@ function destruyeDT() {
     }
 }
 
+ // Manejo del clic en el botón incluir
+    $("#mostrar").on("click", function () {
+        $("#modalver").modal("show"); // Muestra el modal
+    });
+    
 function crearDT() {
     // Crea la tabla solo si no existe
     if (!$.fn.DataTable.isDataTable("#tablaubicacion")) {
@@ -182,10 +187,12 @@ $(document).ready(function () {
                 }
             });
         }
+
+
     });
 
-    // Manejo del clic en el botón incluir
-    $("#incluir").on("click", function () {
+   
+     $("#incluir").on("click", function () {
         limpia(); // Limpia los campos
         $("#proceso").text("INCLUIR"); // Cambia el texto del botón
         $("#modal1").modal("show"); // Muestra el modal
@@ -322,6 +329,24 @@ function pone(pos, accion) {
        }*/
     $("#modal1").modal("show");
      // Muestra el modal
+}
+function muestra(pos, accion) {
+    // Obtiene la fila seleccionada
+    var linea = $(pos).closest('tr');
+    // Toma los datos de la fila de la tabla de consulta
+    var nombre = $(linea).find("td:eq(1)").text();
+    var apellido = $(linea).find("td:eq(2)").text();
+    var telefono = $(linea).find("td:eq(3)").text();
+    var correo = $(linea).find("td:eq(4)").text();
+
+    // Asigna los valores a los campos del modal de solo lectura
+    $("#ver_nombre").val(nombre).prop("disabled", true);
+    $("#ver_Apellido").val(apellido).prop("disabled", true);
+    $("#ver_telefono").val(telefono).prop("disabled", true);
+    $("#ver_correo").val(correo).prop("disabled", true);
+
+    // Muestra el modal de visualización
+    $("#modalver").modal("show");
 }
 
 function enviaAjax(datos) {

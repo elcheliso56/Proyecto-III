@@ -12,8 +12,23 @@ require_once('comunes/menu.php');
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
 	crossorigin="anonymous"></script>
+<style>
+	#tablacliente th,
+	#tablacliente td {
+		font-size: 0.95rem;
+		vertical-align: middle;
+	}
+
+	#tablacliente th {
+		padding: 0.5rem 0.3rem;
+	}
+
+	#tablacliente td {
+		padding: 0.4rem 0.3rem;
+	}
+</style>
 <br>
-<div class="container-fluid">
+<div class="container">
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i>Historial de Pacientes</h1>
 		<div>
@@ -29,17 +44,7 @@ require_once('comunes/menu.php');
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
 			<h6 class="m-0 font-weight-bold text-info">Listado de Pacientes</h6>
-			<div class="dropdown no-arrow">
-				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
-					<i class="bi bi-three-dots-vertical"></i>
-				</a>
-				<div class="dropdown-menu dropdown-menu-right shadow">
-					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
-						Excel</a>
-					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
-						Listado</a>
-				</div>
-			</div>
+
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
@@ -81,7 +86,6 @@ require_once('comunes/menu.php');
 			<div class="modal-header bg-info text-white">
 				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Odontograma</h5>
 				<div class="col-0">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 				</div>
 			</div>
 			<form class="row g-3 mb-3">
@@ -102,21 +106,23 @@ require_once('comunes/menu.php');
 					<input type="date" class="form-control" id="fecha_odontograma" name="fecha_odontograma">
 				</div>
 			</form>
-			<div id="generar-pdf" class="modal-content">
-				<div class="modal-body">
-					<!-- Datos del paciente para el odontograma -->
-
-					<!-- Contenido del odontograma se mantiene igual -->
-					<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
-				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-danger" id="generar-pdf">
-						<i class="bi bi-file-pdf"></i> Guardar como PDF
-					</button>
-				</div>
+			<!-- Modal Odontograma - Contenido organizado -->
+			<div class="modal-body">
+				<!-- Datos del paciente para el odontograma (ya están en el formulario superior) -->
+				<!-- Contenido del odontograma -->
+				<iframe src="index.html" width="100%" height="500px" frameborder="0"></iframe>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle"></i> Cerrar
+				</button>
+				<button type="button" class="btn btn-info" id="generar-pdf">
+					<i class="bi bi-file-pdf"></i> Guardar como PDF
+				</button>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 <!-- Modal de Historial -->
 <div class="modal fade" id="modal1" tabindex="-1" aria-hidden="true">
@@ -124,17 +130,15 @@ require_once('comunes/menu.php');
 		<div class="modal-content">
 			<div class="modal-header bg-info text-white">
 				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Historial del Paciente</h5>
-				<div class="col-0">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-				</div>
+
 			</div>
-			<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-				<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
-					<input type="hidden" name="accion" id="accion">
-					<div class="card shadow mb-4" class="card-mb" name="Datos de paciente" id="pacientecard">
-						<div class="font-weight-bold text-center" class="h13 mb-0 text-gray-800">Datos del Paciente
-						</div>
-						<div class="row mb-3">
+			<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
+				<input type="hidden" name="accion" id="accion">
+				<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+					<!-- Datos del Paciente -->
+					<div class="card shadow mb-4" id="pacientecard">
+						<div class="font-weight-bold text-center mb-3">Datos del Paciente</div>
+						<div class="row g-3">
 							<div class="col-md-6">
 								<label for="nombre" class="form-label">Nombre</label>
 								<input class="form-control" type="text" id="nombre" name="nombre" required>
@@ -159,39 +163,29 @@ require_once('comunes/menu.php');
 								</select>
 								<div class="invalid-feedback">El sexo es obligatorio</div>
 							</div>
-
-							<div class="row mb">
-								<div class="col-md-6">
-									<label for="PersonaContacto" class="form-label">Numero de contacto
-										(Emergencias)</label>
-									<input class="form-control" type="text" id="PersonaContacto" name="PersonaContacto"
-										required>
-									<div class="invalid-feedback">La persona de contacto es obligatoria</div>
-								</div>
-								<div class="col-md-6">
-									<label for="telefono" class="form-label">Teléfono(personal)</label>
-									<input class="form-control" type="tel" id="telefono" name="telefono">
-								</div>
-
+							<div class="col-md-6">
+								<label for="PersonaContacto" class="form-label">Número de contacto (Emergencias)</label>
+								<input class="form-control" type="text" id="PersonaContacto" name="PersonaContacto" required>
+								<div class="invalid-feedback">La persona de contacto es obligatoria</div>
 							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-4">
-									<label for="Edad" class="form-label">Edad</label>
-									<input class="form-control" type="number" id="Edad" name="Edad">
-								</div>
-
-								<div class="col-md-4">
-									<label for="correo" class="form-label">Correo</label>
-									<input class="form-control" type="email" id="correo" name="correo">
-								</div>
+							<div class="col-md-6">
+								<label for="telefono" class="form-label">Teléfono (personal)</label>
+								<input class="form-control" type="tel" id="telefono" name="telefono">
+							</div>
+							<div class="col-md-4">
+								<label for="Edad" class="form-label">Edad</label>
+								<input class="form-control" type="number" id="Edad" name="Edad">
+							</div>
+							<div class="col-md-8">
+								<label for="correo" class="form-label">Correo</label>
+								<input class="form-control" type="email" id="correo" name="correo">
 							</div>
 						</div>
 					</div>
-					<div class="card shadow mb-4" class="card-mb" name="Datos de paciente" id="pacientecard">
-						<div class="font-weight-bold text-center" class="h13 mb-0 text-gray-800">Datos de la Consulta
-						</div>
-						<div class="row mb-3">
+					<!-- Datos de la Consulta -->
+					<div class="card shadow mb-4" id="pacientecard">
+						<div class="font-weight-bold text-center mb-3">Datos de la Consulta</div>
+						<div class="row g-3">
 							<div class="col-md-6">
 								<label for="motivo" class="form-label">Motivo de Consulta</label>
 								<input class="form-control" type="text" id="motivo" name="motivo">
@@ -200,8 +194,6 @@ require_once('comunes/menu.php');
 								<label for="diagnostico" class="form-label">Diagnóstico</label>
 								<input class="form-control" type="text" id="diagnostico" name="diagnostico">
 							</div>
-						</div>
-						<div class="row mb-3">
 							<div class="col-md-4">
 								<label for="tratamiento" class="form-label">Tratamiento</label>
 								<input class="form-control" type="text" id="tratamiento" name="tratamiento">
@@ -214,47 +206,126 @@ require_once('comunes/menu.php');
 								<label for="dientesafectados" class="form-label">Dientes Afectados</label>
 								<input class="form-control" type="text" id="dientesafectados" name="dientesafectados">
 							</div>
-							<div class="mb-3">
+							<div class="col-12">
 								<label for="antecedentes" class="form-label">Antecedentes Médicos</label>
-								<textarea class="form-control" id="antecedentes" name="antecedentes"
-									rows="3"></textarea>
+								<textarea class="form-control" id="antecedentes" name="antecedentes" rows="2"></textarea>
 							</div>
-							<div class="row">
-								<div class="mb-3">
-									<label for="fechaconsulta" class="form-label">Fecha de Consulta</label>
-									<input class="form-control" type="date" id="fechaconsulta" name="fechaconsulta">
-								</div>
-								<div class="mb-3">
-									<label for="proximacita" class="form-label">Próxima Cita</label>
-									<input class="form-control" type="date" id="proximacita" name="proximacita">
-								</div>
+							<div class="col-md-6">
+								<label for="fechaconsulta" class="form-label">Fecha de Consulta</label>
+								<input class="form-control" type="date" id="fechaconsulta" name="fechaconsulta">
 							</div>
-							<div class="mb-3">
+							<div class="col-md-6">
+								<label for="proximacita" class="form-label">Próxima Cita</label>
+								<input class="form-control" type="date" id="proximacita" name="proximacita">
+							</div>
+							<div class="col-12">
 								<label for="observaciones" class="form-label">Observaciones</label>
-								<textarea class="form-control" id="observaciones" name="observaciones"
-									rows="3"></textarea>
-								<!--<div class="row mb-3">
-									<div class="col-md-6">
-										<label for="imagen" class="form-label">Fotografía</label>
-										<input class="form-control" type="file" id="imagen" name="imagen"
-											accept=".png,.jpg,.jpeg">
-									</div>
-									<div class="col-md-6 text-center">
-										<img id="imagen_actual" src="" alt="Foto del paciente"
-											class="img-thumbnail mt-2" style="max-height: 150px;">
-									</div>
-								</div> -->
+								<textarea class="form-control" id="observaciones" name="observaciones" rows="2"></textarea>
 							</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<div class="row mb-3">
-					<div class="col-md-3">
-						<button type="button" class="btn btn-info" id="proceso">
-							<i class="bi bi-check-circle me-1"></i> Guardar
-						</button>
+						</div>
 					</div>
 				</div>
+			</form>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger me-auto" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle me-1"></i> Cerrar
+				</button>
+				<button type="button" class="btn btn-info" id="proceso">
+					<i class="bi bi-check-circle me-1"></i> Guardar
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- Modal de Visualización de Paciente -->
+<div class="modal fade" id="modalver" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header bg-info text-white">
+				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Ver Detalles del Paciente</h5>
+				<div class="col-0">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+				</div>
+			</div>
+			<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th>Nombre</th>
+								<td id="ver_nombre"></td>
+							</tr>
+							<tr>
+								<th>Apellido</th>
+								<td id="ver_apellido"></td>
+							</tr>
+							<tr>
+								<th>Ocupación</th>
+								<td id="ver_ocupacion"></td>
+							</tr>
+							<tr>
+								<th>Sexo</th>
+								<td id="ver_sexo"></td>
+							</tr>
+							<tr>
+								<th>Numero de contacto (Emergencias)</th>
+								<td id="ver_personacontacto"></td>
+							</tr>
+							<tr>
+								<th>Teléfono (personal)</th>
+								<td id="ver_telefono"></td>
+							</tr>
+							<tr>
+								<th>Edad</th>
+								<td id="ver_edad"></td>
+							</tr>
+							<tr>
+								<th>Correo</th>
+								<td id="ver_correo"></td>
+							</tr>
+							<tr>
+								<th>Motivo de Consulta</th>
+								<td id="ver_motivo"></td>
+							</tr>
+							<tr>
+								<th>Diagnóstico</th>
+								<td id="ver_diagnostico"></td>
+							</tr>
+							<tr>
+								<th>Tratamiento</th>
+								<td id="ver_tratamiento"></td>
+							</tr>
+							<tr>
+								<th>Medicamentos</th>
+								<td id="ver_medicamentos"></td>
+							</tr>
+							<tr>
+								<th>Dientes Afectados</th>
+								<td id="ver_dientesafectados"></td>
+							</tr>
+							<tr>
+								<th>Antecedentes Médicos</th>
+								<td id="ver_antecedentes"></td>
+							</tr>
+							<tr>
+								<th>Fecha de Consulta</th>
+								<td id="ver_fechaconsulta"></td>
+							</tr>
+							<tr>
+								<th>Próxima Cita</th>
+								<td id="ver_proximacita"></td>
+							</tr>
+							<tr>
+								<th>Observaciones</th>
+								<td id="ver_observaciones"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 	</div>

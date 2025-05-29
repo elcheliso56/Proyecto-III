@@ -287,11 +287,21 @@ class historial extends datos
 					$respuesta .= "<td class='align-middle'>" . $r['nombre'] . "</td>"; // Nombre
 					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Descripción
 					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Ocupación
-					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Sexo
+					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Sexo	
+					/* $respuesta .= "<td class='align-middle'>" . $r['diagnostico'] . "</td>"; // Persona de contacto
+					$respuesta .= "<td class='align-middle'>" . $r['tratamiento'] . "</td>"; // Teléfono
+					$respuesta .= "<td class='align-middle'>" . $r['medicamentos'] . "</td>"; // Edad
+					$respuesta .= "<td class='align-middle'>" . $r['dientesafectados'] . "</td>"; // Dientes afectados
+					$respuesta .= "<td class='align-middle'>" . $r['antecedentes'] . "</td>"; // Antecedentes
+					$respuesta .= "<td class='align-middle'>" . $r['fechaconsulta'] . "</td>"; // Fecha de consulta
+					$respuesta .= "<td class='align-middle'>" . $r['proximacita'] . "</td>"; // Próxima cita
+					$respuesta .= "<td class='align-middle'>" . $r['observaciones'] . "</td>"; // Observaciones*/
+
 					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
 					$respuesta .= "<td class='align-middle'>";
 					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ubicación'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ubicación'><i class='bi bi-trash'></i></button><br/>";
+					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ubicación'><i class='bi bi-trash'></i></button>";
+					$respuesta .= "<br><button class='btn-sm btn-danger-width mt-1 type='button'  id='mostrar' title='ver Historia'><i class='bi bi-eye'></i></button>";
 					$respuesta .= "</td>";
 					$respuesta .= "</tr>";
 					$n++; // Incrementa el contador
