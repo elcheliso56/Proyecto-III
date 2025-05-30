@@ -3,39 +3,41 @@ require_once("comunes/encabezado.php");
 require_once('comunes/menu.php'); 
 ?> 
 
-<div class="container-fluid mt-4">
-    <h2 class="mb-4">📊 Dashboard</h2>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-graph-up me-2"></i>Dashboard</h1>
+        <div>
+            <button class="btn btn-primary" onclick="aplicarFiltros()">
+                <i class="bi bi-search me-1"></i> Aplicar Filtros
+            </button>
+        </div>
+    </div>
 
     <!-- Filtros -->
-    <div class="card mb-4">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
+        </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="cuenta">Cuenta</label>
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
                         <select class="form-select" id="cuenta">
                             <option value="">Todas las cuentas</option>
                         </select>
+                        <label for="cuenta">Cuenta</label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="fechaInicio">Fecha Inicio</label>
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
                         <input type="date" class="form-control" id="fechaInicio">
+                        <label for="fechaInicio">Fecha Inicio</label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="fechaFin">Fecha Fin</label>
+                <div class="col-md-4">
+                    <div class="form-floating mb-3">
                         <input type="date" class="form-control" id="fechaFin">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary w-100" onclick="aplicarFiltros()">
-                            <i class="bi bi-search"></i> Aplicar Filtros
-                        </button>
+                        <label for="fechaFin">Fecha Fin</label>
                     </div>
                 </div>
             </div>
@@ -45,26 +47,41 @@ require_once('comunes/menu.php');
     <!-- Tarjetas de resumen -->
     <div class="row mb-4">
         <div class="col-md-4">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Ingresos</h5>
-                    <h3 class="card-text" id="totalIngresos">Bs. 0.00</h3>
+            <div class="card shadow h-100">
+                <div class="card-body bg-primary text-white rounded">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Total Ingresos</h6>
+                            <h3 class="card-text mt-2" id="totalIngresos">Bs. 0.00</h3>
+                        </div>
+                        <i class="bi bi-cash-coin fs-1 opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-danger text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Egresos</h5>
-                    <h3 class="card-text" id="totalEgresos">Bs. 0.00</h3>
+            <div class="card shadow h-100">
+                <div class="card-body bg-danger text-white rounded">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Total Egresos</h6>
+                            <h3 class="card-text mt-2" id="totalEgresos">Bs. 0.00</h3>
+                        </div>
+                        <i class="bi bi-cash-stack fs-1 opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Ganancias</h5>
-                    <h3 class="card-text" id="totalGanancias">Bs. 0.00</h3>
+            <div class="card shadow h-100">
+                <div class="card-body bg-success text-white rounded">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Ganancias</h6>
+                            <h3 class="card-text mt-2" id="totalGanancias">Bs. 0.00</h3>
+                        </div>
+                        <i class="bi bi-graph-up-arrow fs-1 opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,9 +90,11 @@ require_once('comunes/menu.php');
     <!-- Gráficos de Ingresos y Egresos por Mes -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Ingresos vs Egresos por Mes</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Ingresos vs Egresos por Mes</h5>
                     <canvas id="graficoComparativo"></canvas>
                 </div>
             </div>
@@ -85,17 +104,21 @@ require_once('comunes/menu.php');
     <!-- Gráficos de Distribución -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Ingresos por Origen</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Ingresos por Origen</h5>
                     <canvas id="graficoIngresosOrigen"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Egresos por Origen</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Egresos por Origen</h5>
                     <canvas id="graficoEgresosCategoria"></canvas>
                 </div>
             </div>
@@ -105,17 +128,19 @@ require_once('comunes/menu.php');
     <!-- Últimos Movimientos -->
     <div class="row">
         <div class="col-md-6">
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Últimos Ingresos</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Últimos Ingresos</h5>
                     <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>Descripción</th>
-                                    <th>Monto</th>
-                                    <th>Fecha</th>
-                                    <th>Origen</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Monto</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Origen</th>
                                 </tr>
                             </thead>
                             <tbody id="ultimosIngresos">
@@ -126,17 +151,19 @@ require_once('comunes/menu.php');
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Últimos Egresos</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Últimos Egresos</h5>
                     <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>Descripción</th>
-                                    <th>Monto</th>
-                                    <th>Fecha</th>
-                                    <th>Categoría</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Monto</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Categoría</th>
                                 </tr>
                             </thead>
                             <tbody id="ultimosEgresos">
@@ -153,18 +180,19 @@ require_once('comunes/menu.php');
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript" src="js/dashboard.js"></script>
 
-<!-- Loader -->
+<!-- Loader mejorado -->
 <div id="loader" class="loader-container" style="display: none;">
-    <div class="loader"></div>
-    <p>Procesando solicitud...</p>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Procesando solicitud...</p>
 </div>
 
 <style>
     .card-body canvas {
-        max-height: 300px; /* Ajusta este valor según lo necesites */
+        max-height: 300px;
     }
 
-    /* Opcional: Ajustar el tamaño del loader si fuera necesario */
     .loader-container {
         position: fixed;
         top: 0;
@@ -173,22 +201,9 @@ require_once('comunes/menu.php');
         height: 100%;
         background-color: rgba(255, 255, 255, 0.7);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        z-index: 1050; /* Asegurarse de que esté por encima de otros elementos */
-    }
-
-    .loader {
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #3498db;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        z-index: 1050;
     }
 </style> 

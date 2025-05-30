@@ -17,13 +17,13 @@ function crearDT() {
         $("#tablaingresos").DataTable({
             language: {
                 // Configuración de idioma para la tabla
-                lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron productos",
+                lengthMenu: "Mostrar _MENU_ registros por página",
+                zeroRecords: "No se encontraron registros",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay productos registrados",
+                infoEmpty: "No hay registros disponibles",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
-                search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar producto...",
+                search: "Buscar:",
+                searchPlaceholder: "Buscar...",
                 paginate: {
                     first: "Primera",
                     last: "Última",
@@ -31,12 +31,15 @@ function crearDT() {
                     previous: "Anterior",
                 },
             },
-            pageLength: 5, // Establece el número de registros por página a 5
-            lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Opciones de número de registros por página
+            pageLength: 10,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
             autoWidth: false,
-            scrollX: true,
-            fixedHeader: false,
-            order: [[0, "asc"]], // Ordena por la segunda columna
+            responsive: true,
+            order: [[0, "desc"]],
+            columnDefs: [
+                { orderable: false, targets: -1 }, // Deshabilitar ordenamiento en la columna de acciones
+                { className: "text-center", targets: "_all" } // Centrar todo el contenido
+            ]
         });
     }
 }
@@ -44,6 +47,11 @@ function crearDT() {
 $(document).ready(function () {
     consultar(); // Llama a la función consultar al cargar el documento
     cargarOpciones(); // Carga las opciones para selectores
+
+    // Inicializar el buscador
+    $("#buscadorMovimientos").on("keyup", function() {
+        $("#tablaingresos").DataTable().search(this.value).draw();
+    });
 
     // Validaciones para el campo de código
 

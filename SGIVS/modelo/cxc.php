@@ -213,6 +213,8 @@ class cxc extends datos {
                 'resultado' => 'error',
                 'mensaje' => 'Error al registrar la cuenta por cobrar: ' . $e->getMessage()
             ];
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
     }
 
@@ -305,6 +307,8 @@ class cxc extends datos {
         } catch(Exception $e) {
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
         return $r;
     }
@@ -355,6 +359,8 @@ class cxc extends datos {
             $co->rollBack();
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
         return $r;
     }
@@ -368,10 +374,9 @@ class cxc extends datos {
         // Verifica si la cuenta por cobrar existe
         if ($this->existe($this->id)) {
             // Validar los datos antes de modificar
-            $validacion = $this->validarDatos();
-            if (!$validacion['valido']) {
+            if (!$this->validarDatos()) {
                 $r['resultado'] = 'error';
-                $r['mensaje'] = $validacion['mensaje'];
+                $r['mensaje'] = $this->mensaje;
                 return $r;
             }
 
@@ -394,6 +399,8 @@ class cxc extends datos {
             } catch(Exception $e) {
                 $r['resultado'] = 'error';
                 $r['mensaje'] = $e->getMessage();
+            } finally {
+                $this->cerrarConexion(); // Cierra la conexión después de la operación
             }
         } else {
             $r['resultado'] = 'modificar';
@@ -426,6 +433,8 @@ class cxc extends datos {
                 } else {
                     $r['mensaje'] = $e->getMessage();
                 }
+            } finally {
+                $this->cerrarConexion(); // Cierra la conexión después de la operación
             }
         }
         else{
@@ -479,6 +488,8 @@ class cxc extends datos {
         } catch(Exception $e) {
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
         return $r;
     }
@@ -494,10 +505,12 @@ class cxc extends datos {
                 return true;   
             }
             else{    
-                return false;;
+                return false;
             }    
         }catch(Exception $e){
             return false;
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
     }    
 
@@ -517,6 +530,8 @@ class cxc extends datos {
         } catch(Exception $e) {
             error_log("Error al obtener pacientes: " . $e->getMessage());
             return array();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
     }
 
@@ -529,6 +544,8 @@ class cxc extends datos {
             return $resultado->rowCount() > 0;
         } catch(Exception $e) {
             return false;
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
     }
 
@@ -544,6 +561,7 @@ class cxc extends datos {
             }
         }
         
+        $this->cerrarConexion(); // Cierra la conexión después de la operación
         return $pacientes;
     }
 
@@ -559,6 +577,7 @@ class cxc extends datos {
             }
         }
         
+        $this->cerrarConexion(); // Cierra la conexión después de la operación
         return $cuentas;
     }
 
@@ -598,6 +617,8 @@ class cxc extends datos {
         } catch(Exception $e) {
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
         return $r;
     }
@@ -669,6 +690,8 @@ class cxc extends datos {
             $co->rollBack();
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $this->cerrarConexion(); // Cierra la conexión después de la operación
         }
         return $r;
     }

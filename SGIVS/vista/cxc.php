@@ -3,35 +3,54 @@ require_once("comunes/encabezado.php");
 require_once('comunes/menu.php'); 
 ?> 
 
-<div class="container mt-4">
-    <h2 class="mb-1">📊 Cuentas por Cobrar</h2> 
-    <p class="text-muted">Listado de cuentas por cobrar registradas en el sistema.</p>
-
-    <div class="text-end mb-3">
-        <button type="button" class="btn btn-success" id="incluir" title="Registrar Cuenta por Cobrar">
-            <i class="bi bi-plus-circle"></i> Nueva Cuenta por Cobrar
-        </button>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-cash-coin me-2"></i>Cuentas por Cobrar</h1>
+        <div>
+            <button type="button" class="btn btn-success" id="incluir" title="Registrar Cuenta por Cobrar">
+                <i class="bi bi-plus-circle me-1"></i> Nueva Cuenta por Cobrar
+            </button>
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-striped table-hover text-center align-middle" id="tablacxc">
-            <thead class="tableh">
-                <tr>
-                    <th>#</th>
-                    <th>Paciente</th>
-                    <th>Monto Total</th>
-                    <th>Monto Pendiente</th>
-                    <th>Fecha Emisión</th>
-                    <th>Fecha Vencimiento</th>
-                    <th>Estado</th>
-                    <th>Referencia</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="resultadoconsulta">
-                <!-- Aquí se cargan las cuentas por cobrar dinámicamente -->
-            </tbody>
-        </table>
+    <!-- Tabla de cuentas por cobrar -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-success">Listado de Cuentas por Cobrar</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow">
+                    <a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a Excel</a>
+                    <a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir Listado</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <!-- Agrega esto antes de la tabla -->
+                
+                <table class="table table-striped table-hover" id="tablacxc" width="100%" cellspacing="0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th class="text-center">Paciente</th>
+                            <th class="text-center">Monto Total</th>
+                            <th class="text-center">Monto Pendiente</th>
+                            <th class="text-center">Fecha Emisión</th>
+                            <th class="text-center">Fecha Vencimiento</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Referencia</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultadoconsulta">
+                        <!-- Aquí se cargan las cuentas por cobrar dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -40,7 +59,7 @@ require_once('comunes/menu.php');
     <div class="modal-dialog">
         <form method="post" id="f" autocomplete="off" enctype="multipart/form-data" class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="bi bi-cash-coin"></i> Registrar Cuenta por Cobrar</h5>
+                <h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Registrar Cuenta por Cobrar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -153,10 +172,10 @@ require_once('comunes/menu.php');
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="bc">
-                    <i class="bi bi-x-square"></i> Cancelar
+                    <i class="bi bi-x-square me-1"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-success" id="proceso">
-                    <i class="bi bi-check-circle"></i> Guardar
+                    <i class="bi bi-check-circle me-1"></i> Guardar
                 </button>
             </div>
         </form>
@@ -168,7 +187,7 @@ require_once('comunes/menu.php');
     <div class="modal-dialog">
         <form method="post" id="fPago" autocomplete="off" class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="bi bi-cash"></i> Registrar Pago</h5>
+                <h5 class="modal-title"><i class="bi bi-cash me-2"></i>Registrar Pago</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -208,10 +227,10 @@ require_once('comunes/menu.php');
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-square"></i> Cancelar
+                    <i class="bi bi-x-square me-1"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-success" id="procesarPago">
-                    <i class="bi bi-check-circle"></i> Registrar Pago
+                    <i class="bi bi-check-circle me-1"></i> Registrar Pago
                 </button>
             </div>
         </form>
@@ -222,8 +241,8 @@ require_once('comunes/menu.php');
 <div class="modal fade" id="modalDetallePago" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title"><i class="bi bi-eye"></i> Detalle del Pago</h5>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-eye me-2"></i>Detalle del Pago</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -252,7 +271,7 @@ require_once('comunes/menu.php');
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-square"></i> Cerrar
+                    <i class="bi bi-x-square me-1"></i> Cerrar
                 </button>
             </div>
         </div>
@@ -263,8 +282,8 @@ require_once('comunes/menu.php');
 <div class="modal fade" id="modalAbono" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" id="fAbono" autocomplete="off" class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="bi bi-cash"></i> Abonar a Cuenta por Cobrar</h5>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-cash me-2"></i>Abonar a Cuenta por Cobrar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -319,10 +338,10 @@ require_once('comunes/menu.php');
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-square"></i> Cancelar
+                    <i class="bi bi-x-square me-1"></i> Cancelar
                 </button>
-                <button type="button" class="btn btn-primary" id="procesarAbono">
-                    <i class="bi bi-check-circle"></i> Registrar Abono
+                <button type="button" class="btn btn-success" id="procesarAbono">
+                    <i class="bi bi-check-circle me-1"></i> Registrar Abono
                 </button>
             </div>
         </form>
@@ -334,8 +353,10 @@ require_once('comunes/menu.php');
 <link href="css/select2.min.css" rel="stylesheet" />
 <script src="js/select2.min.js"></script>
 
-<!-- Loader -->
+<!-- Loader mejorado -->
 <div id="loader" class="loader-container" style="display: none;">
-    <div class="loader"></div>
-    <p>Procesando solicitud...</p>
+    <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Procesando solicitud...</p>
 </div>

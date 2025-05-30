@@ -1,13 +1,5 @@
 Array
 (
-    [accion] => cargarOpciones
-)
-Array
-(
-    [accion] => consultar
-)
-Array
-(
     [accion] => consultar
 )
 Array
@@ -264,6 +256,86 @@ Array
 )
 Array
 (
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
     [accion] => cargarOpciones
 )
 Array
@@ -309,6 +381,48 @@ Array
 Array
 (
     [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => incluir
+    [paciente_id] => 1
+    [monto_total] => 440
+    [fecha_emision] => 2025-05-30
+    [fecha_vencimiento] => 2025-06-12
+    [descripcion] => algo asi
+    [referencia] => prueba
+    [numero_cuotas] => 2
+    [frecuencia_pago] => semanal
+    [cuenta_id] => 4
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultarCuotasPendientes
+    [id] => 12
+)
+Array
+(
+    [accion] => procesarAbono
+    [id_cuenta] => 12
+    [monto] => 200
+    [fecha_pago] => 2025-05-30
+    [referencia] => pago
+)
+Array
+(
+    [accion] => consultar
 )
 Array
 (

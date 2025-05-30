@@ -135,7 +135,7 @@
 									</div>
 								</a>
 							</li>
-
+							
 
 							<li class="full-width">
 								<a href="?pagina=ingresos" class="full-width">
@@ -185,6 +185,17 @@
 									</div>
 									<div class="navLateral-body-cr"style="color: white;">
 										Dashboard
+									</div>
+								</a>
+							</li>
+
+							<li class="full-width">
+								<a href="?pagina=reportes_cuentas" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-file-earmark-pdf"></i>
+									</div>
+									<div class="navLateral-body-cr"style="color: white;">
+										reportes cuentas
 									</div>
 								</a>
 							</li>

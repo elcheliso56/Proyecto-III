@@ -82,6 +82,15 @@ $(document).ready(function () {
         validarkeyup(/^[0-9]{10,20}$/, $(this), $("#snumero_cuenta"), "Solo números entre 10 y 20 dígitos");
     });
 
+    // Validaciones para moneda
+    $("#moneda").on("change", function () {
+        if ($(this).val() === null) {
+            $("#smoneda").text("La moneda es obligatoria");
+        } else {
+            $("#smoneda").text("");
+        }
+    });
+
     // Manejo de clics en el botón de proceso
     $("#proceso").on("click", function () {
         if ($(this).text() == "INCLUIR") {
@@ -208,7 +217,39 @@ $(document).ready(function () {
 });
 
 function validarenvio() {
-    return true;
+    let valido = true;
+
+    // Validar nombre
+    if ($("#nombre").val() === "") {
+        $("#snombre").text("El nombre es obligatorio");
+        valido = false;
+    }
+
+    // Validar tipo
+    if ($("#tipo").val() === null) {
+        $("#stipo").text("El tipo de cuenta es obligatorio");
+        valido = false;
+    }
+
+    // Validar moneda
+    if ($("#moneda").val() === null) {
+        $("#smoneda").text("La moneda es obligatoria");
+        valido = false;
+    }
+
+    // Validar campos bancarios si el tipo es bancaria
+    if ($("#tipo").val() === 'bancaria') {
+        if ($("#entidad_bancaria").val() === "") {
+            $("#sentidad_bancaria").text("La entidad bancaria es obligatoria");
+            valido = false;
+        }
+        if ($("#numero_cuenta").val() === "") {
+            $("#snumero_cuenta").text("El número de cuenta es obligatorio");
+            valido = false;
+        }
+    }
+
+    return valido;
 }
 
 function validarkeypress(er, e) {

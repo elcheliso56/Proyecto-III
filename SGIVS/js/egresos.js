@@ -44,11 +44,11 @@ $(document).ready(function () {
 
     // Validaciones para el campo de descripción
     $("#descripcion").on("keypress", function (e) {
-        validarkeypress(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
 
     $("#descripcion").on("keyup", function () {
-        validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras entre 3 y 90 caracteres");
+        validarkeyup(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras y números entre 3 y 90 caracteres");
     });
 
     // Validaciones para el campo de monto
@@ -60,12 +60,30 @@ $(document).ready(function () {
         validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
     });
 
+    // Validaciones para el campo de fecha
+    $("#fecha").on("change", function () {
+        if ($(this).val() === "") {
+            $("#sfecha").text("La fecha es obligatoria").addClass("text-danger small");
+        } else {
+            $("#sfecha").text("").removeClass("text-danger small");
+        }
+    });
+
+    // Validaciones para el campo de origen
+    $("#origen").on("change", function () {
+        if ($(this).val() === null) {
+            $("#sorigen").text("El origen es obligatorio").addClass("text-danger small");
+        } else {
+            $("#sorigen").text("").removeClass("text-danger small");
+        }
+    });
+
     // Validaciones para el campo de cuenta
     $("#cuenta_id").on("change", function () {
         if ($(this).val() === null) {
-            $("#scuenta_id").text("La cuenta es obligatoria");
+            $("#scuenta_id").text("La cuenta es obligatoria").addClass("text-danger small");
         } else {
-            $("#scuenta_id").text("");
+            $("#scuenta_id").text("").removeClass("text-danger small");
         }
     });
 
@@ -75,7 +93,7 @@ $(document).ready(function () {
             if (validarenvio()) {
                 Swal.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas registrar este nuevo egreso?",
+                    text: "¿Deseas registrar este egreso?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
@@ -97,8 +115,7 @@ $(document).ready(function () {
                     }
                 });
             }
-        }
-        else if ($(this).text() == "MODIFICAR") {
+        } else if ($(this).text() == "MODIFICAR") {
             if (validarenvio()) {
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
@@ -123,22 +140,21 @@ $(document).ready(function () {
                             datos.append('id', $("#id").val());
                             datos.append('descripcion', $("#descripcion").val());
                             datos.append('monto', $("#monto").val());
-                            datos.append('origen', $("#origen").val());
                             datos.append('fecha', $("#fecha").val());
+                            datos.append('origen', $("#origen").val());
                             datos.append('cuenta_id', $("#cuenta_id").val());
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "El registro no ha sido modificado",
+                            text: "El egreso no ha sido modificado",
                             icon: "error"
                         });
                     }
                 });
             }
-        }
-        else if ($(this).text() == "ELIMINAR") {
+        } else if ($(this).text() == "ELIMINAR") {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-danger",
@@ -163,7 +179,7 @@ $(document).ready(function () {
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     swalWithBootstrapButtons.fire({
                         title: "Cancelado",
-                        text: "Registro no eliminado",
+                        text: "Egreso no eliminado",
                         icon: "error"
                     });
                 }
@@ -178,8 +194,8 @@ $(document).ready(function () {
         $("#modal1").modal("show");
     });
 
-    // Inicializar Select2 en el select de origen
-    $('#origen').select2({
+    // Inicializar Select2 en los selects
+    $('.select2').select2({
         placeholder: "Seleccione una opción",
         allowClear: true,
         width: '100%',
@@ -195,7 +211,39 @@ $(document).ready(function () {
 });
 
 function validarenvio() {
-    return true;
+    let valido = true;
+
+    // Validar descripción
+    if ($("#descripcion").val() === "") {
+        $("#sdescripcion").text("La descripción es obligatoria").addClass("text-danger small");
+        valido = false;
+    }
+
+    // Validar monto
+    if ($("#monto").val() === "") {
+        $("#smonto").text("El monto es obligatorio").addClass("text-danger small");
+        valido = false;
+    }
+
+    // Validar fecha
+    if ($("#fecha").val() === "") {
+        $("#sfecha").text("La fecha es obligatoria").addClass("text-danger small");
+        valido = false;
+    }
+
+    // Validar origen
+    if ($("#origen").val() === null) {
+        $("#sorigen").text("El origen es obligatorio").addClass("text-danger small");
+        valido = false;
+    }
+
+    // Validar cuenta
+    if ($("#cuenta_id").val() === null) {
+        $("#scuenta_id").text("La cuenta es obligatoria").addClass("text-danger small");
+        valido = false;
+    }
+
+    return valido;
 }
 
 function validarkeypress(er, e) {
@@ -210,10 +258,10 @@ function validarkeypress(er, e) {
 function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
     a = er.test(etiqueta.val());
     if (a) {
-        etiquetamensaje.text("");
+        etiquetamensaje.text("").removeClass("text-danger small");
         return 1;
     } else {
-        etiquetamensaje.text(mensaje);
+        etiquetamensaje.text(mensaje).addClass("text-danger small");
         return 0;
     }
 }
