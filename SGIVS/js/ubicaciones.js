@@ -203,39 +203,29 @@ $("#odontomodal").on("click", function () {
 $("#cierrate").on("click", function () {
     $("#miModal").modal("hide");// Muestra el modal
 });
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Configura jsPDF (si usas la versión umd)
-    const { jsPDF } = window.jspdf;
-
-    // Botón para generar PDF
+    // Botón para generar imagen
     document.getElementById('generar-pdf').addEventListener('click', function () {
         const iframe = document.querySelector('#miModal iframe');
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-        // 1. Capturar el contenido del iframe con html2canvas
         html2canvas(iframeDoc.body, {
-            scale: 4, // Aumenta la calidad
-            useCORS: true, // Para contenido externo (si aplica)
-            logging: true, // Depuración en consola
-            backgroundColor: '#FFFFFF' // Fondo blanco
+            scale: 4,
+            useCORS: true,
+            logging: true,
+            backgroundColor: '#FFFFFF'
         }).then(canvas => {
-            // 2. Crear el PDF
-            const pdf = new jsPDF('p', 'mm', 'a4'); // Orientación vertical, formato A4
+            // Convierte el canvas a imagen PNG y la descarga
             const imgData = canvas.toDataURL('image/png');
-
-            // Calcular dimensiones para que la imagen quepa en el PDF
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            // 3. Agregar la imagen al PDF
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-            // 4. Descargar el PDF
-            pdf.save('odontograma.pdf');
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = 'odontograma.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }).catch(error => {
-            console.error('Error al generar PDF:', error);
-            alert('No se pudo generar el PDF. Ver consola para detalles.');
+            console.error('Error al generar imagen:', error);
+            alert('No se pudo generar la imagen. Ver consola para detalles.');
         });
     });
 });
