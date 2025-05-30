@@ -11,10 +11,7 @@ function destruyeDT() {
     }
 }
 
- // Manejo del clic en el botón incluir
-    $("#mostrar").on("click", function () {
-        $("#modalver").modal("show"); // Muestra el modal
-    });
+
     
 function crearDT() {
     // Crea la tabla solo si no existe
@@ -27,7 +24,7 @@ function crearDT() {
                 infoEmpty: "No hay historial registradas",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar ubicación...",
+                searchPlaceholder: "Buscar historia...",
                 paginate: {
                     first: "Primera",
                     last: "Última",
@@ -73,7 +70,7 @@ $(document).ready(function () {
     $("#proceso").on("click", function () {
         if ($(this).text() == "INCLUIR") {
             if (validarenvio()) {
-                // Confirmación para incluir una nueva ubicación
+                // Confirmación para incluir una nueva historia
                 Swal.fire({
                     title: "¿Estás seguro?",
                     text: "¿Deseas incluir esta nueva Historia?",
@@ -117,7 +114,7 @@ $(document).ready(function () {
         }
         else if ($(this).text() == "MODIFICAR") {
             if (validarenvio()) {
-                // Confirmación para modificar una ubicación
+                // Confirmación para modificar una historia
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
                         confirmButton: "btn btn-success",
@@ -128,7 +125,7 @@ $(document).ready(function () {
 
                 swalWithBootstrapButtons.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas modificar esta ubicación?",
+                    text: "¿Deseas modificar esta historia?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonText: "Sí, modificar",
@@ -149,7 +146,7 @@ $(document).ready(function () {
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "La ubicación no ha sido modificada",
+                            text: "La historia no ha sido modificada",
                             icon: "error"
                         });
                     }
@@ -248,7 +245,7 @@ function validarenvio() {
     if (validarkeyup(/^[^"']{3,30}$/, $("#nombre"), $("#snombre"), "Texto entre 3 y 30 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El nombre de la ubicación es obligatorio",
+            text: "El nombre de la historia es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
@@ -292,9 +289,25 @@ function pone(pos, accion) {
     if (accion == 0) {
         $("#proceso").text("MODIFICAR"); // Cambia el texto a MODIFICAR
         $("#nombre").prop("disabled", true); // Desactiva el campo nombre
-        $("#Apellido").prop("disabled", true); // Activa el campo Apellido
-        $("#telefono").prop("disabled", true); // Activa el campo telefono
-        $("#correo").prop("disabled", false);
+        $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
+        $("#Ocupacion").prop("disabled", true); // Desactiva el campo Ocupacion
+        $("#Sexo").prop("disabled", true); // Desactiva el campo Sexo
+        $("#PersonaContacto").prop("disabled", true); // Desactiva el campo PersonaContacto
+        $("#telefono").prop("disabled", true); // Desactiva el campo telefono
+        $("#Edad").prop("disabled", true); // Desactiva el campo Edad
+        $("#correo").prop("disabled", true); // Desactiva el campo correo
+        $("#motivo").prop("disabled", true); // Desactiva el campo motivo
+        $("#diagnostico").prop("disabled", true); // Desactiva el campo diagnostico
+        $("#tratamiento").prop("disabled", true); // Desactiva el campo tratamiento
+        $("#medicamentos").prop("disabled", true); // Desactiva el campo medicamentos
+        $("#dientesafectados").prop("disabled", true); // Desactiva el campo dientesafectados
+        $("#antecedentes").prop("disabled", true); // Desactiva el campo antecedentes
+        $("#fechaconsulta").prop("disabled", true); // Desactiva el campo fechaconsulta
+        $("#proximacita").prop("disabled", true); // Desactiva el campo proximacita
+        $("#observaciones").prop("disabled", true); // Desactiva el campo observaciones
+
+
+
 
         // $("#imagen").prop("disabled", false); // Activa el campo imagen
     } else {
@@ -302,13 +315,39 @@ function pone(pos, accion) {
         $("#nombre").prop("disabled", true); // Desactiva el campo nombre
         $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
         $("#telefono").prop("disabled", true); // Desactiva el campo telefono
-        $("#correo").prop("disabled", false);
+        $("#correo").prop("disabled", true); // Desactiva el campo correo
+        $("#Sexo").prop("disabled", true); // Desactiva el campo Sexo
+        $("#Ocupacion").prop("disabled", true); // Desactiva el campo Ocupacion
+        $("#PersonaContacto").prop("disabled", true); // Desactiva el campo PersonaContacto
+        $("#Edad").prop("disabled", true); // Desactiva el campo Edad
+        $("#motivo").prop("disabled", true); // Desactiva el campo motivo
+        $("#diagnostico").prop("disabled", true); // Desactiva el campo diagnostico
+        $("#tratamiento").prop("disabled", true); // Desactiva el campo tratamiento
+        $("#medicamentos").prop("disabled", true); // Desactiva el campo medicamentos
+        $("#dientesafectados").prop("disabled", true); // Desactiva el campo dientesafectados
+        $("#antecedentes").prop("disabled", true); // Desactiva el campo antecedentes
+        $("#fechaconsulta").prop("disabled", true); // Desactiva el campo fechaconsulta
+        $("#proximacita").prop("disabled", true); // Desactiva el campo proximacita
+        $("#observaciones").prop("disabled", true); // Desactiva el campo observaciones
         // $("#imagen").prop("disabled", true); // Desactiva el campo imagen
     }
     $("#nombre").val($(linea).find("td:eq(1)").text()); // Rellena el campo nombre
     $("#Apellido").val($(linea).find("td:eq(2)").text()); // Rellena el campo Apellido
     $("#telefono").val($(linea).find("td:eq(3)").text()); // Rellena el campo telefono
-    $("#Correo").val($(linea).find("td:eq(4)").text()); // Rellena el campo Sexo
+    $("#correo").val($(linea).find("td:eq(4)").text()); // Rellena el campo correo
+    $("#Sexo").val($(linea).find("td:eq(5)").text()); // Rellena el campo Sexo
+    $("#Ocupacion").val($(linea).find("td:eq(6)").text()); // Rellena el campo Ocupacion
+    $("#PersonaContacto").val($(linea).find("td:eq(7)").text()); // Rellena el campo PersonaContacto
+    $("#Edad").val($(linea).find("td:eq(8)").text()); // Rellena el campo Edad
+    $("#motivo").val($(linea).find("td:eq(9)").text()); // Rellena el campo motivo
+    $("#diagnostico").val($(linea).find("td:eq(10)").text()); // Rellena el campo diagnostico
+    $("#tratamiento").val($(linea).find("td:eq(11)").text()); // Rellena el campo tratamiento
+    $("#medicamentos").val($(linea).find("td:eq(12)").text()); // Rellena el campo medicamentos
+    $("#dientesafectados").val($(linea).find("td:eq(13)").text()); // Rellena el campo dientesafectados
+    $("#antecedentes").val($(linea).find("td:eq(14)").text()); // Rellena el campo antecedentes
+    $("#fechaconsulta").val($(linea).find("td:eq(15)").text()); // Rellena el campo fechaconsulta
+    $("#proximacita").val($(linea).find("td:eq(16)").text()); // Rellena el campo proximacita
+    $("#observaciones").val($(linea).find("td:eq(17)").text()); // Rellena el campo observaciones
 
 
     /*   var imagenSrc = $(linea).find("td:eq(3) img").attr("src"); // Obtiene la fuente de la imagen
@@ -330,25 +369,6 @@ function pone(pos, accion) {
     $("#modal1").modal("show");
      // Muestra el modal
 }
-function muestra(pos, accion) {
-    // Obtiene la fila seleccionada
-    var linea = $(pos).closest('tr');
-    // Toma los datos de la fila de la tabla de consulta
-    var nombre = $(linea).find("td:eq(1)").text();
-    var apellido = $(linea).find("td:eq(2)").text();
-    var telefono = $(linea).find("td:eq(3)").text();
-    var correo = $(linea).find("td:eq(4)").text();
-
-    // Asigna los valores a los campos del modal de solo lectura
-    $("#ver_nombre").val(nombre).prop("disabled", true);
-    $("#ver_Apellido").val(apellido).prop("disabled", true);
-    $("#ver_telefono").val(telefono).prop("disabled", true);
-    $("#ver_correo").val(correo).prop("disabled", true);
-
-    // Muestra el modal de visualización
-    $("#modalver").modal("show");
-}
-
 function enviaAjax(datos) {
     // Envía datos al servidor mediante AJAX
     $.ajax({

@@ -238,97 +238,70 @@ require_once('comunes/menu.php');
 		</div>
 	</div>
 </div>
-<!-- Modal de Visualización de Paciente -->
-<div class="modal fade" id="modalver" tabindex="-1" aria-hidden="true">
+<!-- Modal para mostrar campos del modelo del paciente seleccionado -->
+
+<!-- Modal para mostrar campos del modelo del paciente seleccionado -->
+<div class="modal fade" id="modalModelo" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header bg-info text-white">
-				<h5 class="modal-title"><i class="bi bi-clipboard2-pulse me-2"></i>Ver Detalles del Paciente</h5>
-				<div class="col-0">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-				</div>
+				<h5 class="modal-title"><i class="bi bi-list-columns-reverse me-2"></i>Datos del Paciente</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 			</div>
-			<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-				<div class="table-responsive">
-					<table class="table table-bordered">
-						<tbody>
-							<tr>
-								<th>Nombre</th>
-								<td id="ver_nombre"></td>
-							</tr>
-							<tr>
-								<th>Apellido</th>
-								<td id="ver_apellido"></td>
-							</tr>
-							<tr>
-								<th>Ocupación</th>
-								<td id="ver_ocupacion"></td>
-							</tr>
-							<tr>
-								<th>Sexo</th>
-								<td id="ver_sexo"></td>
-							</tr>
-							<tr>
-								<th>Numero de contacto (Emergencias)</th>
-								<td id="ver_personacontacto"></td>
-							</tr>
-							<tr>
-								<th>Teléfono (personal)</th>
-								<td id="ver_telefono"></td>
-							</tr>
-							<tr>
-								<th>Edad</th>
-								<td id="ver_edad"></td>
-							</tr>
-							<tr>
-								<th>Correo</th>
-								<td id="ver_correo"></td>
-							</tr>
-							<tr>
-								<th>Motivo de Consulta</th>
-								<td id="ver_motivo"></td>
-							</tr>
-							<tr>
-								<th>Diagnóstico</th>
-								<td id="ver_diagnostico"></td>
-							</tr>
-							<tr>
-								<th>Tratamiento</th>
-								<td id="ver_tratamiento"></td>
-							</tr>
-							<tr>
-								<th>Medicamentos</th>
-								<td id="ver_medicamentos"></td>
-							</tr>
-							<tr>
-								<th>Dientes Afectados</th>
-								<td id="ver_dientesafectados"></td>
-							</tr>
-							<tr>
-								<th>Antecedentes Médicos</th>
-								<td id="ver_antecedentes"></td>
-							</tr>
-							<tr>
-								<th>Fecha de Consulta</th>
-								<td id="ver_fechaconsulta"></td>
-							</tr>
-							<tr>
-								<th>Próxima Cita</th>
-								<td id="ver_proximacita"></td>
-							</tr>
-							<tr>
-								<th>Observaciones</th>
-								<td id="ver_observaciones"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+			<div class="modal-body">
+				<ul class="list-group" id="camposModeloLista">
+					<!-- Los datos del paciente se insertarán aquí dinámicamente -->
+				</ul>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle"></i> Cerrar
+				</button>
 			</div>
 		</div>
 	</div>
+</div>
+<script>
+	// Espera a que el DOM esté listo
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('tablaPacientes').addEventListener('click', function(e) {
+			let tr = e.target.closest('tr');
+			// Evita abrir el modal si se hace clic en un botón dentro de "Acciones"
+			if (tr && tr.parentNode.tagName === 'TBODY') {
+				// Si el clic fue en la columna de Acciones (última columna), no abrir modal
+				const accionesTd = tr.querySelector('td:last-child');
+				if (accionesTd && (accionesTd.contains(e.target) || accionesTd === e.target)) {
+					return;
+				}
+				const tds = tr.querySelectorAll('td');
+				if (tds.length > 0) {
+					const campos = [
+						'Numero',
+						'Nombre',
+						'Apellido',
+						'Teléfono',
+						'Correo'
+					];
+					let html = '';
+					tds.forEach((td, idx) => {
+						if (idx < campos.length) {
+							html += `<li class="list-group-item"><strong>${campos[idx]}:</strong> ${td.textContent}</li>`;
+						}
+					});
+					document.getElementById('camposModeloLista').innerHTML = html;
+					const modal = new bootstrap.Modal(document.getElementById('modalModelo'));
+					modal.show();
+				}
+			}
+		});
+	});
+</script>
+
+<!-- Botón para abrir el modal del modelo -->
+<div class="position-fixed bottom-0 end-0 m-4" style="z-index: 1055;">
+	<button type="button" class="btn btn-secondary" id="mostrarModeloBtn" data-bs-toggle="modal" data-bs-target="#modalModelo">
+		<i class="bi bi-list-columns-reverse"></i> Ver Campos del Modelo
+	</button>
 </div>
 
 <script type="text/javascript" src="js/ubicaciones.js"></script>
