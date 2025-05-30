@@ -222,7 +222,7 @@ function construirHTMLReporte(datos) {
                 </tbody>
             </table>
             <div class="footer">
-                <p>SGIVS - Sistema de Gestión Integral de Veterinaria</p>
+                <p>SGIVS - Sistema de Gestión Integral Vital Sonrisas</p>
                 <p>Este es un documento generado automáticamente por el sistema</p>
             </div>
         </body>

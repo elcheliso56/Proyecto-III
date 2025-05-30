@@ -201,9 +201,11 @@ function consultar(){
                 $respuesta .= "<td>".$row['origen']."</td>";
                 $respuesta .= "<td data-cuenta-id='".$row['cuenta_id']."'>".$row['nombre_cuenta']."</td>";
 				$respuesta .= "<td>";
-					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ingreso'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ingreso'><i class='bi bi-trash'></i></button><br/>";
-					$respuesta .= "</td>";
+                    // Botón de modificar comentado
+                    // $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ingreso'><i class='bi bi-arrow-repeat'></i></button><br/>";
+                    // Botón de eliminar comentado
+                    // $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ingreso'><i class='bi bi-trash'></i></button><br/>";
+                    $respuesta .= "</td>";
                 $respuesta .= "</tr>";
                 $n++;
             }

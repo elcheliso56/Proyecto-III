@@ -278,10 +278,12 @@ function pone(pos, accion) {
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
         $("#id").prop("disabled", true);
-        $("#nombre").prop("disabled", false);
-        $("#tipo").prop("disabled", false);
-        $("#moneda").prop("disabled", false);
+        $("#nombre").prop("disabled", true);
+        $("#tipo").prop("disabled", true);
+        $("#moneda").prop("disabled", true);
         $("#activa").prop("disabled", false);
+        $("#entidad_bancaria").prop("disabled", true);
+        $("#numero_cuenta").prop("disabled", true);
     } else {
         $("#proceso").text("ELIMINAR");
         $("#id").prop("disabled", true);
@@ -289,6 +291,8 @@ function pone(pos, accion) {
         $("#tipo").prop("disabled", true);
         $("#moneda").prop("disabled", true);
         $("#activa").prop("disabled", true);
+        $("#entidad_bancaria").prop("disabled", true);
+        $("#numero_cuenta").prop("disabled", true);
     }
 
     $("#nombre").val($(linea).find("td:eq(1)").text());

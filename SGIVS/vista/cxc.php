@@ -105,9 +105,10 @@ require_once('comunes/menu.php');
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input type="date" class="form-control" id="fecha_vencimiento" placeholder="Fecha de vencimiento">
-                    <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+                    <input type="date" class="form-control" id="fecha_vencimiento" placeholder="Fecha de vencimiento" disabled readonly>
+                    <label for="fecha_vencimiento">Fecha de Vencimiento (Calculada automáticamente)</label>
                     <span id="sfecha_vencimiento" class="text-danger"></span>
+                    <small class="form-text text-muted">La fecha se calcula automáticamente según el número de cuotas y la frecuencia de pago</small>
                 </div>
 
                 <div class="form-floating mb-3">

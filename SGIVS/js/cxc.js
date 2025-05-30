@@ -73,13 +73,7 @@ $(document).ready(function () {
     });
 
     // Validaciones para el campo de fecha de vencimiento
-    $("#fecha_vencimiento").on("change", function () {
-        if ($(this).val() === "") {
-            $("#sfecha_vencimiento").text("La fecha de vencimiento es obligatoria");
-        } else {
-            $("#sfecha_vencimiento").text("");
-        }
-    });
+    $("#fecha_vencimiento").prop("disabled", true);
 
     // Validaciones para el campo de descripción
     $("#descripcion").on("keypress", function (e) {
@@ -105,7 +99,15 @@ $(document).ready(function () {
     });
 
     $("#numero_cuotas").on("keyup", function () {
-        validarkeyup(/^[1-9][0-9]*$/, $(this), $("#snumero_cuotas"), "Debe ser un número mayor a 0");
+        let valor = parseInt($(this).val());
+        if (valor < 1 || valor > 6) {
+            $("#snumero_cuotas").text("El número de cuotas debe estar entre 1 y 6");
+            return 0;
+        } else {
+            $("#snumero_cuotas").text("");
+            calcularFechaVencimiento();
+            return 1;
+        }
     });
 
     // Validaciones para el campo de frecuencia de pago
@@ -307,6 +309,19 @@ $(document).ready(function () {
             }
         }
     });
+
+    // Agregar event listeners para recalcular la fecha de vencimiento
+    $("#fecha_emision").on("change", function() {
+        calcularFechaVencimiento();
+    });
+
+    $("#numero_cuotas").on("change keyup", function() {
+        calcularFechaVencimiento();
+    });
+
+    $("#frecuencia_pago").on("change", function() {
+        calcularFechaVencimiento();
+    });
 });
 
 // Función para validar el envío de datos
@@ -329,6 +344,9 @@ function validarenvio() {
     if ($("#numero_cuotas").val() === "") {
         $("#snumero_cuotas").text("El número de cuotas es obligatorio");
         valido = false;
+    } else if (parseInt($("#numero_cuotas").val()) < 1 || parseInt($("#numero_cuotas").val()) > 6) {
+        $("#snumero_cuotas").text("El número de cuotas debe estar entre 1 y 6");
+        valido = false;
     }
 
     // Validar frecuencia de pago
@@ -340,12 +358,6 @@ function validarenvio() {
     // Validar fecha de emisión
     if ($("#fecha_emision").val() === "") {
         $("#sfecha_emision").text("La fecha de emisión es obligatoria");
-        valido = false;
-    }
-
-    // Validar fecha de vencimiento
-    if ($("#fecha_vencimiento").val() === "") {
-        $("#sfecha_vencimiento").text("La fecha de vencimiento es obligatoria");
         valido = false;
     }
 
@@ -929,3 +941,31 @@ $("#procesarAbono").on("click", function () {
         });
     }
 });
+
+// Función para calcular la fecha de vencimiento
+function calcularFechaVencimiento() {
+    const fechaEmision = new Date($("#fecha_emision").val());
+    const numeroCuotas = parseInt($("#numero_cuotas").val());
+    const frecuencia = $("#frecuencia_pago").val();
+    
+    if (fechaEmision && numeroCuotas && frecuencia) {
+        let fechaVencimiento = new Date(fechaEmision);
+        
+        // Calcular la fecha de vencimiento según la frecuencia
+        switch (frecuencia) {
+            case 'semanal':
+                fechaVencimiento.setDate(fechaVencimiento.getDate() + (7 * numeroCuotas));
+                break;
+            case 'quincenal':
+                fechaVencimiento.setDate(fechaVencimiento.getDate() + (15 * numeroCuotas));
+                break;
+            case 'mensual':
+                fechaVencimiento.setMonth(fechaVencimiento.getMonth() + numeroCuotas);
+                break;
+        }
+        
+        // Formatear la fecha para el input
+        const fechaFormateada = fechaVencimiento.toISOString().split('T')[0];
+        $("#fecha_vencimiento").val(fechaFormateada);
+    }
+}
