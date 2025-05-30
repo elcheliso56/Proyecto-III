@@ -5,12 +5,12 @@ enviaAjax(datos);
 $("#listadopaciente").on("click", function () {
   $("#modalpaciente").modal("show");
 });
-
 function colocapa(linea) {
-  $("#cedula").val($(linea).find("td:eq(0)").text());
-  $("#nombre").val($(linea).find("td:eq(1)").text());
-  $("#Apellido").val($(linea).find("td:eq(2)").text());
-  $("#telefono").val($(linea).find("td:eq(3)").text());
+  // Centra los valores en los campos de entrada
+  $("#cedula").val($(linea).find("td:eq(0)").text()).css("text-align", "center");
+  $("#nombre").val($(linea).find("td:eq(1)").text()).css("text-align", "center");
+  $("#Apellido").val($(linea).find("td:eq(2)").text()).css("text-align", "center");
+  $("#telefono").val($(linea).find("td:eq(3)").text()).css("text-align", "center");
   $("#modalpaciente").modal("hide");
 }
 
@@ -52,7 +52,8 @@ function crearDT() {
         infoEmpty: "No hay clientes registrados",
         infoFiltered: "(filtrado de _MAX_ registros totales)",
         search: "<i class='bi bi-search'></i>",
-        searchPlaceholder: "Buscar cliente...",
+        searchPlaceholder: "Buscar...",
+        
         paginate: {
           first: "Primera",
           last: "Última",
@@ -81,26 +82,6 @@ function crearDT() {
 $(document).ready(function () {
   // Llama a la función consultar al cargar el documento
   consultar();
-  /*
-    // Validaciones para el campo de número de documento
-    $("#cedula").on("keypress", function(e) {
-        if ($("#tipo_documento").val() === "RIF") {
-            validarkeypress(/^[VEJ0-9-\b]*$/, e);
-        } else {
-            validarkeypress(/^[0-9-V\b]*$/, e);
-        }
-    });
-
-    // Validaciones para el campo de número de documento al soltar la tecla
-    $("#cedula").on("keyup", function() {
-        var tipoDocumento = $("#tipo_documento").val();
-        if (tipoDocumento === "Cédula") {
-            validarkeyup(/^[0-9]{7,8}$/, $(this), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
-        } else if (tipoDocumento === "RIF") {
-            validarkeyup(/^[VJE]{1}-[0-9]{9}$/, $(this), $("#scedula"), "El formato de RIF debe ser V/J/E-123456789");
-        }else { validarkeyup(/^[0]{0}[0]{0}$/, $(this), $("#scedula"), "Debe seleccionar el tipo de documento");}
-    });*/
-
   // Validaciones para el campo de nombre
   $("#nombre").on("keypress", function (e) {
     validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
@@ -138,6 +119,35 @@ $(document).ready(function () {
       $("#stelefono"),
       "El formato de teléfono debe ser 04120000000"
     );
+  });
+  // Validación para el campo de tratamiento: solo letras, números, espacios y algunos signos de puntuación
+  $("#tratamiento").on("keypress", function (e) {
+    validarkeypress(/^[A-Za-z0-9\s.,;:()\-\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+  });
+  // Validación para el campo de tratamiento: no permitir incluir si está vacío
+  $("#tratamiento").on("keyup", function () {
+    var tratamiento = $(this).val().trim();
+    if (tratamiento.length === 0) {
+      $("#stratamiento").text("El tratamiento no puede estar vacío.");
+    } else {
+      $("#stratamiento").text("");
+    }
+  });
+  // Validación para la fecha de consulta: solo permitir la fecha de hoy
+  $("#fechaconsulta").on("change", function () {
+    var fechaIngresada = $(this).val();
+    var hoy = new Date();
+    var yyyy = hoy.getFullYear();
+    var mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    var dd = String(hoy.getDate()).padStart(2, '0');
+    var fechaHoy = yyyy + '-' + mm + '-' + dd;
+
+    if (fechaIngresada && fechaIngresada !== fechaHoy) {
+      $("#sfechaconsulta").text("Solo se permite la fecha de hoy: " + fechaHoy);
+      $(this).val(""); // Limpiar el campo si no es la fecha de hoy
+    } else {
+      $("#sfechaconsulta").text("");
+    }
   });
 
   // Manejo de clic en el botón de proceso
@@ -289,160 +299,95 @@ $(document).ready(function () {
 
 // Función para validar el envío de datos
 function validarenvio() {
-  // Validaciones para el tipo de documento
-  if ($("#tipo_documento").length && $("#cedula").length) {
-    if ($("#tipo_documento").val() === "Cédula") {
-      if (
-        validarkeyup(
-          /^[0-9]{7,8}$/,
-          $("#cedula"),
-          $("#scedula"),
-          "El formato de CI debe ser 1234567 o 12345678"
-        ) == 0
-      ) {
-        Swal.fire({
-          title: "¡ERROR!",
-          text: "La Cedula del cliente es obligatoria",
-          icon: "error",
-          confirmButtonText: "Aceptar",
-        });
-        return false;
-      }
-    } else if ($("#tipo_documento").val() === "RIF") {
-      if (
-        validarkeyup(
-          /^[VJE]{1}-[0-9]{9}$/,
-          $("#cedula"),
-          $("#scedula"),
-          "El formato de RIF debe ser V/J/E-123456789"
-        ) == 0
-      ) {
-        Swal.fire({
-          title: "¡ERROR!",
-          text: "El RIF del cliente es obligatorio",
-          icon: "error",
-          confirmButtonText: "Aceptar",
-        });
-        return false;
-      }
-    }
-  }
-
-  // Validaciones para nombre y Apellido
-  let nombre = $("#nombre").length ? $("#nombre").val() : "";
-  let Apellido = $("#Apellido").length ? $("#Apellido").val() : "";
-
-  if (nombre.trim() === "") {
-    Swal.fire({
-      title: "¡ERROR!",
-      text: "El nombre del cliente es obligatorio",
-      icon: "error",
-      confirmButtonText: "Aceptar",
-    });
-    return false;
-  }
-  if (Apellido.trim() === "") {
-    Swal.fire({
-      title: "¡ERROR!",
-      text: "El Apellido del cliente es obligatorioww",
-      icon: "error",
-      confirmButtonText: "Aceptar",
-    });
-    return false;
-  }
-
-  // Validaciones para el formato de nombre y Apellido
+  // Validación de cédula
+  let cedula = $("#cedula").val().trim();
   if (
-    validarkeyup(
-      /^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{3,30}$/,
-      $("#nombre"),
-      $("#snombre"),
-      "Solo letras entre 3 y 30 caracteres"
-    ) == 0
+    cedula === "" ||
+    !/^\d{7,8}$/.test(cedula) ||
+    parseInt(cedula, 10) > 32000000
   ) {
     Swal.fire({
       title: "¡ERROR!",
-      text: "El nombre debe contener solo letras y tener entre 3 y 30 caracteres",
-      icon: "error",
-      confirmButtonText: "Aceptar",
-    });
-    return false;
-  }
-  if (
-    validarkeyup(
-      /^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{3,30}$/,
-      $("#Apellido"),
-      $("#sApellido"),
-      "Solo letras entre 3 y 30 caracteres"
-    ) == 0
-  ) {
-    Swal.fire({
-      title: "¡ERROR!",
-      text: "El Apellido debe contener solo letras y tener entre 3 y 30 caracteres",
+      text: "La cédula es obligatoria, debe tener 7 u 8 dígitos numéricos.",
       icon: "error",
       confirmButtonText: "Aceptar",
     });
     return false;
   }
 
-  // Validaciones para el correo (si existe el campo)
-  if (
-    $("#correo").length &&
-    $("#correo").val().trim() !== "" &&
-    validarkeyup(
-      /^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/,
-      $("#correo"),
-      $("#scorreo"),
-      "El formato de correo electrónico debe ser ejemplo@correo.com"
-    ) == 0
-  ) {
+  // Validación de nombre
+  let nombre = $("#nombre").val().trim();
+  if (nombre === "" || !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,30}$/.test(nombre)) {
     Swal.fire({
       title: "¡ERROR!",
-      text: "El formato de correo electrónico debe ser ejemplo@correo.com",
+      text: "El nombre es obligatorio y debe tener solo letras (3-30 caracteres).",
       icon: "error",
       confirmButtonText: "Aceptar",
     });
     return false;
   }
 
-  // Validaciones para el teléfono
-  if (
-    $("#telefono").length &&
-    validarkeyup(
-      /^0[0-9]{10}$/,
-      $("#telefono"),
-      $("#stelefono"),
-      "El formato de teléfono debe ser 04120000000"
-    ) == 0
-  ) {
+  // Validación de apellido
+  let apellido = $("#Apellido").val().trim();
+  if (apellido === "" || !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,30}$/.test(apellido)) {
     Swal.fire({
       title: "¡ERROR!",
-      text: "El formato de teléfono debe ser 04120000000",
+      text: "El apellido es obligatorio y debe tener solo letras (3-30 caracteres).",
       icon: "error",
       confirmButtonText: "Aceptar",
     });
     return false;
   }
 
-  // Validaciones para la dirección (si existe el campo)
-  if (
-    $("#direccion").length &&
-    validarkeyup(
-      /^[^"']{1,100}$/,
-      $("#direccion"),
-      $("#sdireccion"),
-      "La dirección debe tener entre 1 y 100 caracteres"
-    ) == 0
-  ) {
+  // Validación de teléfono
+  let telefono = $("#telefono").val().trim();
+  if (telefono === "" || !/^0\d{10}$/.test(telefono)) {
     Swal.fire({
       title: "¡ERROR!",
-      text: "La dirección debe tener un máximo de 100 caracteres",
+      text: "El teléfono es obligatorio y debe tener el formato 0412xxxxxxx.",
       icon: "error",
       confirmButtonText: "Aceptar",
     });
     return false;
   }
-  return true; // Si todas las validaciones pasan, retorna verdadero
+
+  // Validación de tratamiento
+  let tratamiento = $("#tratamiento").val().trim();
+  if (tratamiento.length < 5 || tratamiento.length > 200) {
+    Swal.fire({
+      title: "¡ERROR!",
+      text: "El tratamiento es obligatorio (mínimo 5 y máximo 200 caracteres).",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    });
+    return false;
+  }
+
+  // Validación de fecha de consulta
+  let fecha = $("#fechaconsulta").val().trim();
+  if (fecha === "") {
+    Swal.fire({
+      title: "¡ERROR!",
+      text: "La fecha de consulta es obligatoria.",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    });
+    return false;
+  }
+
+  // Validación de doctor
+  let doctor = $("#doctor").val().trim();
+  if (doctor.length < 3) {
+    Swal.fire({
+      title: "¡ERROR!",
+      text: "El nombre del doctor es obligatorio (mínimo 3 caracteres).",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    });
+    return false;
+  }
+
+  return true;
 }
 
 function validarkeypress(er, e) {
@@ -617,7 +562,6 @@ function enviaAjax(datos) {
   });
 }
 
-
 // Función para añadir el tratamiento seleccionado al textarea
 $("#btn_add_tratamiento").on("click", function () {
   var selectedTreatment = $("#select_tratamiento_add").val(); // Obtiene el valor del select
@@ -644,6 +588,12 @@ $("#modal1").on("hidden.bs.modal", function () {
   // $('#nombre_paciente').val(''); etc.
 
   // Limpiar el textarea de tratamiento y el select de añadir tratamientos
+  $("#tratamiento").val("");
+  $("#select_tratamiento_add").val(null).trigger("change");
+});
+
+// Función para limpiar el textarea de tratamientos y el select de tratamientos
+$("#btn_clear_tratamiento").on("click", function () {
   $("#tratamiento").val("");
   $("#select_tratamiento_add").val(null).trigger("change");
 });

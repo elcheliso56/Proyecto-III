@@ -90,7 +90,7 @@ class ingresos extends datos {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		}
 		else{
@@ -132,7 +132,7 @@ class ingresos extends datos {
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage();
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		} else {
 			$r['resultado'] = 'modificar';
@@ -166,7 +166,7 @@ class ingresos extends datos {
 					$r['mensaje'] = $e->getMessage();
 				}
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		}
 		else{
@@ -217,7 +217,7 @@ function consultar(){
         $r['resultado'] = 'error';
         $r['mensaje'] = $e->getMessage();
     } finally {
-        $this->cerrarConexion(); // Cierra la conexión después de la operación
+        $co = null; // Cierra la conexión después de la operación
     }
     return $r;
 }

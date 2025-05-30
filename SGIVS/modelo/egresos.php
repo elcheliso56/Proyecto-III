@@ -89,7 +89,7 @@ class egresos extends datos {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		}
 		else{
@@ -138,7 +138,7 @@ class egresos extends datos {
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage();
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		} else {
 			$r['resultado'] = 'modificar';
@@ -171,7 +171,7 @@ class egresos extends datos {
 					$r['mensaje'] = $e->getMessage();
 				}
 			} finally {
-                $this->cerrarConexion(); // Cierra la conexión después de la operación
+                $co = null; // Cierra la conexión después de la operación
             }
 		}
 		else{
@@ -221,7 +221,7 @@ function consultar(){
         $r['resultado'] = 'error';
         $r['mensaje'] = $e->getMessage();
     } finally {
-        $this->cerrarConexion(); // Cierra la conexión después de la operación
+        $co = null; // Cierra la conexión después de la operación
     }
     return $r;
 }
@@ -241,7 +241,7 @@ function consultar(){
 		}catch(Exception $e){
 			return false;
 		} finally {
-            $this->cerrarConexion(); // Cierra la conexión después de la operación
+            $co = null; // Cierra la conexión después de la operación
         }
 	}	
 
@@ -263,7 +263,7 @@ function consultar(){
             error_log("Error al obtener cuentas: " . $e->getMessage());
             return false;
         } finally {
-            $this->cerrarConexion(); // Cierra la conexión después de la operación
+            $co = null; // Cierra la conexión después de la operación
         }
     }
 
@@ -277,7 +277,7 @@ function consultar(){
         } catch(Exception $e) {
             return false;
         } finally {
-            $this->cerrarConexion(); // Cierra la conexión después de la operación
+            $co = null; // Cierra la conexión después de la operación
         }
     }
 }

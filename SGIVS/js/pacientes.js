@@ -61,7 +61,7 @@ $(document).ready(function() {
 	consultar();
     // Validaciones para el campo de número de documento
     $("#cedula").on("keypress", function(e) {
-        validarkeypress(/^[VEJ0-9-\b]*$/, e);
+        validarkeypress(/^[0-9-\b]*$/, e);
     });
     $("#cedula").on("keyup", function() {
         validarkeyup(/^[0-9]{7,8}$/, $(this), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
@@ -537,11 +537,36 @@ function enviaAjax(datos) {
         },
         timeout: 10000, 
         success: function (respuesta) {
+            
             try {
                 var lee = JSON.parse(respuesta);
                 if (lee.resultado == "consultar") {
-                    destruyeDT();	
-                    $("#resultadoconsulta").html(lee.mensaje);
+                    destruyeDT();
+                    // Construir filas desde JS usando los datos JSON
+                    let filas = "";
+                    (lee.mensaje || []).forEach(function(p, idx) {
+                        filas += `<tr class='text-center'>
+                            <td class='align-middle'>${idx+1}</td>
+                            <td class='align-middle'>${p.cedula}</td>
+                            <td class='align-middle'>${p.nombre}</td>
+                            <td class='align-middle'>${p.apellido}</td>
+                            <td class='align-middle'>${p.fecha_nacimiento}</td>
+                            <td class='align-middle'>${p.edad}</td>
+                            <td class='align-middle'>${p.clasificacion}</td>
+                            <td class='align-middle'>${p.genero}</td>
+                            <td class='align-middle'>${p.alergias}</td>
+                            <td class='align-middle'>${p.antecedentes}</td>
+                            <td class='align-middle'>${p.email}</td>
+                            <td class='align-middle'>${p.telefono}</td>
+                            <td class='align-middle'>${p.direccion}</td>
+                            <td class='align-middle'>${p.fecha_registro}</td>
+                            <td class='align-middle'>
+                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>
+                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>
+                            </td>
+                        </tr>`;
+                    });
+                    $("#resultadoconsulta").html(filas);
                     crearDT();
                 }
                 else if (lee.resultado == "incluir") {

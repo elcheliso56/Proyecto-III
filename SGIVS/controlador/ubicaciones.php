@@ -22,7 +22,7 @@ if (is_file("vista/" . $pagina . ".php")) {
 			echo  json_encode($o->eliminar()); // Devuelve el resultado de la eliminación en JSON
 		} else {
 			// Acciones para incluir o modificar un registro
-			if ($accion == 'incluir' || $accion == 'modificar') {
+			if ($accion == 'incluir') {
 				$o->set_nombre($_POST['nombre']);
 				$o->set_Apellido($_POST['Apellido']);
 				$o->set_Ocupacion($_POST['Ocupacion']); // Establece la fecha del registro

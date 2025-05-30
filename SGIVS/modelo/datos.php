@@ -1,50 +1,45 @@
 <?php
 class datos {
-    // Propiedades privadas para la conexión a la base de datos
-	private $ip = "localhost"; // Dirección IP del servidor de la base de datos
-    private $bd = "inventario"; // Nombre de la base de datos
-    private $usuario = "root"; // Usuario de la base de datos
-    private $contrasena = ""; // Contraseña del usuario
-    private $pdo = null; // Propiedad para almacenar la conexión PDO
+    // Propiedades privadas para la conexión a la base de datos principal
+    private $ip = "localhost";
+    private $bd = "sgivs";
+    private $usuario = "root";
+    private $contrasena = "";
 
-    // Método para establecer la conexión a la base de datos
+    // Propiedades privadas para la conexión a la base de datos de usuarios
+    private $bd_usuarios = "bd_usuarios";
+
+    // Método para establecer la conexión a la base de datos principal
     function conecta() {
+        $pdo = new PDO("mysql:host=".$this->ip.";dbname=".$this->bd."",$this->usuario,$this->contrasena);
+        $pdo->exec("set names utf8");
+        return $pdo;
+    }
+
+    // Método para establecer la conexión a la base de datos de usuarios
+    function conecta_usuarios() {
+        $pdo = new PDO("mysql:host=".$this->ip.";dbname=".$this->bd_usuarios."",$this->usuario,$this->contrasena);
+        $pdo->exec("set names utf8");
+        return $pdo;
+    }
+
+    // Método para registrar acciones en la bitácora
+    protected function registrarBitacora($modulo, $accion, $descripcion, $detalles = null) {
+        $co = $this->conecta_usuarios();
+        $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
-            // Si ya existe una conexión, la retornamos
-            if ($this->pdo !== null) {
-                return $this->pdo;
-            }
+            date_default_timezone_set('America/Caracas');
+            $fecha_hora = date('Y-m-d H:i:s');
+            $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
 
-            // Crear una nueva instancia de PDO para la conexión
-            $this->pdo = new PDO(
-                "mysql:host=".$this->ip.";dbname=".$this->bd."",
-                $this->usuario,
-                $this->contrasena,
-                array(
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-                )
-            );
-
-            return $this->pdo;
-        } catch (PDOException $e) {
-            error_log("Error de conexión: " . $e->getMessage());
-            throw new Exception("Error al conectar con la base de datos");
+            $stmt = $co->prepare("INSERT INTO bitacora (fecha_hora, modulo, accion, descripcion, detalles, usuario_id) 
+                                VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$fecha_hora, $modulo, $accion, $descripcion, $detalles, $usuario_id]);
+        } catch(Exception $e) {
+            error_log("Error al registrar en bitácora: " . $e->getMessage());
+        } finally {
+            $co = null;
         }
-    }
-
-    // Método para cerrar la conexión
-    function cerrarConexion() {
-        if ($this->pdo !== null) {
-            $this->pdo = null;
-        }
-    }
-
-    // Destructor para asegurar que la conexión se cierre
-    function __destruct() {
-        $this->cerrarConexion();
     }
 }
 ?>

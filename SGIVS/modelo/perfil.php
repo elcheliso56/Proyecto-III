@@ -39,7 +39,7 @@ class perfil extends datos{
 
     // Método para cargar el perfil del usuario
     function cargarPerfil($id){
-        $co = $this->conecta(); // Conectar a la base de datos
+        $co = $this->conecta_usuarios(); // Conectar a la base de datos de usuarios
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             // Consultar los datos del usuario por ID
@@ -54,7 +54,7 @@ class perfil extends datos{
 
     // Método para modificar el perfil del usuario
     function modificarPerfil($id){
-        $co = $this->conecta(); // Conectar a la base de datos
+        $co = $this->conecta_usuarios(); // Conectar a la base de datos de usuarios
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             // Obtener la imagen actual del usuario

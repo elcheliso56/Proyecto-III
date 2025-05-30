@@ -21,8 +21,6 @@ class historial extends datos
 	private $observaciones;
 
 
-
-
 	// Método para establecer el nombre
 	function set_nombre($valor)
 	{
@@ -211,8 +209,21 @@ class historial extends datos
 				//$imagen_actual = $fila['imagen'];
 				// Actualiza la ubicación en la base de datos
 				$co->query("UPDATE historial SET 
-					descripcion = '$this->descripcion',
-					imagen = '$this->imagen'
+					Apellido = '$this->Apellido',
+					ocupacion = '$this->Ocupacion',
+					sexo = '$this->Sexo',
+					personacontacto = '$this->PersonaContacto',
+					telefono = '$this->telefono',
+					edad = '$this->Edad',
+					correo = '$this->correo',
+					diagnostico = '$this->diagnostico',
+					tratamiento = '$this->tratamiento',
+					medicamentos = '$this->medicamentos',
+					dientesafectados = '$this->dientesafectados',
+					antecedentes = '$this->antecedentes',
+					fechaconsulta = '$this->fechaconsulta',
+					proximacita = '$this->proximacita',
+					observaciones = '$this->observaciones'
 					WHERE
 					nombre = '$this->nombre'
 					");
@@ -285,13 +296,15 @@ class historial extends datos
 					$respuesta .= "<tr class='text-center'>"; // Crea una fila de tabla
 					$respuesta .= "<td class='align-middle'>$n</td>"; // Número de fila
 					$respuesta .= "<td class='align-middle'>" . $r['nombre'] . "</td>"; // Nombre
-					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Descripción
-					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Ocupación
-					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Sexo
+					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Apellido
+					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Teléfono
+					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Correo
+					
 					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
 					$respuesta .= "<td class='align-middle'>";
 					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ubicación'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ubicación'><i class='bi bi-trash'></i></button><br/>";
+					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ubicación'><i class='bi bi-trash'></i></button>";
+					
 					$respuesta .= "</td>";
 					$respuesta .= "</tr>";
 					$n++; // Incrementa el contador
@@ -309,6 +322,8 @@ class historial extends datos
 		return $r; // Retorna el resultado
 	}
 
+
+	
 	// Método privado para verificar si una ubicación existe
 	private function existe($nombre)
 	{
@@ -326,6 +341,85 @@ class historial extends datos
 		} catch (Exception $e) {
 			return false;
 		}
+
+
 	}
+	
+		// Validaciones para cada campo según su tipo
+		public function validarCampos()
+		{
+			$errores = [];
+
+			// Validar nombre (solo letras y espacios, requerido)
+			if (empty($this->nombre) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->nombre)) {
+				$errores['nombre'] = 'El nombre es requerido y solo debe contener letras.';
+			}
+
+			// Validar Apellido (solo letras y espacios, requerido)
+			if (empty($this->Apellido) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Apellido)) {
+				$errores['Apellido'] = 'El apellido es requerido y solo debe contener letras.';
+			}
+
+			// Validar Ocupacion (opcional, solo letras y espacios)
+			if (!empty($this->Ocupacion) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Ocupacion)) {
+				$errores['Ocupacion'] = 'La ocupación solo debe contener letras.';
+			}
+
+			// Validar Sexo (requerido, solo "Masculino" o "Femenino")
+			if (empty($this->Sexo) || !in_array($this->Sexo, ['Masculino', 'Femenino'])) {
+				$errores['Sexo'] = 'El sexo es requerido y debe ser Masculino o Femenino.';
+			}
+
+			// Validar PersonaContacto (opcional, solo letras y espacios)
+			if (!empty($this->PersonaContacto) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->PersonaContacto)) {
+				$errores['PersonaContacto'] = 'La persona de contacto solo debe contener letras.';
+			}
+
+			// Validar teléfono (requerido, solo números, mínimo 7 dígitos)
+			if (empty($this->telefono) || !preg_match('/^\d{7,15}$/', $this->telefono)) {
+				$errores['telefono'] = 'El teléfono es requerido y debe contener solo números (7 a 15 dígitos).';
+			}
+
+			// Validar Edad (requerido, número entre 0 y 120)
+			if (!is_numeric($this->Edad) || $this->Edad < 0 || $this->Edad > 120) {
+				$errores['Edad'] = 'La edad debe ser un número entre 0 y 120.';
+			}
+
+			// Validar correo (opcional, formato de email)
+			if (!empty($this->correo) && !filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
+				$errores['correo'] = 'El correo electrónico no es válido.';
+			}
+
+			// Validar diagnostico (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar tratamiento (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar medicamentos (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar dientesafectados (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar antecedentes (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar fechaconsulta (requerido, formato fecha)
+			if (empty($this->fechaconsulta) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->fechaconsulta)) {
+				$errores['fechaconsulta'] = 'La fecha de consulta es requerida y debe tener el formato YYYY-MM-DD.';
+			}
+
+			// Validar proximacita (opcional, formato fecha)
+			if (!empty($this->proximacita) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->proximacita)) {
+				$errores['proximacita'] = 'La próxima cita debe tener el formato YYYY-MM-DD.';
+			}
+
+			// Validar observaciones (opcional, texto)
+			// No se aplica validación estricta
+
+			return $errores;
+		}
 }
+	
 ?>

@@ -32,6 +32,8 @@ class reportes extends datos{
 	private $proveedor;
 	private $fecha_inicio;
 	private $fecha_fin;
+	private $precio;
+	private $presentacion;
 
 	function set_nombre_categoria($valor){
 		$this->nombre_categoria = $valor; 
@@ -80,6 +82,8 @@ class reportes extends datos{
 	function set_precio_venta($valor){
 		$this->precio_venta = $valor; 
 	}
+
+
 
 	function set_stock_total($valor){
 		$this->stock_total = $valor; 
@@ -137,356 +141,13 @@ class reportes extends datos{
 		$this->fecha_fin = $valor;
 	}
 
-	function reporte_categorias(){	
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');//zona horaria 
-			$fecha = date('d-m-y H:i');
-			$resultado = $co->prepare("Select * from categorias where nombre like :nombre and 
-				descripcion like :descripcion");
-			$resultado->bindValue(':nombre','%'.$this->nombre_categoria.'%');
-			$resultado->bindValue(':descripcion','%'.$this->descripcion_categoria.'%');
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			$html = "<html><head></head><body>";
-			$html = $html . "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
-			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Categorias</h2></div>";
-			$html = $html."<table style='width:100%; border: solid;' >";
-			$html = $html."<thead style='width:100%;'>";
-			$html = $html."<tr style='background-color: #f7dc6f ; '>";
-			$html = $html."<th style='border: solid;'>#</th>";			
-			$html = $html."<th style='border: solid;'>Nombre</th>";
-			$html = $html."<th style='border: solid;'>Descripcion</th>";
-			$html = $html."</tr>";
-			$html = $html."</thead>";
-			$html = $html."<tbody>";
-			if($fila){
-				$n=1;
-				foreach($fila as $f){
-					$html = $html."<tr>";
-					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
-					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['descripcion']."</td>";		 
-					$html = $html."</tr>";
-					$n++;
-				}
-			}
-			else{	
-			}
-			$html = $html."</tbody>";
-			$html = $html."</table>";
-			$html = $html."</div></div></div>";
-			$html = $html."</body></html>";	
-		}catch(Exception $e){
-		}
-		$fecha = date('d-m-y');		
-		$pdf = new DOMPDF();
-
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-		$pdf->render();
-		$pdf->stream("ReporteCategorias".$fecha.".pdf", array("Attachment" => false));	
+	function set_precio($valor){
+		$this->precio = $valor;
 	}
 
-
-	function reporte_ubicaciones(){	
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');//zona horaria 
-			$fecha = date('d-m-y H:i');
-			$resultado = $co->prepare("Select * from ubicaciones where nombre like :nombre and 
-				descripcion like :descripcion");
-			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
-			$resultado->bindValue(':descripcion','%'.$this->descripcion.'%');
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			$html = "<html><head></head><body>";
-			$html = $html . "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
-			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Ubicaciones</h2></div>";
-			$html = $html."<table style='width:100%; border: solid;' >";
-			$html = $html."<thead style='width:100%;'>";
-			$html = $html."<tr style='background-color: #f7dc6f ; '>";
-			$html = $html."<th style='border: solid;'>#</th>";			
-			$html = $html."<th style='border: solid;'>Nombre</th>";
-			$html = $html."<th style='border: solid;'>Descripcion</th>";
-			$html = $html."</tr>";
-			$html = $html."</thead>";
-			$html = $html."<tbody>";
-			if($fila){
-				$n=1;
-				foreach($fila as $f){
-					$html = $html."<tr>";
-					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
-					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['descripcion']."</td>";		 
-					$html = $html."</tr>";
-					$n++;
-				}
-			}
-			else{	
-			}
-			$html = $html."</tbody>";
-			$html = $html."</table>";
-			$html = $html."</div></div></div>";
-			$html = $html."</body></html>";	
-
-		}catch(Exception $e){
-		}
-		$fecha = date('d-m-y');			
-		$pdf = new DOMPDF();
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-		$pdf->render();
-		$pdf->stream("ReporteUbicaciones".$fecha.".pdf", array("Attachment" => false));	
-	}	
-
-
-	function reporte_proveedores(){	
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');//zona horaria 
-			$fecha = date('d-m-y H:i');
-			$resultado = $co->prepare("Select * from proveedores where 
-				nombre like :nombre and  numero_documento like :numero_documento and 
-				direccion like :direccion and correo like :correo and
-				telefono like :telefono and catalogo like :catalogo");
-			$resultado->bindValue(':numero_documento','%'.$this->numero_documento.'%');
-			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
-			$resultado->bindValue(':direccion','%'.$this->direccion.'%');
-			$resultado->bindValue(':correo','%'.$this->correo.'%');
-			$resultado->bindValue(':telefono','%'.$this->telefono.'%');
-			$resultado->bindValue(':catalogo','%'.$this->catalogo.'%');
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			$html = "<html><head></head><body>";
-			$html = $html . "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
-			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Proveedores</h2></div>";
-			$html = $html."<table style='width:100%; border: solid;' >";
-			$html = $html."<thead style='width:100%;'>";
-			$html = $html."<tr style='background-color: #f7dc6f ; '>";
-			$html = $html."<th style='border: solid;'>#</th>";			
-			$html = $html."<th style='border: solid;'>Documento</th>";
-			$html = $html."<th style='border: solid;'>Nombre</th>";
-			$html = $html."<th style='border: solid;'>Direccion</th>";
-			$html = $html."<th style='border: solid;'>Correo</th>";
-			$html = $html."<th style='border: solid;'>Telefono</th>";												
-			$html = $html."<th style='border: solid;'>Catalogo</th>";
-			$html = $html."</tr>";
-			$html = $html."</thead>";
-			$html = $html."<tbody>";
-			if($fila){
-				$n=1;
-				foreach($fila as $f){
-					$html = $html."<tr>";
-					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
-					$html = $html."<td style='border: solid;'>".$f['numero_documento']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['direccion']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['correo']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['telefono']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['catalogo']."</td>";		 
-					$html = $html."</tr>";
-					$n++;
-				}
-			}
-			else{	
-			}
-			$html = $html."</tbody>";
-			$html = $html."</table>";
-			$html = $html."</div></div></div>";
-			$html = $html."</body></html>";	
-
-		}catch(Exception $e){
-		}
-		$fecha = date('d-m-y');		
-		$pdf = new DOMPDF();
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-		$pdf->render();
-		$pdf->stream("ReporteProveedores".$fecha.".pdf", array("Attachment" => false));	
+	function set_presentacion($valor){
+		$this->presentacion = $valor;
 	}
-
-
-	function reporte_productos(){	
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');//zona horaria 
-			$fecha = date('d-m-y H:i');
-			$resultado = $co->prepare("Select * from productos where 
-				codigo like :codigo and  
-				nombre like :nombre and 
-				precio_compra like :precio_compra and 
-				precio_venta like :precio_venta and
-				stock_total like :stock_total and
-				stock_minimo like :stock_minimo and  
-				marca like :marca and 
-				modelo like :modelo and 
-				tipo_unidad like :tipo_unidad 
-
-				");
-			$resultado->bindValue(':codigo','%'.$this->codigo.'%');
-			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
-			$resultado->bindValue(':precio_compra','%'.$this->precio_compra.'%');
-			$resultado->bindValue(':precio_venta','%'.$this->precio_venta.'%');
-			$resultado->bindValue(':stock_total','%'.$this->stock_total.'%');
-			$resultado->bindValue(':stock_minimo','%'.$this->stock_minimo.'%');
-			$resultado->bindValue(':marca','%'.$this->marca.'%');
-			$resultado->bindValue(':modelo','%'.$this->modelo.'%');
-			$resultado->bindValue(':tipo_unidad','%'.$this->tipo_unidad.'%');
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			$html = "<html><head></head><body>";
-			$html = $html . "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
-			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Productos</h2></div>";
-			$html = $html."<table style='width:100%; border: solid;' >";
-			$html = $html."<thead style='width:100%;'>";
-			$html = $html."<tr style='background-color: #f7dc6f ; '>";
-			$html = $html."<th style='border: solid;'>#</th>";	
-			$html = $html."<th style='border: solid;'>Codigo</th>";
-			$html = $html."<th style='border: solid;'>Nombre</th>";
-			$html = $html."<th style='border: solid;'>Precio compra</th>";
-			$html = $html."<th style='border: solid;'>Precio venta</th>";
-			$html = $html."<th style='border: solid;'>Stock total</th>";
-			$html = $html."<th style='border: solid;'>Stock minimo</th>";
-			$html = $html."<th style='border: solid;'>Marca</th>";
-			$html = $html."<th style='border: solid;'>Modelo</th>";
-			$html = $html."<th style='border: solid;'>Tipo unidad</th>";
-			$html = $html."</tr>";
-			$html = $html."</thead>";
-			$html = $html."<tbody>";
-			if($fila){
-				$n=1;
-				foreach($fila as $f){
-					$html = $html."<tr>";
-					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
-					$html = $html."<td style='border: solid;'>".$f['codigo']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
-					$html = $html."<td style='border: solid;'>$".$f['precio_compra']."</td>";
-					$html = $html."<td style='border: solid;'>$".$f['precio_venta']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['stock_total']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['stock_minimo']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['marca']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['modelo']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['tipo_unidad']."</td>";
-					$html = $html."</tr>";
-					$n++;
-				}
-			}
-			else{	
-			}
-			$html = $html."</tbody>";
-			$html = $html."</table>";
-			$html = $html."</div></div></div>";
-			$html = $html."</body></html>";	
-
-		}catch(Exception $e){
-		}
-		$fecha = date('d-m-y');		
-		$pdf = new DOMPDF();
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-		$pdf->render();
-		$pdf->stream("ReporteProductos".$fecha.".pdf", array("Attachment" => false));	
-	}
-
-
-	function reporte_clientes(){	
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');//zona horaria 
-			$fecha = date('d-m-y H:i');
-			$resultado = $co->prepare("Select * from clientes where 
-				numero_documento like :numero_documento and 
-				nombre like :nombre and  
-				apellido like :apellido and
-				correo like :correo and
-				telefono like :telefono and 				  
-				direccion like :direccion ");
-			$resultado->bindValue(':numero_documento','%'.$this->numero_documento.'%');
-			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
-			$resultado->bindValue(':apellido','%'.$this->apellido.'%');
-			$resultado->bindValue(':correo','%'.$this->correo.'%');
-			$resultado->bindValue(':telefono','%'.$this->telefono.'%');
-			$resultado->bindValue(':direccion','%'.$this->direccion.'%');
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			$html = "<html><head></head><body>";
-			$html = $html . "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
-			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Clientes</h2></div>";
-			$html = $html."<table style='width:100%; border: solid;' >";
-			$html = $html."<thead style='width:100%;'>";
-			$html = $html."<tr style='background-color: #f7dc6f ; '>";
-			$html = $html."<th style='border: solid;'>#</th>";			
-			$html = $html."<th style='border: solid;'>Documento</th>";
-			$html = $html."<th style='border: solid;'>Nombre</th>";
-			$html = $html."<th style='border: solid;'>Apellido</th>";
-			$html = $html."<th style='border: solid;'>Correo</th>";
-			$html = $html."<th style='border: solid;'>Telefono</th>";												
-			$html = $html."<th style='border: solid;'>Direccion</th>";
-			$html = $html."</tr>";
-			$html = $html."</thead>";
-			$html = $html."<tbody>";
-			if($fila){
-				$n=1;
-				foreach($fila as $f){
-					$html = $html."<tr>";
-					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
-					$html = $html."<td style='border: solid;'>".$f['numero_documento']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['apellido']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['correo']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['telefono']."</td>";
-					$html = $html."<td style='border: solid;'>".$f['direccion']."</td>";		 
-					$html = $html."</tr>";
-					$n++;
-				}
-			}
-			else{	
-			}
-			$html = $html."</tbody>";
-			$html = $html."</table>";
-			$html = $html."</div></div></div>";
-			$html = $html."</body></html>";	
-
-		}catch(Exception $e){
-		}
-		$fecha = date('d-m-y');		
-		$pdf = new DOMPDF();
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html(utf8_decode($html));
-		$pdf->render();
-		$pdf->stream("ReporteClientes".$fecha.".pdf", array("Attachment" => false));	
-	}	
 
 	function reporte_usuarios(){	
 		$co = $this->conecta();
@@ -516,9 +177,9 @@ class reportes extends datos{
 			$html = $html . "
 			<div style='position: relative;'>
 			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
+			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>Centro Odontologico Vital Sonrisa, C.A<br>J-</h2>
 			</div>";		
-			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha.".</p>";	
+			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Direccion <br><strong>Telefono:</strong> 0414-<br><strong>Fecha:</strong> ".$fecha.".</p>";	
 			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Usuarios</h2></div>";
 			$html = $html."<table style='width:100%; border: solid;' >";
 			$html = $html."<thead style='width:100%;'>";
@@ -567,238 +228,67 @@ class reportes extends datos{
 		$pdf->stream("ReporteUsuarios".$fecha.".pdf", array("Attachment" => false));	
 	}
 
-
-	function reporte_apartados(){    
+	function reporte_insumos(){    
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			date_default_timezone_set('America/Caracas');
-			$fecha_actual = date('d-m-y H:i');
-			$sql = "SELECT a.id, a.fecha_apartado, 
-			c.tipo_documento, c.numero_documento, c.nombre AS cliente_nombre, c.apellido AS cliente_apellido,
-			p.codigo, p.nombre AS producto_nombre, ap.cantidad, ap.precio,
-			(ap.cantidad * ap.precio) AS subtotal,
-			SUM(ap.cantidad * ap.precio) OVER (PARTITION BY a.id) AS total
-			FROM apartados a
-			JOIN clientes c ON a.cliente_id = c.id
-			JOIN apartados_detalles ap ON a.id = ap.apartado_id
-			JOIN productos p ON ap.producto_id = p.id
-			WHERE 1=1";
-
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$sql .= " AND DATE(a.fecha_apartado) BETWEEN :fecha_inicio AND :fecha_fin";
-			}
-			if(!empty($this->cliente)){
-				$sql .= " AND c.numero_documento LIKE :cliente";
-			}
-			$sql .= " ORDER BY a.fecha_apartado DESC";
-
-			$resultado = $co->prepare($sql);
-
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$resultado->bindValue(':fecha_inicio', $this->fecha_inicio);
-				$resultado->bindValue(':fecha_fin', $this->fecha_fin);
-			}
-			if(!empty($this->cliente)){
-				$resultado->bindValue(':cliente', '%'.$this->cliente.'%');
-			}
-
-			$resultado->execute();
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-
-			$html = "<html><head></head><body>";
-			$html .= "
-			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute; left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";        
-			$html .= "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha_actual.".</p>";    
-			$html .= "<div style='background-color: #f1c40f; border: solid;'><h2 style='color:#14345a; text-align: center;'>Reporte de Apartados</h2></div>";
-
-			if($fila){
-				$currentApartado = null;
-				$n = 1;
-				
-				foreach($fila as $f){
-					if ($currentApartado !== $f['id']) {
-						if ($currentApartado !== null) {
-							$html .= "<tr style='background-color: #f7dc6f;'>";
-							$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-							$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-							$html .= "</tr>";
-							$html .= "</tbody></table></td>";
-							$html .= "</tr>";
-							$html .= "</table>";
-						}
-
-						$html .= "<table style='width:100%; border: solid; margin-bottom: 20px;'>";
-						$html .= "<tr style='background-color: #f7dc6f;'>";
-						$html .= "<th style='border: solid; padding: 5px;' colspan='2'>Apartado #" . $n . "</th>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Fecha:</strong> " . $f['fecha_apartado'] . "</td>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Cliente:</strong> " . $f['cliente_nombre'] . " " . $f['cliente_apellido'] . " <strong>Documento: </strong>" . $f['numero_documento'] . "</td>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td colspan='2' style='padding: 0;'>";
-						$html .= "<table style='width:100%; border-collapse: collapse;'>";
-						$html .= "<thead style='background-color: #f7dc6f;'>";
-						$html .= "<tr>";
-						$html .= "<th style='border: solid;'>Codigo</th>";
-						$html .= "<th style='border: solid;'>Producto</th>";
-						$html .= "<th style='border: solid;'>Cantidad</th>";
-						$html .= "<th style='border: solid;'>Precio</th>";
-						$html .= "<th style='border: solid;'>Subtotal</th>";
-						$html .= "</tr>";
-						$html .= "</thead><tbody>";
-						
-						$currentApartado = $f['id'];
-						$prevTotal = $f['total'];
-						$n++;
-					}
-					
-					$html .= "<tr>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['codigo'] . "</td>";
-					$html .= "<td style='border: solid;'>" . $f['producto_nombre'] . "</td>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['cantidad'] . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['precio'], 2) . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['subtotal'], 2) . "</td>";
-					$html .= "</tr>";
-				}
-				
-				if ($currentApartado !== null) {
-					$html .= "<tr style='background-color: #f7dc6f;'>";
-					$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-					$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-					$html .= "</tr>";
-					$html .= "</tbody></table></td>";
-					$html .= "</tr>";
-					$html .= "</table>";
-				}
-			}
-			
-			$html .= "</body></html>";    
-
-		}catch(Exception $e){
-		}
-		
-		$fecha = date('d-m-y');        
-		$pdf = new DOMPDF();
-		$pdf->set_paper("letter", "portrait");
-		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-		$pdf->render();
-		$pdf->stream("ReporteApartados".$fecha.".pdf", array("Attachment" => false));    
-	}
-
-
-
-	function reporte_entradas(){    
-		$co = $this->conecta();
-		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		try{
-			date_default_timezone_set('America/Caracas');
-			$fecha_actual = date('d-m-y H:i');
-			
-			$sql = "SELECT e.id, e.fecha_entrada, e.nota_entrega,
-			pv.tipo_documento, pv.numero_documento, pv.nombre AS proveedor_nombre,
-			p.codigo, p.nombre AS producto_nombre, ed.cantidad, ed.precio,
-			(ed.cantidad * ed.precio) AS subtotal,
-			SUM(ed.cantidad * ed.precio) OVER (PARTITION BY e.id) AS total
-			FROM entradas e
-			JOIN proveedores pv ON e.proveedor_id = pv.id
-			JOIN entradas_detalles ed ON e.id = ed.entrada_id
-			JOIN productos p ON ed.producto_id = p.id
-			WHERE 1=1";
-
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$sql .= " AND DATE(e.fecha_entrada) BETWEEN :fecha_inicio AND :fecha_fin";
-			}
-
-			if(!empty($this->proveedor)){
-				$sql .= " AND pv.numero_documento LIKE :proveedor";
-			}
-			$sql .= " ORDER BY e.fecha_entrada DESC";
-
-			$resultado = $co->prepare($sql);
-			
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$resultado->bindValue(':fecha_inicio', $this->fecha_inicio);
-				$resultado->bindValue(':fecha_fin', $this->fecha_fin);
-			}
-			if(!empty($this->proveedor)){
-				$resultado->bindValue(':proveedor', '%'.$this->proveedor.'%');
-			}
+			date_default_timezone_set('America/Caracas');//zona horaria 
+			$fecha = date('d-m-y H:i');
+			$resultado = $co->prepare("SELECT i.codigo, i.nombre, i.marca, i.cantidad as stock_total, i.cantidad_minima as stock_minimo, i.precio, p.nombre as presentacion_nombre FROM insumos i LEFT JOIN presentaciones p ON i.id_presentacion = p.id WHERE i.codigo like :codigo and i.nombre like :nombre and i.marca like :marca and i.cantidad like :stock_total and i.cantidad_minima like :stock_minimo and i.precio like :precio and p.nombre like :presentacion");
+			$resultado->bindValue(':codigo','%'.$this->codigo.'%');
+			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
+			$resultado->bindValue(':marca','%'.$this->marca.'%');
+			$resultado->bindValue(':stock_total','%'.$this->stock_total.'%');
+			$resultado->bindValue(':stock_minimo','%'.$this->stock_minimo.'%');
+			$resultado->bindValue(':precio','%'.$this->precio.'%');
+			$resultado->bindValue(':presentacion','%'.$this->presentacion.'%');
 			$resultado->execute();
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
 			$html = "<html><head></head><body>";
-			$html .= "
+			$html = $html . "
 			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute; left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";        
-			$html .= "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha_actual.".</p>";    
-			$html .= "<div style='background-color: #f1c40f; border: solid;'><h2 style='color:#14345a; text-align: center;'>Reporte de Entradas</h2></div>";
+			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
+			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>Centro Odontologico Vital Sonrisa, C.A<br>J-</h2>
+			</div>";		
+			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Direccion <br><strong>Telefono:</strong> 0414-<br><strong>Fecha:</strong> ".$fecha.".</p>";	
+
+
+
+			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Insumos</h2></div>";
+			$html = $html."<table style='width:100%; border: solid;' >";
+			$html = $html."<thead style='width:100%;'>";
+			$html = $html."<tr style='background-color: #f7dc6f ; '>";
+			$html = $html."<th style='border: solid;'>#</th>";    
+			$html = $html."<th style='border: solid;'>Codigo</th>";
+			$html = $html."<th style='border: solid;'>Nombre</th>";
+			$html = $html."<th style='border: solid;'>Marca</th>";
+			$html = $html."<th style='border: solid;'>Stock total</th>";
+			$html = $html."<th style='border: solid;'>Stock minimo</th>";
+			$html = $html."<th style='border: solid;'>Precio</th>";
+			$html = $html."<th style='border: solid;'>Presentación</th>";
+			$html = $html."</tr>";
+			$html = $html."</thead>";
+			$html = $html."<tbody>";
 			if($fila){
-				$currentEntrada = null;
-				$n = 1;
+				$n=1;
 				foreach($fila as $f){
-					if ($currentEntrada !== $f['id']) {
-						if ($currentEntrada !== null) {
-							$html .= "<tr style='background-color: #f7dc6f;'>";
-							$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-							$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-							$html .= "</tr>";
-							$html .= "</tbody></table></td>";
-							$html .= "</tr>";
-							$html .= "</table>";
-						}
-						$html .= "<table style='width:100%; border: solid; margin-bottom: 20px;'>";
-						$html .= "<tr style='background-color: #f7dc6f;'>";
-						$html .= "<th style='border: solid; padding: 5px;' colspan='2'>Entrada #" . $n . "</th>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Fecha:</strong> " . $f['fecha_entrada'] . "</td>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Proveedor:</strong> " . $f['proveedor_nombre'] . " <strong>Documento: </strong>" . $f['numero_documento'] . "</td>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td colspan='2' style='padding: 0;'>";
-						$html .= "<table style='width:100%; border-collapse: collapse;'>";
-						$html .= "<thead style='background-color: #f7dc6f;'>";
-						$html .= "<tr>";
-						$html .= "<th style='border: solid;'>Codigo</th>";
-						$html .= "<th style='border: solid;'>Producto</th>";
-						$html .= "<th style='border: solid;'>Cantidad</th>";
-						$html .= "<th style='border: solid;'>Precio</th>";
-						$html .= "<th style='border: solid;'>Subtotal</th>";
-						$html .= "</tr>";
-						$html .= "</thead><tbody>";
-						$currentEntrada = $f['id'];
-						$prevTotal = $f['total'];
-						$n++;
-					}
-					
-					$html .= "<tr>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['codigo'] . "</td>";
-					$html .= "<td style='border: solid;'>" . $f['producto_nombre'] . "</td>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['cantidad'] . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['precio'], 2) . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['subtotal'], 2) . "</td>";
-					$html .= "</tr>";
-				}
-				
-				if ($currentEntrada !== null) {
-					$html .= "<tr style='background-color: #f7dc6f;'>";
-					$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-					$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-					$html .= "</tr>";
-					$html .= "</tbody></table></td>";
-					$html .= "</tr>";
-					$html .= "</table>";
+					$html = $html."<tr>";
+					$html = $html."<td style='text-align:center; border: solid; '".$n."></td>";
+					$html = $html."<td style='border: solid;'>".$f['codigo']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['marca']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['stock_total']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['stock_minimo']."</td>";
+					$html = $html."<td style='border: solid;'>$".$f['precio']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['presentacion_nombre']."</td>";
+					$html = $html."</tr>";
+					$n++;
 				}
 			}
-			
-			$html .= "</body></html>";    
-
+			$html = $html."</tbody>";
+			$html = $html."</table>";
+			$html = $html."</div></div></div>";
+			$html = $html."</body></html>";    
 		}catch(Exception $e){
 		}
 		$fecha = date('d-m-y');        
@@ -806,131 +296,78 @@ class reportes extends datos{
 		$pdf->set_paper("letter", "portrait");
 		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
 		$pdf->render();
-		$pdf->stream("ReporteEntradas".$fecha.".pdf", array("Attachment" => false));    
+		$pdf->stream("ReporteInsumos".$fecha.".pdf", array("Attachment" => false));    
 	}
 
-	function reporte_salidas(){    
+
+
+
+
+function reporte_equipos(){    
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			date_default_timezone_set('America/Caracas');
-			$fecha_actual = date('d-m-y H:i');
-			
-			$sql = "SELECT s.id, s.fecha_salida, 
-			c.tipo_documento, c.numero_documento, c.nombre AS cliente_nombre, c.apellido AS cliente_apellido,
-			p.codigo, p.nombre AS producto_nombre, sp.cantidad, sp.precio,
-			(sp.cantidad * sp.precio) AS subtotal,
-			SUM(sp.cantidad * sp.precio) OVER (PARTITION BY s.id) AS total
-			FROM salidas s
-			JOIN clientes c ON s.cliente_id = c.id
-			JOIN salidas_detalles sp ON s.id = sp.salida_id
-			JOIN productos p ON sp.producto_id = p.id
-			WHERE 1=1";
-
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$sql .= " AND DATE(s.fecha_salida) BETWEEN :fecha_inicio AND :fecha_fin";
-			}
-			if(!empty($this->cliente)){
-				$sql .= " AND c.numero_documento LIKE :cliente";
-			}
-			$sql .= " ORDER BY s.fecha_salida DESC";
-
-			$resultado = $co->prepare($sql);
-			
-			if(!empty($this->fecha_inicio) && !empty($this->fecha_fin)){
-				$resultado->bindValue(':fecha_inicio', $this->fecha_inicio);
-				$resultado->bindValue(':fecha_fin', $this->fecha_fin);
-			}
-
-			if(!empty($this->cliente)){
-				$resultado->bindValue(':cliente', '%'.$this->cliente.'%');
-			}
-			
+			date_default_timezone_set('America/Caracas');//zona horaria 
+			$fecha = date('d-m-y H:i');
+			$resultado = $co->prepare("SELECT e.codigo, e.nombre, e.marca,e.modelo, e.cantidad as stock_total, e.precio FROM equipos WHERE e.codigo like :codigo and e.nombre like :nombre and e.marca like :marca and e.modelo like :modelo and e.cantidad like :stock_total and e.precio like :precio");
+			$resultado->bindValue(':codigo','%'.$this->codigo.'%');
+			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
+			$resultado->bindValue(':marca','%'.$this->marca.'%');
+			$resultado->bindValue(':modelo','%'.$this->modelo.'%');
+			$resultado->bindValue(':cantidad','%'.$this->cantidad.'%');
+			$resultado->bindValue(':precio','%'.$this->precio.'%');
 			$resultado->execute();
 			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-
 			$html = "<html><head></head><body>";
-			$html .= "
+			$html = $html . "
 			<div style='position: relative;'>
-			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute; left: 650px;'>
-			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>FERRETERIA Y REPUESTOS YSDAEL 24, C.A<br>J-504886165</h2>
-			</div>";        
-			$html .= "<p style='color: #14345a;'><strong>Direccion:</strong> Avenida Florencio Jimenez Km 8 y 1/2 Via Quibor. Barrio Santa Rosalia, Barquisimeto, Lara<br><strong>Telefono:</strong> 0414-5290300<br><strong>Fecha:</strong> ".$fecha_actual.".</p>";    
-			$html .= "<div style='background-color: #f1c40f; border: solid;'><h2 style='color:#14345a; text-align: center;'>Reporte de Salidas</h2></div>";
+			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
+			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>Centro Odontologico Vital Sonrisa, C.A<br>J-</h2>
+			</div>";		
+			$html = $html . "<p style='color: #14345a;'><strong>Direccion:</strong> Direccion <br><strong>Telefono:</strong> 0414-<br><strong>Fecha:</strong> ".$fecha.".</p>";	
 
+			$html = $html . "<div style='background-color: #f1c40f; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Equipos</h2></div>";
+			$html = $html."<table style='width:100%; border: solid;' >";
+			$html = $html."<thead style='width:100%;'>";
+			$html = $html."<tr style='background-color: #f7dc6f ; '>";
+			$html = $html."<th style='border: solid;'>#</th>";    
+			$html = $html."<th style='border: solid;'>Codigo</th>";
+			$html = $html."<th style='border: solid;'>Nombre</th>";
+			$html = $html."<th style='border: solid;'>Marca</th>";
+			$html = $html."<th style='border: solid;'>Modelo</th>";
+			$html = $html."<th style='border: solid;'>Cantidad</th>";
+			$html = $html."<th style='border: solid;'>Precio</th>";
+			$html = $html."</tr>";
+			$html = $html."</thead>";
+			$html = $html."<tbody>";
 			if($fila){
-				$currentSalida = null;
-				$n = 1;
-				
+				$n=1;
 				foreach($fila as $f){
-					if ($currentSalida !== $f['id']) {
-						if ($currentSalida !== null) {
-							$html .= "<tr style='background-color: #f7dc6f;'>";
-							$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-							$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-							$html .= "</tr>";
-							$html .= "</tbody></table></td>";
-							$html .= "</tr>";
-							$html .= "</table>";
-						}
-
-						$html .= "<table style='width:100%; border: solid; margin-bottom: 20px;'>";
-						$html .= "<tr style='background-color: #f7dc6f;'>";
-						$html .= "<th style='border: solid; padding: 5px;' colspan='2'>Salida #" . $n . "</th>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Fecha:</strong> " . $f['fecha_salida'] . "</td>";
-						$html .= "<td style='border: solid; padding: 5px;'><strong>Cliente:</strong> " . $f['cliente_nombre'] . " " . $f['cliente_apellido'] . " <strong>Documento: </strong>" . $f['numero_documento'] . "</td>";
-						$html .= "</tr>";
-						$html .= "<tr>";
-						$html .= "<td colspan='2' style='padding: 0;'>";
-						$html .= "<table style='width:100%; border-collapse: collapse;'>";
-						$html .= "<thead style='background-color: #f7dc6f;'>";
-						$html .= "<tr>";
-						$html .= "<th style='border: solid;'>Codigo</th>";
-						$html .= "<th style='border: solid;'>Producto</th>";
-						$html .= "<th style='border: solid;'>Cantidad</th>";
-						$html .= "<th style='border: solid;'>Precio</th>";
-						$html .= "<th style='border: solid;'>Subtotal</th>";
-						$html .= "</tr>";
-						$html .= "</thead><tbody>";
-						
-						$currentSalida = $f['id'];
-						$prevTotal = $f['total'];
-						$n++;
-					}
-					
-					$html .= "<tr>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['codigo'] . "</td>";
-					$html .= "<td style='border: solid;'>" . $f['producto_nombre'] . "</td>";
-					$html .= "<td style='border: solid; text-align: center;'>" . $f['cantidad'] . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['precio'], 2) . "</td>";
-					$html .= "<td style='border: solid; text-align: right;'>$" . number_format($f['subtotal'], 2) . "</td>";
-					$html .= "</tr>";
-				}
-				
-				if ($currentSalida !== null) {
-					$html .= "<tr style='background-color: #f7dc6f;'>";
-					$html .= "<td colspan='4' style='text-align: right; border: solid;'><strong>Total:</strong></td>";
-					$html .= "<td style='text-align: right; border: solid;'><strong>$" . number_format($prevTotal, 2) . "</strong></td>";
-					$html .= "</tr>";
-					$html .= "</tbody></table></td>";
-					$html .= "</tr>";
-					$html .= "</table>";
+					$html = $html."<tr>";
+					$html = $html."<td style='text-align:center; border: solid; '".$n."></td>";
+					$html = $html."<td style='border: solid;'>".$f['codigo']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['marca']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['modelo']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['cantidad']."</td>";
+					$html = $html."<td style='border: solid;'>$".$f['precio']."</td>";
+					$html = $html."</tr>";
+					$n++;
 				}
 			}
-			
-			$html .= "</body></html>";    
-
+			$html = $html."</tbody>";
+			$html = $html."</table>";
+			$html = $html."</div></div></div>";
+			$html = $html."</body></html>";    
 		}catch(Exception $e){
 		}
-		
 		$fecha = date('d-m-y');        
 		$pdf = new DOMPDF();
 		$pdf->set_paper("letter", "portrait");
 		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
 		$pdf->render();
-		$pdf->stream("ReporteSalidas".$fecha.".pdf", array("Attachment" => false));    
+		$pdf->stream("ReporteInsumos".$fecha.".pdf", array("Attachment" => false));    
 	}
+
 }
 ?>

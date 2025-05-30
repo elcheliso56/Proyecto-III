@@ -47,6 +47,9 @@ function crearDT() {
 
 $(document).ready(function() {
     consultar(); // Llama a la función consultar al cargar el documento
+     $("#proceso").text("INCLUIR");
+     $("#modal1").modal("show");
+
 
     // Validaciones para el campo nombre
     $("#nombre").on("keypress", function(e) {
@@ -168,6 +171,11 @@ $(document).ready(function() {
      $("#proceso").text("INCLUIR");
      $("#modal1").modal("show");
  });	
+
+    // Manejador para el botón de volver a registrar insumo
+    $("#volverRegistrarInsumo").on("click", function() {
+        window.location.href = "?pagina=gestionarInsumos&from=presentaciones";
+    });
 });
 
 // Función para validar el envío de datos

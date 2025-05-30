@@ -76,7 +76,7 @@ class usuarios extends datos{
 	function incluir(){
 		$r = array();
 		if(!$this->existe($this->cedula)){
-			$co = $this->conecta();
+			$co = $this->conecta_usuarios();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
 				$co->query("Insert into usuarios(cedula,nombre,apellido,correo,telefono,nombre_usuario,tipo_usuario,contraseña,imagen)
@@ -106,7 +106,7 @@ class usuarios extends datos{
 
 	// Método para modificar un usuario existente
 	function modificar(){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		if($this->existe($this->cedula)){
@@ -149,7 +149,7 @@ class usuarios extends datos{
 
 	// Método para eliminar un usuario
 	function eliminar(){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		if($this->existe($this->cedula)){
@@ -182,7 +182,7 @@ class usuarios extends datos{
 
 	// Método para consultar todos los usuarios
 	function consultar(){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try{
@@ -226,7 +226,7 @@ class usuarios extends datos{
 
 	// Método privado para verificar si un usuario existe
 	private function existe($cedula){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
 			$resultado = $co->query("Select * from usuarios where cedula='$cedula'");
@@ -245,7 +245,7 @@ class usuarios extends datos{
 
 	// Método para obtener datos de un usuario específico
 	function obtenerDatosUsuario($id){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
 			$resultado = $co->query("SELECT * FROM usuarios WHERE id = '$id'");
@@ -258,7 +258,7 @@ class usuarios extends datos{
 
 	// Método para modificar el perfil de un usuario
 	function modificarPerfil($id){
-		$co = $this->conecta();
+		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {

@@ -2,7 +2,10 @@
 require_once("comunes/encabezado.php");//Incluye el encabezado común de la página 
 require_once('comunes/menu.php');//Incluye el menú común de la página 
 ?> 
-		<div class="container"> 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+	<div class="container"> 
+		<div class="container">
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Empleados</h1>
 				<div>
@@ -11,12 +14,27 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 					</button>
 				</div>
 			</div>
-			<!-- Contenedor para la tabla de empleados -->
-			<div class="container">
-				<div class="table-responsive" id="tt">
-					<!-- Tabla para mostrar la lista de empleados -->
+		</div> 
+	<!-- Tabla de empleados -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3 d-flex justify-content-between align-items-center">
+			<h6 class="m-0 font-weight-bold text-info">Listado de Empleados</h6>
+			<div class="dropdown no-arrow">
+				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+					<i class="bi bi-three-dots-vertical"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right shadow">
+					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
+						Excel</a>
+					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
+						Listado</a>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
 					<table class="table table-striped table-hover table-center" id="tablacliente">
-						<thead>
+						<thead class="table-light">
 							<tr>
 								<!-- Encabezados de la tabla -->
 								<th class="text-center">#</th>
@@ -39,14 +57,14 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							<!-- Aquí se cargarán dinámicamente los datos de los Empleados -->
 						</tbody>
 					</table>
-				</div>
 			</div>
-		</div> 
+		</div>
+	</div>
 		<!-- Modal para agregar o editar Empleados -->
 		<div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 			<div class="modal-dialog modal-lg" role="document" id="lm">
 					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title"><i class="bi bi-people-fill me-2"></i> Paciente</h5>
+						<h5 class="modal-title"><i class="bi bi-person-fill me-2"></i> Empleado</h5>
 					</div>
 				<div class="modal-content">
 					<div class="container" id="mtm"> 
@@ -58,17 +76,17 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-4">
 										<label for="cedula">Cédula</label>
-										<input class="form-control" type="text" id="cedula" title="El número de documento no puede ser modificado..." placeholder="Cédula obligatoria" requerid/>
+										<input class="form-control" type="text" id="cedula" title="El número de documento no puede ser modificado..." placeholder="Cédula obligatoria" required/>
 										<span id="scedula"></span>
 									</div>
 									<div class="col-md-4">
 										<label for="nombre">Nombre</label>
-										<input class="form-control" type="text" id="nombre"  placeholder="Nombre obligatorio" requerid/>
+										<input class="form-control" type="text" id="nombre"  placeholder="Nombre obligatorio" required/>
 										<span id="snombre"></span>
 									</div>
 									<div class="col-md-4">
 										<label for="apellido">Apellido</label>
-										<input class="form-control" type="text" id="apellido" placeholder="Apellido obligatorio" requerid/>
+										<input class="form-control" type="text" id="apellido" placeholder="Apellido obligatorio" required/>
 										<span id="sapellido"></span>
 									</div>
 								</div>
@@ -76,7 +94,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-4">
 										<label for="fecha_nacimiento">Fecha de Nacimiento</label>
-										<input class="form-control" type="date" id="fecha_nacimiento" title="Fecha de nacimiento del empleado" requerid/>
+										<input class="form-control" type="date" id="fecha_nacimiento" title="Fecha de nacimiento del empleado" required/>
 										<span id="sfecha_nacimiento"></span>
 									</div>
 									<div class="col-md-4">
@@ -86,7 +104,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 									<div class="col-md-4" title="El tipo de género no puede ser modificado...">
 										<label for="genero">Género</label>
-										<select class="form-control" id="genero" title="Género del paciente" requerid/>
+										<select class="form-control" id="genero" title="Género del paciente" required>
 											<option value="" selected disabled>Seleccione una opción </option>
 											<option value="F"title="Género Femenino">Femenina</option>
 											<option value="M"title="Género Masculono">Masculino</option>
@@ -103,7 +121,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 									<div class="col-md-4">
 										<label for="telefono">Teléfono</label>
-										<input class="form-control" type="text" id="telefono" placeholder="Ejemplo: 04123456789" requerid/>
+										<input class="form-control" type="text" id="telefono" placeholder="Ejemplo: 04123456789" required/>
 										<span id="stelefono"></span>
 									</div>
 								</div>
@@ -111,7 +129,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-12">
 										<label for="direccion">Dirección</label>
-										<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" requerid/>
+										<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" required/>
 										<span id="sdireccion"></span>
 									</div>
 								</div>	
@@ -119,12 +137,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-4">
 										<label for="fecha_contratacion">Fecha de Contratación</label>
-										<input class="form-control" type="date" id="fecha_contratacion" requerid/>
+										<input class="form-control" type="date" id="fecha_contratacion" required/>
 										<span id="sfecha_contratacion"></span>
 									</div>
 									<div class="col-md-4">
 										<label for="cargo">Cargo</label>
-										<select class="form-control" id="cargo" title="Género del paciente" requerid/>
+										<select class="form-control" id="cargo" title="Género del paciente" required/>
 											<option value="" selected disabled>Seleccione una opción </option>
 											<option value="Doctor"title="Doctor">Doctor</option>
 											<option value="Asistente"title="Asistente">Asistente</option>
@@ -138,7 +156,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 									<div class="col-md-4">
 										<label for="salario">Salario</label>
-										<input class="form-control" type="text" id="salario" placeholder="Ejemplo: 1000.00" requerid/>
+										<input class="form-control" type="text" id="salario" placeholder="Ejemplo: 1000.00" required/>
 										<span id="ssalario"></span>
 									</div>
 								</div>	
