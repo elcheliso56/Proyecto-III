@@ -88,24 +88,6 @@ require_once('comunes/menu.php');
 				<div class="col-0">
 				</div>
 			</div>
-			<form class="row g-3 mb-3">
-				<div class="col-md-3">
-					<label for="cedula_odontograma" class="form-label">Cédula</label>
-					<input type="text" class="form-control" id="cedula_odontograma" name="cedula_odontograma">
-				</div>
-				<div class="col-md-3">
-					<label for="nombre_odontograma" class="form-label">Nombre</label>
-					<input type="text" class="form-control" id="nombre_odontograma" name="nombre_odontograma">
-				</div>
-				<div class="col-md-3">
-					<label for="apellido_odontograma" class="form-label">Apellido</label>
-					<input type="text" class="form-control" id="apellido_odontograma" name="apellido_odontograma">
-				</div>
-				<div class="col-md-3">
-					<label for="fecha_odontograma" class="form-label">Fecha</label>
-					<input type="date" class="form-control" id="fecha_odontograma" name="fecha_odontograma">
-				</div>
-			</form>
 			<!-- Modal Odontograma - Contenido organizado -->
 			<div class="modal-body">
 				<!-- Datos del paciente para el odontograma (ya están en el formulario superior) -->
@@ -140,6 +122,15 @@ require_once('comunes/menu.php');
 						<div class="font-weight-bold text-center mb-3">Datos del Paciente</div>
 						<div class="row g-3">
 							<div class="col-md-6">
+								 <div class="mb-3">
+                                    <label for="cedula" class="form-label"></label>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <button class="btn btn-outline-info flex-shrink-0" type="button" id="listadopaciente" name="listadopaciente" title="Listado de Cédulas">
+                                            <i class="bi bi-card-list"></i>
+                                        </button>
+                                        <input type="text" class="form-control flex-grow-1" id="cedula" name="cedula" placeholder="Cédula" aria-label="Cédula" disabled>
+                                    </div>
+                                </div>
 								<label for="nombre" class="form-label">Nombre</label>
 								<input class="form-control" type="text" id="nombre" name="nombre" required>
 								<div class="invalid-feedback">El nombre es obligatorio</div>
@@ -260,7 +251,36 @@ require_once('comunes/menu.php');
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="modalpaciente" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pacientes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped-columns table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Cédula</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Apellido</th>
+                                <th class="text-center">Teléfono</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablapaciente">
+                            <!-- Aquí se cargarán dinámicamente los datos de los clientes -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Botón para abrir el modal del modelo -->
 <div class="position-fixed bottom-0 end-0 m-4" style="z-index: 1055;">
 	<button type="button" class="btn btn-secondary" id="mostrarModeloBtn" data-bs-toggle="modal" data-bs-target="#modalModelo">

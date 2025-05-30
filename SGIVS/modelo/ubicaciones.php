@@ -420,6 +420,49 @@ class historial extends datos
 
 			return $errores;
 		}
+		
+	function listadopaciente()
+	{
+		$co = $this->conecta();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$r = array();
+		try {
+
+			$resultado = $co->query("Select * from pacientes");
+
+			if ($resultado) {
+
+				$respuesta = '';
+				foreach ($resultado as $r) {
+					$respuesta = $respuesta . "<tr style='cursor:pointer' onclick='colocapa(this);'>";
+					$respuesta = $respuesta . "<td>";
+					$respuesta = $respuesta . $r['cedula'];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td>";
+					$respuesta = $respuesta . $r['nombre'];
+					$respuesta = $respuesta . "</td>";
+
+					$respuesta = $respuesta . "<td>";
+					$respuesta = $respuesta . $r['apellido'];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "<td>";
+					$respuesta = $respuesta . $r['telefono'];
+					$respuesta = $respuesta . "</td>";
+					$respuesta = $respuesta . "</tr>";
+				}
+				$r['resultado'] = 'modalpaciente';
+				$r['mensaje'] =  $respuesta;
+			} else {
+				$r['resultado'] = 'modalpaciente';
+				$r['mensaje'] =  '';
+			}
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] =  $e->getMessage();
+		}
+		return $r;
+	}
+
 }
 	
 ?>

@@ -16,6 +16,9 @@ if (is_file("vista/" . $pagina . ".php")) {
 		if ($accion == 'consultar') {
 			echo  json_encode($o->consultar());  // Devuelve los datos en formato JSON
 		}
+		else if ($accion == 'modalpaciente') {
+			echo  json_encode($o->listadopaciente());
+		}
 		// Acción para eliminar un registro
 		elseif ($accion == 'eliminar') {
 			$o->set_nombre($_POST['nombre']); // Establece el nombre del registro a eliminar
