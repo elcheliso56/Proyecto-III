@@ -401,16 +401,15 @@ html, body{
 	height: 45px;
 }
 .navBar-options-list ul li{
-    height: 45px;
-    line-height: 45px;
-    cursor: pointer;
-    display: inline-block;
-    padding: 0 7px;
-    font-size: 21px;
-    user-select: none; /* Standard property for compatibility */
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+	height: 45px;
+	line-height: 45px;
+	cursor: pointer;
+	display: inline-block;
+	padding: 0 7px;
+	font-size: 21px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
 
@@ -625,13 +624,12 @@ html, body{
 
 .tile-text span,
 .tile-icon{
-    position: absolute;
-    color: rgba(0,0,0,.3);
-    transition: all .3s ease-in-out;
-    user-select: none; /* Standard property for compatibility */
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+	position: absolute;
+	color: rgba(0,0,0,.3);
+	transition: all .3s ease-in-out;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
 .tile-text span{
@@ -668,7 +666,10 @@ html, body{
 	background-color:#14345a; 
 }
 #home{ border:1px solid black; color: black;}
+
 .tableh{background-color: #14345a; color: white;}
+
+
 .table{
 	border-top: 1px solid black;
 	border-left: 1px solid black;

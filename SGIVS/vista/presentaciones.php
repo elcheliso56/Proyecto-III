@@ -8,6 +8,11 @@ require_once('comunes/menu.php');
 		<div class="row mt-1 justify-content-center">
 			<div class="col-md-2 text-center">
 				<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Presentacion"><i class="bi bi-plus-square"></i></button>
+			</div>
+			<div class="col-md-3 text-center">
+				<button type="button" class="btn-sm btn-danger w-50 small-width" id="volverRegistrarInsumo" title="Volver a registrar insumo">
+					<i class="bi bi-arrow-return-left"></i>
+				</button>
 			</div>				
 		</div>
 	</div>

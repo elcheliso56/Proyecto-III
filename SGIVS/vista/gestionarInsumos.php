@@ -21,6 +21,11 @@ require_once('comunes/menu.php');
                     <button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Insumo">
                         <i class="bi bi-plus-square"></i>
                     </button>               
+                </div>
+                <div class="col-md-2 text-center">
+                    <button type="button" class="btn-sm btn-warning w-75 small-width" id="generar_reporte" title="Generar Reporte PDF">
+                        <i class="bi bi-file-pdf"></i>
+                    </button>
                 </div>              
             </div>
             <div class="table-responsive" id="tt">
@@ -227,6 +232,60 @@ require_once('comunes/menu.php');
         </div>
         <div class="modal-footer modal-insumos-footer">
             <button type="button" class="btn" data-dismiss="moda2" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalReporte">
+    <div class="modal-dialog modal-smarll" role="document" id="lm">
+        <div class="modal-header" id="hm">
+            <h5 class="modal-title">Generar Reporte de Insumos</h5>
+        </div>
+        <div class="modal-content">
+            <div class="container" id="mtm">
+                <form method="post" id="formReporte" target="_blank">
+                    <input type="hidden" name="accion" value="reporte_insumos">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="codigo_reporte">Código</label>
+                            <input class="form-control" type="text" id="codigo_reporte" name="codigo" placeholder="Código del insumo..."/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombre_reporte">Nombre</label>
+                            <input class="form-control" type="text" id="nombre_reporte" name="nombre" placeholder="Nombre del insumo..."/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="marca_reporte">Marca</label>
+                            <input class="form-control" type="text" id="marca_reporte" name="marca" placeholder="Marca del insumo..."/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="stock_total_reporte">Stock total</label>
+                            <input class="form-control" type="text" id="stock_total_reporte" name="stock_total" placeholder="Stock total..."/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="stock_minimo_reporte">Stock mínimo</label>
+                            <input class="form-control" type="text" id="stock_minimo_reporte" name="stock_minimo" placeholder="Stock mínimo..."/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="precio_reporte">Precio</label>
+                            <input class="form-control" type="text" id="precio_reporte" name="precio" placeholder="Precio..."/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="presentacion_reporte">Presentación</label>
+                            <input class="form-control" type="text" id="presentacion_reporte" name="presentacion" placeholder="Presentación..."/>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn" data-dismiss="modal" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
+                        <button type="submit" class="btn btn-warning"><i class="bi bi-file-pdf"></i> Generar PDF</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
