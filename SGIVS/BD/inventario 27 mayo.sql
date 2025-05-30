@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2025 a las 03:45:40
+-- Tiempo de generación: 29-05-2025 a las 03:41:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -21,30 +21,33 @@ SET time_zone = "+00:00";
 -- Base de datos: `inventario`
 --
 
--- --------------------------------------------------------
-
+DELIMITER $$
 --
--- Estructura de tabla para la tabla `apartados`
+-- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrar_tratamiento_cuotas` (IN `p_paciente_id` INT, IN `p_monto_total` DECIMAL(10,2), IN `p_fecha_emision` DATE, IN `p_fecha_vencimiento` DATE, IN `p_descripcion` TEXT, IN `p_referencia` VARCHAR(50))   BEGIN
+    INSERT INTO cuentas_por_cobrar (
+        paciente_id,
+        fecha_emision,
+        fecha_vencimiento,
+        monto_total,
+        monto_pendiente,
+        descripcion,
+        referencia
+    ) VALUES (
+        p_paciente_id,
+        p_fecha_emision,
+        p_fecha_vencimiento,
+        p_monto_total,
+        p_monto_total,
+        p_descripcion,
+        p_referencia
+    );
+    
+    SELECT LAST_INSERT_ID() as nueva_cuenta_id;
+END$$
 
-CREATE TABLE `apartados` (
-  `id` int(11) NOT NULL,
-  `fecha_apartado` datetime NOT NULL,
-  `cliente_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `apartados_detalles`
---
-
-CREATE TABLE `apartados_detalles` (
-  `apartado_id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -110,50 +113,8 @@ CREATE TABLE `citas` (
 --
 
 INSERT INTO `citas` (`id_cita`, `nombre_paciente`, `numero_contacto`, `id_medico`, `motivo_cita`, `fecha_cita`, `hora_cita`, `estado_cita`, `fecha_registro`, `observaciones`, `id_solicitud`) VALUES
-(1, 'PEDRO', '0451851848', 28, 'Ortodoncia', '2025-05-31', '12:17:00', 'pendiente', '2025-05-27 02:55:20', 'dolor de muela', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `clientes`
---
-
-CREATE TABLE `clientes` (
-  `id` int(11) NOT NULL,
-  `tipo_documento` varchar(10) NOT NULL,
-  `numero_documento` varchar(15) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `correo` varchar(25) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `direccion` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `clientes`
---
-
-INSERT INTO `clientes` (`id`, `tipo_documento`, `numero_documento`, `nombre`, `apellido`, `correo`, `telefono`, `direccion`) VALUES
-(1, 'Cédula', '12345678', 'Juan', 'Perez', 'juan@email.com', '04141234567', 'Calle Principal 123'),
-(2, 'Cédula', '98765432', 'Maria', 'Gonzalez', 'maria@email.com', '04242345678', 'Avenida Central 456'),
-(3, 'Cédula', '45678912', 'Pedro', 'Ramirez', 'pedro@email.com', '04163456789', 'Carrera 7 #89'),
-(4, 'Cédula', '78912345', 'Ana', 'Martinez', 'ana@email.com', '04124567890', 'Calle 15 #45-67'),
-(5, 'Cédula', '32165498', 'Luis', 'Garcia', 'luis@email.com', '04145678901', 'Avenida 5 #12-34'),
-(6, 'Cédula', '65498732', 'Carmen', 'Lopez', 'carmen@email.com', '04166789012', 'Carrera 23 #56'),
-(7, 'Cédula', '95175384', 'Jose', 'Torres', 'jose@email.com', '04127890123', 'Calle 8 #90-12'),
-(8, 'Cédula', '75395146', 'Rosa', 'Diaz', 'rosa@email.com', '04148901234', 'Avenida 12 #34-56'),
-(9, 'Cédula', '85296374', 'Miguel', 'Sanchez', 'miguel@email.com', '04169012345', 'Carrera 45 #78'),
-(10, 'Cédula', '14725836', 'Laura', 'Hernandez', 'laura@email.com', '04123456789', 'Calle 67 #89-12'),
-(11, 'Cédula', '23456789', 'Carlos', 'Mendoza', 'carlos@email.com', '04141234568', 'Calle 10 #20-30'),
-(12, 'Cédula', '34567890', 'Sofia', 'Martinez', 'sofia@email.com', '04242345679', 'Avenida 20 #40-50'),
-(13, 'Cédula', '45678901', 'Andres', 'Gonzalez', 'andres@email.com', '04163456780', 'Carrera 30 #60-70'),
-(14, 'Cédula', '56789012', 'Lucia', 'Hernandez', 'lucia@email.com', '04124567891', 'Calle 40 #80-90'),
-(15, 'Cédula', '67890123', 'Fernando', 'Lopez', 'fernando@email.com', '04145678902', 'Avenida 50 #100-110'),
-(16, 'Cédula', '78901234', 'Patricia', 'Diaz', 'patricia@email.com', '04166789013', 'Carrera 60 #120-130'),
-(17, 'Cédula', '89012345', 'Javier', 'Torres', 'javier@email.com', '04127890124', 'Calle 70 #140-150'),
-(18, 'Cédula', '90123456', 'Claudia', 'Sanchez', 'claudia@email.com', '04148901235', 'Avenida 80 #160-170'),
-(19, 'Cédula', '01234567', 'Diego', 'Ramirez', 'diego@email.com', '04169012346', 'Carrera 90 #180-190'),
-(20, 'Cédula', '1234567', 'Valeria', 'García', 'valeria@email.com', '04123456789', 'Calle 100 #200-210');
+(1, 'PEDRO', '0451851848', 28, 'Ortodoncia', '2025-05-31', '12:17:00', 'pendiente', '2025-05-27 02:55:20', 'dolor de muela', NULL),
+(2, 'dasdas', '231231231323', 28, 'Limpieza', '2025-05-29', '11:20:00', 'pendiente', '2025-05-28 05:19:20', 'asdasd', NULL);
 
 -- --------------------------------------------------------
 
@@ -204,7 +165,7 @@ CREATE TABLE `cuentas` (
 --
 
 INSERT INTO `cuentas` (`id`, `nombre`, `tipo`, `saldo_actual`, `numero_cuenta`, `entidad_bancaria`, `moneda`, `activa`, `fecha_creacion`) VALUES
-(1, 'Dueño', 'Efectivo', 20.01, '', '', 'USD', 1, '2025-05-23 01:15:34'),
+(1, 'Dueño', 'Efectivo', 220.01, '', '', 'USD', 1, '2025-05-23 01:15:34'),
 (2, '100BANCO', 'bancaria', 301.00, '', '', 'USD', 1, '2025-05-25 17:32:00'),
 (3, 'Mercantil', 'bancaria', 2311.00, '', '', 'EUR', 1, '2025-05-25 17:32:38'),
 (4, 'BANESCO', 'bancaria', 21.00, '', '', 'USD', 1, '2025-05-25 17:59:10'),
@@ -213,6 +174,51 @@ INSERT INTO `cuentas` (`id`, `nombre`, `tipo`, `saldo_actual`, `numero_cuenta`, 
 (8, 'Cuenta Corriente', 'bancaria', 200.00, '1234567890', 'Banco Dental', 'USD', 1, '2025-05-01 04:00:00'),
 (9, 'Tarjeta de Crédito', 'tarjeta', 19000.00, '9876543210', 'Visa', 'USD', 1, '2025-05-01 04:00:00'),
 (10, 'Fondo de Emergencia', 'bancaria', 10000.00, '4567890123', 'Banco Dental', 'USD', 1, '2025-05-01 04:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuentas_por_cobrar`
+--
+
+CREATE TABLE `cuentas_por_cobrar` (
+  `id` int(11) NOT NULL,
+  `paciente_id` int(20) NOT NULL,
+  `fecha_emision` date NOT NULL,
+  `fecha_vencimiento` date NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `monto_pendiente` decimal(10,2) NOT NULL,
+  `estado` enum('pendiente','parcial','pagado','vencido') NOT NULL DEFAULT 'pendiente',
+  `descripcion` text DEFAULT NULL,
+  `referencia` varchar(50) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cuentas_por_cobrar`
+--
+
+INSERT INTO `cuentas_por_cobrar` (`id`, `paciente_id`, `fecha_emision`, `fecha_vencimiento`, `monto_total`, `monto_pendiente`, `estado`, `descripcion`, `referencia`, `fecha_creacion`) VALUES
+(1, 1, '2024-03-20', '2024-04-20', 1000.00, 800.00, 'parcial', 'Tratamiento de ortodoncia - Cuota inicial', 'TRAT-001', '2025-05-28 02:43:10');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuentas_por_pagar`
+--
+
+CREATE TABLE `cuentas_por_pagar` (
+  `id` int(11) NOT NULL,
+  `proveedor_id` int(11) NOT NULL,
+  `fecha_emision` date NOT NULL,
+  `fecha_vencimiento` date NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `monto_pendiente` decimal(10,2) NOT NULL,
+  `estado` enum('pendiente','parcial','pagado','vencido') NOT NULL DEFAULT 'pendiente',
+  `descripcion` text DEFAULT NULL,
+  `referencia` varchar(50) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -491,7 +497,8 @@ INSERT INTO `ingresos` (`id`, `descripcion`, `monto`, `fecha`, `origen`, `cuenta
 (38, 'Reembolso seguro', 420.00, '2025-03-22', 'manual', 8),
 (39, 'Consulta urgencia', 90.00, '2025-03-25', 'consulta', 7),
 (40, 'Prótesis parcial', 600.00, '2025-03-28', 'servicio', 8),
-(42, 'PAGO ANUAL', 40000.00, '2025-05-27', 'consulta', 9);
+(42, 'PAGO ANUAL', 40000.00, '2025-05-27', 'consulta', 9),
+(43, 'Pago de cuenta por cobrar #1', 200.00, '2024-03-20', 'servicio', 1);
 
 --
 -- Disparadores `ingresos`
@@ -581,7 +588,114 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id_paciente`, `cedula`, `nombre`, `apellido`, `fecha_nacimiento`, `genero`, `alergias`, `antecedentes`, `email`, `direccion`, `telefono`, `fecha_registro`) VALUES
-(0, 28591973, 'Jesus', 'Regalado', '2002-06-18', 'M', 'Nada', 'ninguno', 'ejejmplo@gmail.com', 'calle 911 ', '04120000000', '2025-05-20');
+(1, 28591973, 'Jesus', 'Regalado', '2002-06-18', 'M', 'Nada', 'ninguno', 'ejejmplo@gmail.com', 'calle 911 ', '04120000000', '2025-05-20');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_cuentas_por_cobrar`
+--
+
+CREATE TABLE `pagos_cuentas_por_cobrar` (
+  `id` int(11) NOT NULL,
+  `cuenta_por_cobrar_id` int(11) NOT NULL,
+  `fecha_pago` date NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `metodo_pago` varchar(50) NOT NULL,
+  `referencia_pago` varchar(50) DEFAULT NULL,
+  `cuenta_id` int(11) NOT NULL,
+  `observaciones` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos_cuentas_por_cobrar`
+--
+
+INSERT INTO `pagos_cuentas_por_cobrar` (`id`, `cuenta_por_cobrar_id`, `fecha_pago`, `monto`, `metodo_pago`, `referencia_pago`, `cuenta_id`, `observaciones`) VALUES
+(1, 1, '2024-03-20', 200.00, 'efectivo', NULL, 1, 'Pago inicial del tratamiento');
+
+--
+-- Disparadores `pagos_cuentas_por_cobrar`
+--
+DELIMITER $$
+CREATE TRIGGER `after_pago_cobrar_insert` AFTER INSERT ON `pagos_cuentas_por_cobrar` FOR EACH ROW BEGIN
+    -- Actualizar la cuenta por cobrar
+    UPDATE cuentas_por_cobrar 
+    SET monto_pendiente = monto_pendiente - NEW.monto,
+        estado = CASE 
+            WHEN monto_pendiente - NEW.monto <= 0 THEN 'pagado'
+            WHEN monto_pendiente - NEW.monto < monto_total THEN 'parcial'
+            ELSE estado
+        END
+    WHERE id = NEW.cuenta_por_cobrar_id;
+    
+    -- Registrar el ingreso automáticamente
+    INSERT INTO ingresos (
+        descripcion,
+        monto,
+        fecha,
+        origen,
+        cuenta_id
+    ) VALUES (
+        CONCAT('Pago de cuenta por cobrar #', NEW.cuenta_por_cobrar_id),
+        NEW.monto,
+        NEW.fecha_pago,
+        'servicio',
+        NEW.cuenta_id
+    );
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_cuentas_por_pagar`
+--
+
+CREATE TABLE `pagos_cuentas_por_pagar` (
+  `id` int(11) NOT NULL,
+  `cuenta_por_pagar_id` int(11) NOT NULL,
+  `fecha_pago` date NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `metodo_pago` varchar(50) NOT NULL,
+  `referencia_pago` varchar(50) DEFAULT NULL,
+  `cuenta_id` int(11) NOT NULL,
+  `observaciones` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Disparadores `pagos_cuentas_por_pagar`
+--
+DELIMITER $$
+CREATE TRIGGER `after_pago_pagar_insert` AFTER INSERT ON `pagos_cuentas_por_pagar` FOR EACH ROW BEGIN
+    -- Actualizar la cuenta por pagar
+    UPDATE cuentas_por_pagar 
+    SET monto_pendiente = monto_pendiente - NEW.monto,
+        estado = CASE 
+            WHEN monto_pendiente - NEW.monto <= 0 THEN 'pagado'
+            WHEN monto_pendiente - NEW.monto < monto_total THEN 'parcial'
+            ELSE estado
+        END
+    WHERE id = NEW.cuenta_por_pagar_id;
+    
+    -- Registrar el egreso automáticamente
+    INSERT INTO egresos (
+        descripcion,
+        monto,
+        fecha,
+        origen,
+        cuenta_id
+    ) VALUES (
+        CONCAT('Pago de cuenta por pagar #', NEW.cuenta_por_pagar_id),
+        NEW.monto,
+        NEW.fecha_pago,
+        'proveedor',
+        NEW.cuenta_id
+    );
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -670,57 +784,6 @@ CREATE TABLE `recordatorios_citas` (
   `metodo` enum('sms','email','whatsapp') NOT NULL,
   `estado` enum('pendiente','enviado','fallido') DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `salidas`
---
-
-CREATE TABLE `salidas` (
-  `id` int(11) NOT NULL,
-  `fecha_salida` datetime NOT NULL,
-  `cliente_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
-
---
--- Volcado de datos para la tabla `salidas`
---
-
-INSERT INTO `salidas` (`id`, `fecha_salida`, `cliente_id`) VALUES
-(1, '2024-03-11 10:00:00', 1),
-(2, '2024-03-12 11:00:00', 2),
-(3, '2024-03-13 12:00:00', 3),
-(4, '2024-03-14 13:00:00', 4),
-(5, '2024-03-15 14:00:00', 5),
-(6, '2024-03-16 15:00:00', 6),
-(7, '2024-03-17 16:00:00', 7),
-(8, '2024-03-18 17:00:00', 8),
-(9, '2024-03-19 18:00:00', 9),
-(10, '2024-03-20 19:00:00', 10),
-(11, '2024-04-11 10:00:00', 11),
-(12, '2024-04-12 11:00:00', 12),
-(13, '2024-04-13 12:00:00', 13),
-(14, '2024-04-14 13:00:00', 14),
-(15, '2024-04-15 14:00:00', 15),
-(16, '2024-04-16 15:00:00', 16),
-(17, '2024-04-17 16:00:00', 17),
-(18, '2024-04-18 17:00:00', 18),
-(19, '2024-04-19 18:00:00', 19),
-(20, '2024-04-20 19:00:00', 20);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `salidas_detalles`
---
-
-CREATE TABLE `salidas_detalles` (
-  `salida_id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -823,20 +886,6 @@ INSERT INTO `usuarios` (`id`, `cedula`, `nombre`, `apellido`, `telefono`, `corre
 --
 
 --
--- Indices de la tabla `apartados`
---
-ALTER TABLE `apartados`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cliente_id` (`cliente_id`);
-
---
--- Indices de la tabla `apartados_detalles`
---
-ALTER TABLE `apartados_detalles`
-  ADD KEY `apartado_id` (`apartado_id`),
-  ADD KEY `producto_id` (`producto_id`);
-
---
 -- Indices de la tabla `categorias`
 --
 ALTER TABLE `categorias`
@@ -855,13 +904,6 @@ ALTER TABLE `citas`
   ADD KEY `estado_cita_2` (`estado_cita`);
 
 --
--- Indices de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `numero_documento` (`numero_documento`);
-
---
 -- Indices de la tabla `consultas`
 --
 ALTER TABLE `consultas`
@@ -872,6 +914,20 @@ ALTER TABLE `consultas`
 --
 ALTER TABLE `cuentas`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `paciente_id` (`paciente_id`);
+
+--
+-- Indices de la tabla `cuentas_por_pagar`
+--
+ALTER TABLE `cuentas_por_pagar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `proveedor_id` (`proveedor_id`);
 
 --
 -- Indices de la tabla `egresos`
@@ -945,6 +1001,28 @@ ALTER TABLE `motivos_cita`
   ADD UNIQUE KEY `nombre_motivo` (`nombre_motivo`);
 
 --
+-- Indices de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD PRIMARY KEY (`id_paciente`);
+
+--
+-- Indices de la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cuenta_por_cobrar_id` (`cuenta_por_cobrar_id`),
+  ADD KEY `cuenta_id` (`cuenta_id`);
+
+--
+-- Indices de la tabla `pagos_cuentas_por_pagar`
+--
+ALTER TABLE `pagos_cuentas_por_pagar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cuenta_por_pagar_id` (`cuenta_por_pagar_id`),
+  ADD KEY `cuenta_id` (`cuenta_id`);
+
+--
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
@@ -966,20 +1044,6 @@ ALTER TABLE `proveedores`
 ALTER TABLE `recordatorios_citas`
   ADD PRIMARY KEY (`id_recordatorio`),
   ADD KEY `id_cita` (`id_cita`);
-
---
--- Indices de la tabla `salidas`
---
-ALTER TABLE `salidas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cliente_id` (`cliente_id`) USING BTREE;
-
---
--- Indices de la tabla `salidas_detalles`
---
-ALTER TABLE `salidas_detalles`
-  ADD KEY `producto_id` (`producto_id`) USING BTREE,
-  ADD KEY `salida_id` (`salida_id`) USING BTREE;
 
 --
 -- Indices de la tabla `solicitud_citas`
@@ -1019,12 +1083,6 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `apartados`
---
-ALTER TABLE `apartados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
@@ -1034,13 +1092,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_cita` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `consultas`
@@ -1053,6 +1105,18 @@ ALTER TABLE `consultas`
 --
 ALTER TABLE `cuentas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `cuentas_por_pagar`
+--
+ALTER TABLE `cuentas_por_pagar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `egresos`
@@ -1094,7 +1158,7 @@ ALTER TABLE `horarios_medicos`
 -- AUTO_INCREMENT de la tabla `ingresos`
 --
 ALTER TABLE `ingresos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `medicos`
@@ -1107,6 +1171,24 @@ ALTER TABLE `medicos`
 --
 ALTER TABLE `motivos_cita`
   MODIFY `id_motivo` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  MODIFY `id_paciente` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_cuentas_por_pagar`
+--
+ALTER TABLE `pagos_cuentas_por_pagar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1125,12 +1207,6 @@ ALTER TABLE `proveedores`
 --
 ALTER TABLE `recordatorios_citas`
   MODIFY `id_recordatorio` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `salidas`
---
-ALTER TABLE `salidas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_citas`
@@ -1161,23 +1237,23 @@ ALTER TABLE `usuarios`
 --
 
 --
--- Filtros para la tabla `apartados`
---
-ALTER TABLE `apartados`
-  ADD CONSTRAINT `apartados_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`);
-
---
--- Filtros para la tabla `apartados_detalles`
---
-ALTER TABLE `apartados_detalles`
-  ADD CONSTRAINT `apartados_productos_ibfk_1` FOREIGN KEY (`apartado_id`) REFERENCES `apartados` (`id`),
-  ADD CONSTRAINT `apartados_productos_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`);
-
---
 -- Filtros para la tabla `citas`
 --
 ALTER TABLE `citas`
   ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitud_citas` (`id_solicitud`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  ADD CONSTRAINT `cuentas_por_cobrar_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_cxc_paciente` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id_paciente`);
+
+--
+-- Filtros para la tabla `cuentas_por_pagar`
+--
+ALTER TABLE `cuentas_por_pagar`
+  ADD CONSTRAINT `cuentas_por_pagar_ibfk_1` FOREIGN KEY (`proveedor_id`) REFERENCES `proveedores` (`id`);
 
 --
 -- Filtros para la tabla `egresos`
@@ -1223,6 +1299,20 @@ ALTER TABLE `medicos`
   ADD CONSTRAINT `fk_medico_especialidad` FOREIGN KEY (`especialidad`) REFERENCES `especialidades` (`id_especialidad`);
 
 --
+-- Filtros para la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  ADD CONSTRAINT `pagos_cuentas_por_cobrar_ibfk_1` FOREIGN KEY (`cuenta_por_cobrar_id`) REFERENCES `cuentas_por_cobrar` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `pagos_cuentas_por_cobrar_ibfk_2` FOREIGN KEY (`cuenta_id`) REFERENCES `cuentas` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pagos_cuentas_por_pagar`
+--
+ALTER TABLE `pagos_cuentas_por_pagar`
+  ADD CONSTRAINT `pagos_cuentas_por_pagar_ibfk_1` FOREIGN KEY (`cuenta_por_pagar_id`) REFERENCES `cuentas_por_pagar` (`id`),
+  ADD CONSTRAINT `pagos_cuentas_por_pagar_ibfk_2` FOREIGN KEY (`cuenta_id`) REFERENCES `cuentas` (`id`);
+
+--
 -- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
@@ -1234,19 +1324,6 @@ ALTER TABLE `productos`
 --
 ALTER TABLE `recordatorios_citas`
   ADD CONSTRAINT `recordatorios_citas_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `salidas`
---
-ALTER TABLE `salidas`
-  ADD CONSTRAINT `salidas_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`);
-
---
--- Filtros para la tabla `salidas_detalles`
---
-ALTER TABLE `salidas_detalles`
-  ADD CONSTRAINT `salidas_detalles_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`),
-  ADD CONSTRAINT `salidas_detalles_ibfk_2` FOREIGN KEY (`salida_id`) REFERENCES `salidas` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
