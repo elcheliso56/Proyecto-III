@@ -188,6 +188,7 @@ class historial extends datos
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage(); // Captura errores
 			}
+			 $co = null; // Cierra la conexión aquí
 		} else {
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] = 'Ya existe el nombre de documento'; // Mensaje si ya existe
@@ -235,6 +236,7 @@ class historial extends datos
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage(); // Captura errores
 			}
+			 $co = null; // Cierra la conexión aquí
 		} else {
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] = 'nombre de documento no registrado'; // Mensaje si no existe
@@ -272,6 +274,7 @@ class historial extends datos
 				} else {
 					$r['mensaje'] = $e->getMessage();
 				}
+				 $co = null; // Cierra la conexión aquí
 			}
 
 		} else {
@@ -319,6 +322,7 @@ class historial extends datos
 			$r['resultado'] = 'error';
 			$r['mensaje'] = $e->getMessage(); // Captura errores
 		}
+		 $co = null; // Cierra la conexión aquí
 		return $r; // Retorna el resultado
 	}
 
@@ -341,6 +345,7 @@ class historial extends datos
 		} catch (Exception $e) {
 			return false;
 		}
+		 $co = null; // Cierra la conexión aquí
 
 
 	}
@@ -460,6 +465,7 @@ class historial extends datos
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
+		 $co = null; // Cierra la conexión aquí
 		return $r;
 	}
 
