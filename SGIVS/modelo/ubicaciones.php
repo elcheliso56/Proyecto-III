@@ -20,6 +20,19 @@ class historial extends datos
 	private $proximacita;
 	private $observaciones;
 
+	private $id;	
+
+
+	// Método para establecer el ID
+	function set_id($valor)
+	{
+		$this->id = $valor;
+	}
+
+	function get_id()
+	{
+		return $this->id;
+	}
 
 	// Método para establecer el nombre
 	function set_nombre($valor)
@@ -159,7 +172,7 @@ class historial extends datos
 	function incluir()
 	{
 		$r = array();
-		if (!$this->existe($this->nombre)) { // Verifica si la ubicación ya existe
+		if (!$this->existe($this->tratamiento)) { // Verifica si la ubicación ya existe
 			$co = $this->conecta(); // Conecta a la base de datos
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
@@ -202,46 +215,63 @@ class historial extends datos
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		if ($this->existe($this->nombre)) { // Verifica si la ubicación existe
-			try {
-				// Obtiene la imagen actual de la ubicación
-				$resultado = $co->query("SELECT imagen FROM historial WHERE nombre = '$this->nombre'");
-				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
-				//$imagen_actual = $fila['imagen'];
-				// Actualiza la ubicación en la base de datos
-				$co->query("UPDATE historial SET 
-					Apellido = '$this->Apellido',
-					ocupacion = '$this->Ocupacion',
-					sexo = '$this->Sexo',
-					personacontacto = '$this->PersonaContacto',
-					telefono = '$this->telefono',
-					edad = '$this->Edad',
-					correo = '$this->correo',
-					diagnostico = '$this->diagnostico',
-					tratamiento = '$this->tratamiento',
-					medicamentos = '$this->medicamentos',
-					dientesafectados = '$this->dientesafectados',
-					antecedentes = '$this->antecedentes',
-					fechaconsulta = '$this->fechaconsulta',
-					proximacita = '$this->proximacita',
-					observaciones = '$this->observaciones'
-					WHERE
-					nombre = '$this->nombre'
-					");
-				$r['resultado'] = 'modificar';
-				$r['mensaje'] = '¡Registro actualizado con éxito!';
-				// Elimina la imagen anterior si es necesario
+		try {
+			// Actualiza la ubicación en la base de datos usando el ID
+			$stmt = $co->prepare("UPDATE historial SET 
+				nombre = ?,
+				Apellido = ?,
+				ocupacion = ?,
+				Sexo = ?,
+				personacontacto = ?,
+				telefono = ?,
+				edad = ?,
+				correo = ?,
+				diagnostico = ?,
+				tratamiento = ?,
+				medicamentos = ?,
+				dientesafectados = ?,
+				antecedentes = ?,
+				fechaconsulta = ?,
+				proximacita = ?,
+				observaciones = ?
+				WHERE id = ?");
 			
-			} catch (Exception $e) {
+			if($stmt->execute([
+				$this->nombre,
+				$this->Apellido,
+				$this->Ocupacion,
+				$this->Sexo,
+				$this->PersonaContacto,
+				$this->telefono,
+				$this->Edad,
+				$this->correo,
+				$this->diagnostico,
+				$this->tratamiento,
+				$this->medicamentos,
+				$this->dientesafectados,
+				$this->antecedentes,
+				$this->fechaconsulta,
+				$this->proximacita,
+				$this->observaciones,
+				$this->id
+			])) {
+				if($stmt->rowCount() > 0) {
+					$r['resultado'] = 'modificar';
+					$r['mensaje'] = '¡Registro actualizado con éxito!';
+				} else {
+					$r['resultado'] = 'error';
+					$r['mensaje'] = 'No se encontró el registro a modificar';
+				}
+			} else {
 				$r['resultado'] = 'error';
-				$r['mensaje'] = $e->getMessage(); // Captura errores
+				$r['mensaje'] = 'Error al intentar modificar el registro';
 			}
-			 $co = null; // Cierra la conexión aquí
-		} else {
-			$r['resultado'] = 'modificar';
-			$r['mensaje'] = 'nombre de documento no registrado'; // Mensaje si no existe
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			$r['mensaje'] = $e->getMessage();
 		}
-		return $r; // Retorna el resultado
+		$co = null;
+		return $r;
 	}
 
 	// Método para eliminar una ubicación
@@ -250,38 +280,31 @@ class historial extends datos
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		if ($this->existe($this->nombre)) { // Verifica si la ubicación existe
-			try {
-				// Obtiene la imagen de la ubicación a eliminar
-				$resultado = $co->query("SELECT nombre FROM historial WHERE nombre = '$this->nombre'");
-				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
-				$imagen = $fila['nombre'];
-				// Elimina la ubicación de la base de datos
-				$co->query("DELETE FROM historial WHERE nombre = '$this->nombre'");
-				$r['resultado'] = 'eliminar';
-				$r['mensaje'] = '¡Registro eliminado con éxito!';
-				// Elimina la imagen si es necesario
-				/*if ($imagen && $imagen != 'otros/img/historial/default.png') {
-					if (file_exists($imagen)) {
-						unlink($imagen);
-					}
-				}*/
-
-			} catch (Exception $e) {
-				$r['resultado'] = 'error';
-				if ($e->getCode() == 23000) {
-					$r['mensaje'] = 'No se puede eliminar el registro porque está relacionado con otros datos.';
+		try {
+			// Elimina el registro usando el ID
+			$stmt = $co->prepare("DELETE FROM historial WHERE id = ? LIMIT 1");
+			if($stmt->execute([$this->id])) {
+				if($stmt->rowCount() > 0) {
+					$r['resultado'] = 'eliminar';
+					$r['mensaje'] = '¡Registro eliminado con éxito!';
 				} else {
-					$r['mensaje'] = $e->getMessage();
+					$r['resultado'] = 'error';
+					$r['mensaje'] = 'No se encontró el registro a eliminar';
 				}
-				 $co = null; // Cierra la conexión aquí
+			} else {
+				$r['resultado'] = 'error';
+				$r['mensaje'] = 'Error al intentar eliminar el registro';
 			}
-
-		} else {
-			$r['resultado'] = 'eliminar';
-			$r['mensaje'] = 'No existe el nombre de documento'; // Mensaje si no existe
+		} catch (Exception $e) {
+			$r['resultado'] = 'error';
+			if ($e->getCode() == 23000) {
+				$r['mensaje'] = 'No se puede eliminar el registro porque está siendo utilizado en otras tablas';
+			} else {
+				$r['mensaje'] = $e->getMessage();
+			}
 		}
-		return $r; // Retorna el resultado
+		$co = null;
+		return $r;
 	}
 
 	// Método para consultar todas las historial
@@ -342,104 +365,99 @@ class historial extends datos
 
 
 	
-	// Método privado para verificar si una ubicación existe
+	// Método privado para verificar si existe un registro
 	private function existe($nombre)
 	{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$encontrado = false;
 		try {
-			$resultado = $co->query("Select * from historial where nombre='$nombre'");
-			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
-			if ($fila) {
-				return true;
-			} else {
-				return false;
-				;
+			$resultado = $co->query("SELECT * FROM historial WHERE nombre = '$nombre'");
+			if($resultado->rowCount() > 0){
+				$encontrado = true;
 			}
 		} catch (Exception $e) {
-			return false;
+			$encontrado = false;
 		}
-		 $co = null; // Cierra la conexión aquí
+		return $encontrado;
+	}
 
+	// Validaciones para cada campo según su tipo
+	public function validarCampos()
+	{
+		$errores = [];
 
+		// Validar nombre (solo letras y espacios, requerido)
+		if (empty($this->nombre) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->nombre)) {
+			$errores['nombre'] = 'El nombre es requerido y solo debe contener letras.';
+		}
+
+		// Validar Apellido (solo letras y espacios, requerido)
+		if (empty($this->Apellido) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Apellido)) {
+			$errores['Apellido'] = 'El apellido es requerido y solo debe contener letras.';
+		}
+
+		// Validar Ocupacion (opcional, solo letras y espacios)
+		if (!empty($this->Ocupacion) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Ocupacion)) {
+			$errores['Ocupacion'] = 'La ocupación solo debe contener letras.';
+		}
+
+		// Validar Sexo (requerido, solo "Masculino" o "Femenino")
+		if (empty($this->Sexo) || !in_array($this->Sexo, ['Masculino', 'Femenino'])) {
+			$errores['Sexo'] = 'El sexo es requerido y debe ser Masculino o Femenino.';
+		}
+
+		// Validar PersonaContacto (opcional, solo letras y espacios)
+		if (!empty($this->PersonaContacto) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->PersonaContacto)) {
+			$errores['PersonaContacto'] = 'La persona de contacto solo debe contener letras.';
+		}
+
+		// Validar teléfono (requerido, solo números, mínimo 7 dígitos)
+		if (empty($this->telefono) || !preg_match('/^\d{7,15}$/', $this->telefono)) {
+			$errores['telefono'] = 'El teléfono es requerido y debe contener solo números (7 a 15 dígitos).';
+		}
+
+		// Validar Edad (requerido, número entre 0 y 120)
+		if (!is_numeric($this->Edad) || $this->Edad < 0 || $this->Edad > 120) {
+			$errores['Edad'] = 'La edad debe ser un número entre 0 y 120.';
+		}
+
+		// Validar correo (opcional, formato de email)
+		if (!empty($this->correo) && !filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
+			$errores['correo'] = 'El correo electrónico no es válido.';
+		}
+
+		// Validar diagnostico (opcional, texto)
+		// No se aplica validación estricta
+
+		// Validar tratamiento (opcional, texto)
+		// No se aplica validación estricta
+
+		// Validar medicamentos (opcional, texto)
+		// No se aplica validación estricta
+
+		// Validar dientesafectados (opcional, texto)
+		// No se aplica validación estricta
+
+		// Validar antecedentes (opcional, texto)
+		// No se aplica validación estricta
+
+		// Validar fechaconsulta (requerido, formato fecha)
+		if (empty($this->fechaconsulta) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->fechaconsulta)) {
+			$errores['fechaconsulta'] = 'La fecha de consulta es requerida y debe tener el formato YYYY-MM-DD.';
+		}
+
+		// Validar proximacita (opcional, formato fecha)
+		if (!empty($this->proximacita) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->proximacita)) {
+			$errores['proximacita'] = 'La próxima cita debe tener el formato YYYY-MM-DD.';
+		}
+
+		// Validar observaciones (opcional, texto)
+		// No se aplica validación estricta
+
+		return $errores;
 	}
 	
-		// Validaciones para cada campo según su tipo
-		public function validarCampos()
-		{
-			$errores = [];
-
-			// Validar nombre (solo letras y espacios, requerido)
-			if (empty($this->nombre) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->nombre)) {
-				$errores['nombre'] = 'El nombre es requerido y solo debe contener letras.';
-			}
-
-			// Validar Apellido (solo letras y espacios, requerido)
-			if (empty($this->Apellido) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Apellido)) {
-				$errores['Apellido'] = 'El apellido es requerido y solo debe contener letras.';
-			}
-
-			// Validar Ocupacion (opcional, solo letras y espacios)
-			if (!empty($this->Ocupacion) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Ocupacion)) {
-				$errores['Ocupacion'] = 'La ocupación solo debe contener letras.';
-			}
-
-			// Validar Sexo (requerido, solo "Masculino" o "Femenino")
-			if (empty($this->Sexo) || !in_array($this->Sexo, ['Masculino', 'Femenino'])) {
-				$errores['Sexo'] = 'El sexo es requerido y debe ser Masculino o Femenino.';
-			}
-
-			// Validar PersonaContacto (opcional, solo letras y espacios)
-			if (!empty($this->PersonaContacto) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->PersonaContacto)) {
-				$errores['PersonaContacto'] = 'La persona de contacto solo debe contener letras.';
-			}
-
-			// Validar teléfono (requerido, solo números, mínimo 7 dígitos)
-			if (empty($this->telefono) || !preg_match('/^\d{7,15}$/', $this->telefono)) {
-				$errores['telefono'] = 'El teléfono es requerido y debe contener solo números (7 a 15 dígitos).';
-			}
-
-			// Validar Edad (requerido, número entre 0 y 120)
-			if (!is_numeric($this->Edad) || $this->Edad < 0 || $this->Edad > 120) {
-				$errores['Edad'] = 'La edad debe ser un número entre 0 y 120.';
-			}
-
-			// Validar correo (opcional, formato de email)
-			if (!empty($this->correo) && !filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
-				$errores['correo'] = 'El correo electrónico no es válido.';
-			}
-
-			// Validar diagnostico (opcional, texto)
-			// No se aplica validación estricta
-
-			// Validar tratamiento (opcional, texto)
-			// No se aplica validación estricta
-
-			// Validar medicamentos (opcional, texto)
-			// No se aplica validación estricta
-
-			// Validar dientesafectados (opcional, texto)
-			// No se aplica validación estricta
-
-			// Validar antecedentes (opcional, texto)
-			// No se aplica validación estricta
-
-			// Validar fechaconsulta (requerido, formato fecha)
-			if (empty($this->fechaconsulta) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->fechaconsulta)) {
-				$errores['fechaconsulta'] = 'La fecha de consulta es requerida y debe tener el formato YYYY-MM-DD.';
-			}
-
-			// Validar proximacita (opcional, formato fecha)
-			if (!empty($this->proximacita) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->proximacita)) {
-				$errores['proximacita'] = 'La próxima cita debe tener el formato YYYY-MM-DD.';
-			}
-
-			// Validar observaciones (opcional, texto)
-			// No se aplica validación estricta
-
-			return $errores;
-		}
-		
 	function listadopaciente()
 	{
 		$co = $this->conecta();

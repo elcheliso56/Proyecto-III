@@ -21,7 +21,8 @@ if (is_file("vista/" . $pagina . ".php")) {
 		}
 		// Acción para eliminar un registro
 		elseif ($accion == 'eliminar') {
-			$o->set_nombre($_POST['nombre']); // Establece el nombre del registro a eliminar
+			$o->set_id($_POST['id']); // Establece el ID del registro a eliminar
+			
 			echo  json_encode($o->eliminar()); // Devuelve el resultado de la eliminación en JSON
 		} else {
 			// Acciones para incluir o modificar un registro
@@ -61,23 +62,24 @@ if (is_file("vista/" . $pagina . ".php")) {
 			}
 			// Acción para modificar un registro existente
 			elseif ($accion == 'modificar') {
+				$o->set_id($_POST['id']); // Establece el ID del registro a modificar
 				$o->set_nombre($_POST['nombre']);
 				$o->set_Apellido($_POST['Apellido']);
-				$o->set_Ocupacion($_POST['Ocupacion']); // Establece la fecha del registro
-				$o->set_Sexo($_POST['Sexo']); // Establece la descripción del registro
-				$o->set_PersonaContacto($_POST['PersonaContacto']); // Establece la persona de contacto del registro
-				$o->set_telefono($_POST['telefono']); // Establece el teléfono del registro
-				$o->set_Edad($_POST['Edad']); // Establece la edad del registro
-				$o->set_correo($_POST['correo']); // Establece el correo electrónico del registro
-				$o->set_diagnostico($_POST['diagnostico']); // Establece el diagnóstico del registro
-				$o->set_tratamiento($_POST['tratamiento']); // Establece el tratamiento del registro
-				$o->set_medicamentos($_POST['medicamentos']); // Establece los medicamentos del registro
-				$o->set_dientesafectados($_POST['dientesafectados']); // Establece los dientes afectados del registro
-				$o->set_antecedentes($_POST['antecedentes']); // Establece los antecedentes del registro
-				$o->set_fechaconsulta($_POST['fechaconsulta']); // Establece la fecha de consulta del registro
-				$o->set_proximacita($_POST['proximacita']); // Establece la próxima cita del registro
-				$o->set_observaciones($_POST['observaciones']); // Establece el nombre del registro a modificar
-				echo json_encode($o->modificar()); // Devuelve el resultado de la modificación en JSON
+				$o->set_Ocupacion($_POST['Ocupacion']);
+				$o->set_Sexo($_POST['Sexo']);
+				$o->set_PersonaContacto($_POST['PersonaContacto']);
+				$o->set_telefono($_POST['telefono']);
+				$o->set_Edad($_POST['Edad']);
+				$o->set_correo($_POST['correo']);
+				$o->set_diagnostico($_POST['diagnostico']);
+				$o->set_tratamiento($_POST['tratamiento']);
+				$o->set_medicamentos($_POST['medicamentos']);
+				$o->set_dientesafectados($_POST['dientesafectados']);
+				$o->set_antecedentes($_POST['antecedentes']);
+				$o->set_fechaconsulta($_POST['fechaconsulta']);
+				$o->set_proximacita($_POST['proximacita']);
+				$o->set_observaciones($_POST['observaciones']);
+				echo json_encode($o->modificar());
 			}
 		}
 		exit; // Termina la ejecución del script

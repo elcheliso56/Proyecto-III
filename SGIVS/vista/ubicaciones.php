@@ -129,6 +129,7 @@ require_once('comunes/menu.php');
 			</div>
 			<form method="post" id="f" autocomplete="off" enctype="multipart/form-data">
 				<input type="hidden" name="accion" id="accion">
+				<input type="hidden" name="id" id="id">
 				<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 					<!-- Datos del Paciente -->
 					<div class="card shadow mb-4" id="pacientecard">

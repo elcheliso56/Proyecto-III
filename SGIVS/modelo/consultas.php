@@ -155,7 +155,7 @@ class consultas extends datos
 			} catch (Exception $e) {
 				$r['resultado'] = 'error';
 				if ($e->getCode() == 23000) {
-					$r['mensaje'] = 'No se puede eliminar este cliente porque tiene movimientos asociados';
+					$r['mensaje'] = 'No se puede eliminar';
 				} else {
 					$r['mensaje'] = $e->getMessage();
 				}

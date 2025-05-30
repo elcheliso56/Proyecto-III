@@ -152,13 +152,25 @@ $(document).ready(function () {
                     if (result.isConfirmed) {
                         if (validarenvio()) {
                             var datos = new FormData();
-                            datos.append('accion', 'modificar'); // Acción para modificar
+                            datos.append('accion', 'modificar');
+                            datos.append('id', $("#id").val());
                             datos.append('nombre', $("#nombre").val());
-                          /*  datos.append('descripcion', $("#descripcion").val());
-                            if ($("#imagen")[0].files[0]) {
-                                datos.append('imagen', $("#imagen")[0].files[0]);
-                            }*/
-                            enviaAjax(datos); // Envía los datos
+                            datos.append('Apellido', $("#Apellido").val());
+                            datos.append('telefono', $("#telefono").val());
+                            datos.append('Sexo', $("#Sexo").val());
+                            datos.append('Ocupacion', $("#Ocupacion").val());
+                            datos.append('PersonaContacto', $("#PersonaContacto").val());
+                            datos.append('Edad', $("#Edad").val());
+                            datos.append('correo', $("#correo").val());
+                            datos.append('diagnostico', $("#diagnostico").val());
+                            datos.append('tratamiento', $("#tratamiento").val());
+                            datos.append('medicamentos', $("#medicamentos").val());
+                            datos.append('dientesafectados', $("#dientesafectados").val());
+                            datos.append('antecedentes', $("#antecedentes").val());
+                            datos.append('fechaconsulta', $("#fechaconsulta").val());
+                            datos.append('proximacita', $("#proximacita").val());
+                            datos.append('observaciones', $("#observaciones").val());
+                            enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
@@ -189,13 +201,14 @@ $(document).ready(function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     var datos = new FormData();
-                    datos.append('accion', 'eliminar'); // Acción para eliminar
+                    datos.append('accion', 'eliminar');
                     datos.append('nombre', $("#nombre").val());
-                    enviaAjax(datos); // Envía los datos
+                    datos.append('id', $("#id").val()); // Agregamos el ID si está disponible
+                    enviaAjax(datos);
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     swalWithBootstrapButtons.fire({
                         title: "Cancelado",
-                        text: "Ubicación no eliminada",
+                        text: "El registro no ha sido eliminado",
                         icon: "error"
                     });
                 }
@@ -247,265 +260,54 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 function validarenvio() {
-    // Valida el envío de datos
-
-    // Nombre
-    if (validarkeyup(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,30}$/, $("#nombre"), $("#snombre"), "El nombre solo debe contener letras y tener entre 3 y 30 caracteres") == 0) {
+    if ($("#nombre").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "El nombre de la historia es obligatorio y no debe contener números",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'El nombre es obligatorio'
         });
         return false;
     }
-
-    // Apellido
-    if (validarkeyup(/^[^"']{0,100}$/, $("#Apellido"), $("#sApellido"), "El apellido debe tener un máximo de 100 caracteres") == 0) {
+    if ($("#Apellido").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "El apellido debe tener un máximo de 100 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'El apellido es obligatorio'
         });
         return false;
     }
-
-    // Ocupacion
-    if ($("#Ocupacion").val().trim().length > 50) {
+    if ($("#Sexo").val() == null || $("#Sexo").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "La ocupación debe tener un máximo de 50 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'Debe seleccionar el sexo del paciente'
         });
         return false;
     }
-
-    // Sexo
-    if ($("#Sexo").val() === "" || $("#Sexo").val() === null) {
+    if ($("#Ocupacion").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "Debe seleccionar un sexo",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'La ocupación es obligatoria'
         });
         return false;
     }
-
-    // Persona de Contacto
-    if ($("#PersonaContacto").val().trim().length > 50) {
+    if ($("#PersonaContacto").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "La persona de contacto debe tener un máximo de 50 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'El número de contacto de emergencia es obligatorio'
         });
         return false;
     }
-
-    // Teléfono
-    // Teléfono (solo números de Venezuela: 0412, 0414, 0416, 0424, 0426, 0212 + 7 dígitos)
-    if (
-        $("#telefono").val().trim() !== "" &&
-        !/^(0412|0414|0416|0424|0426|0212)\d{7}$/.test($("#telefono").val().trim())
-    ) {
+    if ($("#dientesafectados").val() == null || $("#dientesafectados").val() == "") {
         Swal.fire({
-            title: "¡ERROR!",
-            text: "El teléfono debe ser un número válido (ej: 04141234567, 02121234567)",
-            icon: "error",
-            confirmButtonText: "Aceptar"
+            icon: 'error',
+            title: 'Error',
+            text: 'Debe seleccionar el diente afectado'
         });
         return false;
     }
-
-    // Edad
-    const edadVal = $("#Edad").val().trim();
-    if (
-        edadVal !== "" &&
-        (!/^\d{1,3}$/.test(edadVal) || parseInt(edadVal, 10) < 0)
-    ) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "La edad debe ser un número entre 0 y 999",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Correo
-    if ($("#correo").val().trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("#correo").val().trim())) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El correo electrónico no es válido",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Motivo
-    if ($("#motivo").val().trim().length > 200) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El motivo debe tener un máximo de 200 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Diagnóstico
-    if ($("#diagnostico").val().trim().length > 200) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El diagnóstico debe tener un máximo de 200 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Tratamiento
-    if ($("#tratamiento").val().trim().length > 200) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El tratamiento debe tener un máximo de 200 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Medicamentos
-    if ($("#medicamentos").val().trim().length > 200) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los medicamentos deben tener un máximo de 200 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Dientes Afectados
-    if ($("#dientesafectados").val().trim().length > 100) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los dientes afectados deben tener un máximo de 100 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Antecedentes
-    if ($("#antecedentes").val().trim().length > 200) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los antecedentes deben tener un máximo de 200 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-  // Fecha de Consulta
-const fechaConsulta = $("#fechaconsulta").val().trim();
-
-if (fechaConsulta === "") {
-    Swal.fire({
-        title: "¡ERROR!",
-        text: "Debe ingresar la fecha de consulta.",
-        icon: "error",
-        confirmButtonText: "Aceptar"
-    });
-    return false;
-}
-
-// Validar formato de fecha (yyyy-mm-dd)
-if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaConsulta)) {
-    Swal.fire({
-        title: "¡ERROR!",
-        text: "La fecha de consulta no es válida. Use el formato AAAA-MM-DD.",
-        icon: "error",
-        confirmButtonText: "Aceptar"
-    });
-    return false;
-}
-
-// Convertir fechaConsulta a objeto Date para comparación
-const fechaConsultaDate = new Date(fechaConsulta);
-const today = new Date();
-today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
-
-// Validar que la fecha de consulta no sea en el futuro
-if (fechaConsultaDate > today) {
-    Swal.fire({
-        title: "¡ERROR!",
-        text: "La fecha de consulta no puede ser una fecha futura.",
-        icon: "error",
-        confirmButtonText: "Aceptar"
-    });
-    return false;
-}
-
-
-// Próxima Cita (opcional)
-const proximaCita = $("#proximacita").val().trim();
-
-if (proximaCita !== "") { // Solo validar si se ha ingresado un valor
-    // Validar formato de fecha (yyyy-mm-dd) para proximaCita
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(proximaCita)) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "La próxima cita debe tener un formato de fecha válido (AAAA-MM-DD).",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Convertir proximaCita a objeto Date para comparación
-    const proximaCitaDate = new Date(proximaCita);
-
-    // Validar que la próxima cita no sea anterior a la fecha actual
-    if (proximaCitaDate < today) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "La próxima cita no puede ser una fecha pasada.",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
-    // Validar que la próxima cita no sea anterior a la fecha de consulta
-    if (proximaCitaDate < fechaConsultaDate) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "La próxima cita no puede ser anterior a la fecha de consulta.",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-}
-
-    // Próxima cita (opcional, pero si existe, debe ser fecha válida)
-    // No se valida formato aquí, solo si está vacía o no
-
-    // Observaciones
-    if ($("#observaciones").val().trim().length > 300) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Las observaciones deben tener un máximo de 300 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return false;
-    }
-
     return true;
 }
 
@@ -529,21 +331,22 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
         return 0; // Retorna 0 si no es válido
     }
 }
+
 function pone(pos, accion) {
     // Maneja la selección de una fila en la tabla
     var linea = $(pos).closest('tr');
+    var id = $(linea).find("td:eq(0)").text(); // Obtiene el ID de la primera columna
 
     // Rellena los campos del formulario con los valores de la fila seleccionada
-    $("#cedula").val($(linea).find("td:eq(0)").text());
-    $("#nombre").val($(linea).find("td:eq(1)").text());
-    $("#Apellido").val($(linea).find("td:eq(2)").text());
-    $("#telefono").val($(linea).find("td:eq(3)").text());
-    $("#correo").val($(linea).find("td:eq(4)").text());
-    $("#Sexo").val($(linea).find("td:eq(5)").text());
-    $("#Ocupacion").val($(linea).find("td:eq(6)").text());
-    $("#PersonaContacto").val($(linea).find("td:eq(7)").text());
-    $("#Edad").val($(linea).find("td:eq(8)").text());
-    $("#motivo").val($(linea).find("td:eq(9)").text());
+    $("#id").val(id); // Guardamos el ID en un campo oculto
+    $("#nombre").val($(linea).find("td:eq(2)").text());
+    $("#Apellido").val($(linea).find("td:eq(3)").text());
+    $("#telefono").val($(linea).find("td:eq(4)").text());
+    $("#correo").val($(linea).find("td:eq(5)").text());
+    $("#Edad").val($(linea).find("td:eq(6)").text());
+    $("#Sexo").val($(linea).find("td:eq(7)").text());
+    $("#Ocupacion").val($(linea).find("td:eq(8)").text());
+    $("#PersonaContacto").val($(linea).find("td:eq(9)").text());
     $("#diagnostico").val($(linea).find("td:eq(10)").text());
     $("#tratamiento").val($(linea).find("td:eq(11)").text());
     $("#medicamentos").val($(linea).find("td:eq(12)").text());
