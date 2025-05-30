@@ -204,7 +204,8 @@ class cuentas extends datos {
                     $respuesta .= "<td>".$row['numero_cuenta']."</td>";
                     $respuesta .= "<td>";
                     $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
-                    $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
+                    // Botón de eliminar comentado
+                    // $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
                     $respuesta .= "</td>";
                     $respuesta .= "</tr>";
                     $n++;

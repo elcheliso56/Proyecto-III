@@ -70,6 +70,15 @@ if(is_file("vista/".$pagina.".php")){
             // Acciones para incluir o modificar una cuenta por cobrar
             if($accion=='incluir' || $accion=='modificar'){
                 try {
+                    // Validar que el paciente_id no esté vacío
+                    if(empty($_POST['paciente_id'])) {
+                        echo json_encode([
+                            'resultado' => 'error',
+                            'mensaje' => 'Debe seleccionar un paciente'
+                        ]);
+                        exit;
+                    }
+
                     // Establece los atributos de la cuenta por cobrar
                     $o->set_paciente_id($_POST['paciente_id']);
                     $o->set_fecha_emision($_POST['fecha_emision']);

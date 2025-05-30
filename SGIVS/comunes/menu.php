@@ -159,7 +159,7 @@
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
-								<i class="bi bi-box-seam"></i>
+								<i class="zmdi zmdi-money"></i>
 							</div>
 							<div class="navLateral-body-cr">
 								Transacciones

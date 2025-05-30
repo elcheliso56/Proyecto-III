@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-05-2025 a las 05:44:54
+-- Tiempo de generación: 30-05-2025 a las 09:35:58
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,12 +36,153 @@ CREATE TABLE `citas_contacto` (
   `fecha_envio` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `citas_contacto`
+-- Estructura de tabla para la tabla `cuentas`
 --
 
-INSERT INTO `citas_contacto` (`id`, `nombre`, `apellido`, `telefono`, `motivo`, `fecha_envio`) VALUES
-(20, 'Gabriel', 'Hernandez', '+584128287690', 'dientesaaa', '2025-05-29 23:16:11');
+CREATE TABLE `cuentas` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `tipo` varchar(50) NOT NULL COMMENT 'Ej: Efectivo, Bancaria, Tarjeta',
+  `saldo_actual` decimal(12,2) DEFAULT 0.00,
+  `numero_cuenta` varchar(20) NOT NULL,
+  `entidad_bancaria` varchar(80) NOT NULL,
+  `moneda` varchar(3) DEFAULT 'VES',
+  `activa` tinyint(1) DEFAULT 1,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cuentas`
+--
+
+INSERT INTO `cuentas` (`id`, `nombre`, `tipo`, `saldo_actual`, `numero_cuenta`, `entidad_bancaria`, `moneda`, `activa`, `fecha_creacion`) VALUES
+(4, 'Principal', 'bancaria', 2057.00, '01254656856', 'BBVA', 'Bs', 1, '2025-05-30 07:10:39');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuentas_por_cobrar`
+--
+
+CREATE TABLE `cuentas_por_cobrar` (
+  `id` int(11) NOT NULL,
+  `paciente_id` int(20) NOT NULL,
+  `cuenta_id` int(11) NOT NULL,
+  `fecha_emision` date NOT NULL,
+  `fecha_vencimiento` date NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `monto_pendiente` decimal(10,2) NOT NULL,
+  `estado` enum('pendiente','parcial','pagado','vencido') NOT NULL DEFAULT 'pendiente',
+  `descripcion` text DEFAULT NULL,
+  `referencia` varchar(50) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `numero_cuotas` int(11) NOT NULL DEFAULT 1,
+  `monto_cuota` decimal(10,2) NOT NULL,
+  `frecuencia_pago` enum('semanal','quincenal','mensual') NOT NULL DEFAULT 'mensual'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cuentas_por_cobrar`
+--
+
+INSERT INTO `cuentas_por_cobrar` (`id`, `paciente_id`, `cuenta_id`, `fecha_emision`, `fecha_vencimiento`, `monto_total`, `monto_pendiente`, `estado`, `descripcion`, `referencia`, `fecha_creacion`, `numero_cuotas`, `monto_cuota`, `frecuencia_pago`) VALUES
+(7, 2, 4, '2025-05-29', '2025-12-02', 4230.00, 3173.00, 'parcial', 'pago moto', '0132', '2025-05-30 07:13:43', 4, 1057.50, 'quincenal'),
+(8, 2, 4, '2025-05-30', '2025-05-11', 500.00, 500.00, 'pendiente', 'pago', 'pago', '2025-05-30 07:21:12', 7, 71.43, 'quincenal'),
+(9, 2, 4, '2025-05-30', '2025-06-27', 1000.00, 1000.00, 'pendiente', 'pago', '0123', '2025-05-30 07:24:15', 4, 250.00, 'semanal');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuentas_por_pagar`
+--
+
+CREATE TABLE `cuentas_por_pagar` (
+  `id` int(11) NOT NULL,
+  `proveedor_id` int(11) NOT NULL,
+  `fecha_emision` date NOT NULL,
+  `fecha_vencimiento` date NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `monto_pendiente` decimal(10,2) NOT NULL,
+  `estado` enum('pendiente','parcial','pagado','vencido') NOT NULL DEFAULT 'pendiente',
+  `descripcion` text DEFAULT NULL,
+  `referencia` varchar(50) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuotas_pago`
+--
+
+CREATE TABLE `cuotas_pago` (
+  `id` int(11) NOT NULL,
+  `cuenta_por_cobrar_id` int(11) NOT NULL,
+  `numero_cuota` int(11) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha_vencimiento` date NOT NULL,
+  `estado` enum('pendiente','pagado','vencido') NOT NULL DEFAULT 'pendiente',
+  `fecha_pago` date DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cuotas_pago`
+--
+
+INSERT INTO `cuotas_pago` (`id`, `cuenta_por_cobrar_id`, `numero_cuota`, `monto`, `fecha_vencimiento`, `estado`, `fecha_pago`, `fecha_creacion`) VALUES
+(6, 7, 1, 0.50, '2025-06-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
+(7, 7, 2, 1057.50, '2025-06-28', 'pendiente', NULL, '2025-05-30 07:13:43'),
+(8, 7, 3, 1057.50, '2025-07-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
+(9, 7, 4, 1057.50, '2025-07-28', 'pendiente', NULL, '2025-05-30 07:13:43'),
+(10, 8, 1, 71.43, '2025-06-14', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(11, 8, 2, 71.43, '2025-06-29', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(12, 8, 3, 71.43, '2025-07-14', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(13, 8, 4, 71.43, '2025-07-29', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(14, 8, 5, 71.43, '2025-08-13', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(15, 8, 6, 71.43, '2025-08-28', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(16, 8, 7, 71.43, '2025-09-12', 'pendiente', NULL, '2025-05-30 07:21:12'),
+(17, 9, 1, 250.00, '2025-06-06', 'pendiente', NULL, '2025-05-30 07:24:15'),
+(18, 9, 2, 250.00, '2025-06-13', 'pendiente', NULL, '2025-05-30 07:24:15'),
+(19, 9, 3, 250.00, '2025-06-20', 'pendiente', NULL, '2025-05-30 07:24:15'),
+(20, 9, 4, 250.00, '2025-06-27', 'pendiente', NULL, '2025-05-30 07:24:15');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `egresos`
+--
+
+CREATE TABLE `egresos` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `origen` enum('servicio','proveedor','otro') DEFAULT 'servicio',
+  `cuenta_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `egresos`
+--
+
+INSERT INTO `egresos` (`id`, `descripcion`, `monto`, `fecha`, `origen`, `cuenta_id`) VALUES
+(1, 'egresos', 500.00, '2025-05-29', 'proveedor', 4);
+
+--
+-- Disparadores `egresos`
+--
+DELIMITER $$
+CREATE TRIGGER `after_egreso_insert` AFTER INSERT ON `egresos` FOR EACH ROW BEGIN
+    UPDATE cuentas 
+    SET saldo_actual = saldo_actual - NEW.monto
+    WHERE id = NEW.cuenta_id;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -142,6 +283,41 @@ INSERT INTO `equipos` (`id`, `codigo`, `nombre`, `marca`, `modelo`, `cantidad`, 
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `ingresos`
+--
+
+CREATE TABLE `ingresos` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `origen` enum('manual','consulta','servicio') DEFAULT 'manual',
+  `cuenta_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ingresos`
+--
+
+INSERT INTO `ingresos` (`id`, `descripcion`, `monto`, `fecha`, `origen`, `cuenta_id`) VALUES
+(1, 'pagos', 1000.00, '2025-05-29', 'consulta', 4),
+(2, 'Pago de cuenta por cobrar #7', 1057.00, '2025-05-30', 'servicio', 4);
+
+--
+-- Disparadores `ingresos`
+--
+DELIMITER $$
+CREATE TRIGGER `after_ingreso_insert` AFTER INSERT ON `ingresos` FOR EACH ROW BEGIN
+    UPDATE cuentas 
+    SET saldo_actual = saldo_actual + NEW.monto
+    WHERE id = NEW.cuenta_id;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `insumos`
 --
 
@@ -207,6 +383,92 @@ INSERT INTO `insumos_entradas` (`id_entradas_insumos`, `id_insumos`, `cantidad`,
 (36, 7, 1, 15.00),
 (37, 2, 1, 100.00),
 (38, 2, 12, 10.00);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pacientes`
+--
+
+CREATE TABLE `pacientes` (
+  `id_paciente` int(20) NOT NULL,
+  `cedula` int(20) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `apellido` varchar(50) NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  `genero` enum('M','F','O') NOT NULL,
+  `alergias` varchar(20) DEFAULT NULL,
+  `antecedentes` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `direccion` varchar(100) DEFAULT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `fecha_registro` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`id_paciente`, `cedula`, `nombre`, `apellido`, `fecha_nacimiento`, `genero`, `alergias`, `antecedentes`, `email`, `direccion`, `telefono`, `fecha_registro`) VALUES
+(2, 25258456, 'javier', 'torres', '1985-09-17', 'M', 'nada', 'nada', 'ejemplo@hotmai.com', 'Lara', '01263666660', '2025-05-30');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_cuentas_por_cobrar`
+--
+
+CREATE TABLE `pagos_cuentas_por_cobrar` (
+  `id` int(11) NOT NULL,
+  `cuenta_por_cobrar_id` int(11) NOT NULL,
+  `fecha_pago` date NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `metodo_pago` varchar(50) NOT NULL,
+  `referencia_pago` varchar(50) DEFAULT NULL,
+  `cuenta_id` int(11) NOT NULL,
+  `observaciones` text DEFAULT NULL,
+  `cuota_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos_cuentas_por_cobrar`
+--
+
+INSERT INTO `pagos_cuentas_por_cobrar` (`id`, `cuenta_por_cobrar_id`, `fecha_pago`, `monto`, `metodo_pago`, `referencia_pago`, `cuenta_id`, `observaciones`, `cuota_id`) VALUES
+(4, 7, '2025-05-30', 1057.00, '', 'pago', 4, NULL, 6);
+
+--
+-- Disparadores `pagos_cuentas_por_cobrar`
+--
+DELIMITER $$
+CREATE TRIGGER `after_pago_cobrar_insert` AFTER INSERT ON `pagos_cuentas_por_cobrar` FOR EACH ROW BEGIN
+    -- Actualizar la cuenta por cobrar
+    UPDATE cuentas_por_cobrar 
+    SET monto_pendiente = monto_pendiente - NEW.monto,
+        estado = CASE 
+            WHEN monto_pendiente - NEW.monto <= 0 THEN 'pagado'
+            WHEN monto_pendiente - NEW.monto < monto_total THEN 'parcial'
+            ELSE estado
+        END
+    WHERE id = NEW.cuenta_por_cobrar_id;
+    
+    -- Registrar el ingreso automáticamente
+    INSERT INTO ingresos (
+        descripcion,
+        monto,
+        fecha,
+        origen,
+        cuenta_id
+    ) VALUES (
+        CONCAT('Pago de cuenta por cobrar #', NEW.cuenta_por_cobrar_id),
+        NEW.monto,
+        NEW.fecha_pago,
+        'servicio',
+        NEW.cuenta_id
+    );
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -319,6 +581,41 @@ ALTER TABLE `citas_contacto`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `cuentas`
+--
+ALTER TABLE `cuentas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `paciente_id` (`paciente_id`),
+  ADD KEY `fk_cxc_cuenta` (`cuenta_id`);
+
+--
+-- Indices de la tabla `cuentas_por_pagar`
+--
+ALTER TABLE `cuentas_por_pagar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `proveedor_id` (`proveedor_id`);
+
+--
+-- Indices de la tabla `cuotas_pago`
+--
+ALTER TABLE `cuotas_pago`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cuenta_por_cobrar_id` (`cuenta_por_cobrar_id`);
+
+--
+-- Indices de la tabla `egresos`
+--
+ALTER TABLE `egresos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_egreso_cuenta` (`cuenta_id`);
+
+--
 -- Indices de la tabla `entradas_equipos`
 --
 ALTER TABLE `entradas_equipos`
@@ -344,6 +641,13 @@ ALTER TABLE `equipos`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `ingresos`
+--
+ALTER TABLE `ingresos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_ingreso_cuenta` (`cuenta_id`);
+
+--
 -- Indices de la tabla `insumos`
 --
 ALTER TABLE `insumos`
@@ -356,6 +660,21 @@ ALTER TABLE `insumos`
 ALTER TABLE `insumos_entradas`
   ADD KEY `insumos_entradas_ibfk_1` (`id_entradas_insumos`),
   ADD KEY `insumos_entradas_ibfk_2` (`id_insumos`);
+
+--
+-- Indices de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD PRIMARY KEY (`id_paciente`);
+
+--
+-- Indices de la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_pago_cxc` (`cuenta_por_cobrar_id`),
+  ADD KEY `fk_pago_cuenta` (`cuenta_id`),
+  ADD KEY `fk_pago_cuota` (`cuota_id`);
 
 --
 -- Indices de la tabla `presentaciones`
@@ -395,6 +714,30 @@ ALTER TABLE `citas_contacto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT de la tabla `cuentas`
+--
+ALTER TABLE `cuentas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `cuotas_pago`
+--
+ALTER TABLE `cuotas_pago`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT de la tabla `egresos`
+--
+ALTER TABLE `egresos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `entradas_equipos`
 --
 ALTER TABLE `entradas_equipos`
@@ -413,10 +756,28 @@ ALTER TABLE `equipos`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
+-- AUTO_INCREMENT de la tabla `ingresos`
+--
+ALTER TABLE `ingresos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `insumos`
 --
 ALTER TABLE `insumos`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  MODIFY `id_paciente` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `presentaciones`
@@ -433,6 +794,13 @@ ALTER TABLE `servicios`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `cuentas_por_cobrar`
+--
+ALTER TABLE `cuentas_por_cobrar`
+  ADD CONSTRAINT `fk_cxc_cuenta` FOREIGN KEY (`cuenta_id`) REFERENCES `cuentas` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_cxc_paciente` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `entradas_equipos_detalles`
@@ -453,6 +821,14 @@ ALTER TABLE `insumos`
 ALTER TABLE `insumos_entradas`
   ADD CONSTRAINT `insumos_entradas_ibfk_1` FOREIGN KEY (`id_entradas_insumos`) REFERENCES `entradas_insumos` (`id`),
   ADD CONSTRAINT `insumos_entradas_ibfk_2` FOREIGN KEY (`id_insumos`) REFERENCES `insumos` (`id`);
+
+--
+-- Filtros para la tabla `pagos_cuentas_por_cobrar`
+--
+ALTER TABLE `pagos_cuentas_por_cobrar`
+  ADD CONSTRAINT `fk_pago_cuenta` FOREIGN KEY (`cuenta_id`) REFERENCES `cuentas` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pago_cuota` FOREIGN KEY (`cuota_id`) REFERENCES `cuotas_pago` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pago_cxc` FOREIGN KEY (`cuenta_por_cobrar_id`) REFERENCES `cuentas_por_cobrar` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `servicios_equipos`

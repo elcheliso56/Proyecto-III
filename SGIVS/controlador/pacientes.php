@@ -45,9 +45,6 @@ function validar_paciente($data) {
     if (empty($data['fecha_registro']) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['fecha_registro'])) {
         $errores[] = 'Fecha de registro inválida';
     }
-    if (empty($data['salario']) || !preg_match('/^[0-9]{7,8}$/', $data['salario'])) {
-    $errores[] = 'Salario inválido';
-    }
     return $errores;
 }
 // Verifica si el archivo del modelo existe

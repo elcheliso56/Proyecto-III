@@ -147,6 +147,14 @@ class cxc extends datos {
                 ];
             }
 
+            // Verificar si el paciente existe
+            if (!$this->pacienteExiste($this->paciente_id)) {
+                return [
+                    'resultado' => 'error',
+                    'mensaje' => 'El paciente seleccionado no existe'
+                ];
+            }
+
             // Iniciar transacción
             $co->beginTransaction();
 
@@ -462,9 +470,11 @@ class cxc extends datos {
                     $respuesta .= "<td>".$row['estado']."</td>";
                     $respuesta .= "<td>".$row['referencia']."</td>";
                     $respuesta .= "<td>";
-                        $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
+                        // Botón de modificar comentado
+                        // $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
                         $respuesta .= "<button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,2)' title='Abonar cuenta'><i class='bi bi-cash'></i></button><br/>";
-                        $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
+                        // Botón de eliminar comentado
+                        // $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
                         $respuesta .= "</td>";
                     $respuesta .= "</tr>";
                     $n++;
@@ -524,8 +534,9 @@ class cxc extends datos {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
-            $resultado = $co->query("SELECT id_paciente FROM pacientes WHERE id_paciente = '$paciente_id'");
-            return $resultado->rowCount() > 0;
+            $stmt = $co->prepare("SELECT id_paciente FROM pacientes WHERE id_paciente = ?");
+            $stmt->execute([$paciente_id]);
+            return $stmt->rowCount() > 0;
         } catch(Exception $e) {
             return false;
         }
