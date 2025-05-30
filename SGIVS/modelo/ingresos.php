@@ -89,7 +89,9 @@ class ingresos extends datos {
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		}
 		else{
 			$r['resultado'] = 'incluir';
@@ -129,7 +131,9 @@ class ingresos extends datos {
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage();
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		} else {
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] = 'Entrada no modificada';
@@ -161,7 +165,9 @@ class ingresos extends datos {
 				} else {
 					$r['mensaje'] = $e->getMessage();
 				}
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		}
 		else{
 			$r['resultado'] = 'eliminar';
@@ -210,6 +216,8 @@ function consultar(){
     } catch(Exception $e) {
         $r['resultado'] = 'error';
         $r['mensaje'] = $e->getMessage();
+    } finally {
+        $co = null; // Cierra la conexión después de la operación
     }
     return $r;
 }

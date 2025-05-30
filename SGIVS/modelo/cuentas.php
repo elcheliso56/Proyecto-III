@@ -90,6 +90,8 @@ class cuentas extends datos {
             } catch(Exception $e) {
                 $r['resultado'] = 'error';
                 $r['mensaje'] =  $e->getMessage();
+            } finally {
+                $co = null; // Cierra la conexión después de la operación
             }
         }
         else{
@@ -132,6 +134,8 @@ class cuentas extends datos {
             } catch(Exception $e) {
                 $r['resultado'] = 'error';
                 $r['mensaje'] = $e->getMessage();
+            } finally {
+                $co = null; // Cierra la conexión después de la operación
             }
         } else {
             $r['resultado'] = 'modificar';
@@ -164,6 +168,8 @@ class cuentas extends datos {
                 } else {
                     $r['mensaje'] = $e->getMessage();
                 }
+            } finally {
+                $co = null; // Cierra la conexión después de la operación
             }
         }
         else{
@@ -212,6 +218,8 @@ class cuentas extends datos {
         } catch(Exception $e) {
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
+        } finally {
+            $co = null; // Cierra la conexión después de la operación
         }
         return $r;
     }
@@ -231,6 +239,8 @@ class cuentas extends datos {
             }    
         }catch(Exception $e){
             return false;
+        } finally {
+            $co = null; // Cierra la conexión después de la operación
         }
     }    
 

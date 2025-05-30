@@ -88,7 +88,9 @@ class egresos extends datos {
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		}
 		else{
 			$r['resultado'] = 'incluir';
@@ -135,7 +137,9 @@ class egresos extends datos {
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] = $e->getMessage();
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		} else {
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] = 'Egreso no modificado';
@@ -166,7 +170,9 @@ class egresos extends datos {
 				} else {
 					$r['mensaje'] = $e->getMessage();
 				}
-			}
+			} finally {
+                $co = null; // Cierra la conexión después de la operación
+            }
 		}
 		else{
 			$r['resultado'] = 'eliminar';
@@ -214,6 +220,8 @@ function consultar(){
     } catch(Exception $e) {
         $r['resultado'] = 'error';
         $r['mensaje'] = $e->getMessage();
+    } finally {
+        $co = null; // Cierra la conexión después de la operación
     }
     return $r;
 }
@@ -232,7 +240,9 @@ function consultar(){
 			}	
 		}catch(Exception $e){
 			return false;
-		}
+		} finally {
+            $co = null; // Cierra la conexión después de la operación
+        }
 	}	
 
     // Método para obtener las cuentas activas
@@ -252,6 +262,8 @@ function consultar(){
         } catch(Exception $e) {
             error_log("Error al obtener cuentas: " . $e->getMessage());
             return false;
+        } finally {
+            $co = null; // Cierra la conexión después de la operación
         }
     }
 
@@ -264,6 +276,8 @@ function consultar(){
             return $resultado->rowCount() > 0;
         } catch(Exception $e) {
             return false;
+        } finally {
+            $co = null; // Cierra la conexión después de la operación
         }
     }
 }

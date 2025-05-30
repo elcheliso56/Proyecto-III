@@ -45,66 +45,55 @@ $(document).ready(function () {
     consultar(); // Llama a la función consultar al cargar el documento
     cargarOpciones(); // Carga las opciones para selectores
 
-    // Validaciones para el campo de código
+    // Validaciones para el campo de descripción
+    $("#descripcion").on("keypress", function (e) {
+        validarkeypress(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    });
 
+    $("#descripcion").on("keyup", function () {
+        validarkeyup(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras y números entre 3 y 90 caracteres");
+    });
 
-    // Validaciones para el campo de nombre
-// Solo permite letras, espacios y algunas letras acentuadas al presionar teclas
-$("#descripcion").on("keypress", function (e) {
-    validarkeypress(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
-});
+    // Validaciones para el campo de monto
+    $("#monto").on("keypress", function (e) {
+        validarkeypress(/^[0-9.]*$/, e);
+    });
 
-// Valida que el texto tenga entre 3 y 90 letras al soltar teclas
-$("#descripcion").on("keyup", function () {
-    validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#sdescripcion"), "Solo letras entre 3 y 90 caracteres");
-});
+    $("#monto").on("keyup", function () {
+        validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
+    });
 
-// Solo permite números al presionar teclas
-$("#monto").on("keypress", function (e) {
-    validarkeypress(/^[0-9.]*$/, e);
-});
+    // Validaciones para el campo de fecha
+    $("#fecha").on("change", function () {
+        if ($(this).val() === "") {
+            $("#sfecha").text("La fecha es obligatoria");
+        } else {
+            $("#sfecha").text("");
+        }
+    });
 
-// Valida que tenga entre 1 y 9 dígitos al soltar teclas
-$("#monto").on("keyup", function () {
-    validarkeyup(/^[0-9.]{1,9}$/, $(this), $("#smonto"), "Solo números, máximo 9 dígitos");
-});
+    // Validaciones para el campo de origen
+    $("#origen").on("change", function () {
+        if ($(this).val() === null) {
+            $("#sorigen").text("El origen es obligatorio");
+        } else {
+            $("#sorigen").text("");
+        }
+    });
 
-// Validaciones para el campo de fecha
-$("#fecha").on("change", function () {
-    if ($(this).val() === "") {
-        $("#sfecha").text("La fecha es obligatoria");
-    } else {
-        $("#sfecha").text("");
-    }
-});
-
-// Validaciones para el campo de origen
-$("#origen").on("change", function () {
-    if ($(this).val() === null) {
-        $("#sorigen").text("El origen es obligatorio");
-    } else {
-        $("#sorigen").text("");
-    }
-});
-
-// Validaciones para el campo de cuenta
-$("#cuenta_id").on("change", function () {
-    if ($(this).val() === null) {
-        $("#scuenta_id").text("La cuenta es obligatoria");
-    } else {
-        $("#scuenta_id").text("");
-    }
-});
-
-
-
-    
+    // Validaciones para el campo de cuenta
+    $("#cuenta_id").on("change", function () {
+        if ($(this).val() === null) {
+            $("#scuenta_id").text("La cuenta es obligatoria");
+        } else {
+            $("#scuenta_id").text("");
+        }
+    });
 
     // Manejo de clics en el botón de proceso
     $("#proceso").on("click", function () {
         if ($(this).text() == "INCLUIR") {
             if (validarenvio()) {
-            // Confirmación para incluir un nuevo registro
                 Swal.fire({
                     title: "¿Estás seguro?",
                     text: "¿Deseas registrar este ingreso?",
@@ -118,144 +107,146 @@ $("#cuenta_id").on("change", function () {
                     if (result.isConfirmed) {
                         if (validarenvio()) {
                             var datos = new FormData();
-                        datos.append('accion', 'incluir'); // Acción para incluir
-                        // Se agregan los datos del formulario
-                        datos.append('descripcion', $("#descripcion").val());
-                        datos.append('monto', $("#monto").val());
-                        datos.append('fecha', $("#fecha").val());
-                        datos.append('origen', $("#origen").val());
-                        datos.append('cuenta_id', $("#cuenta_id").val());
-
-                        
-                        enviaAjax(datos); // Envía los datos al servidor
+                            datos.append('accion', 'incluir');
+                            datos.append('descripcion', $("#descripcion").val());
+                            datos.append('monto', $("#monto").val());
+                            datos.append('fecha', $("#fecha").val());
+                            datos.append('origen', $("#origen").val());
+                            datos.append('cuenta_id', $("#cuenta_id").val());
+                            enviaAjax(datos);
+                        }
                     }
-                }
-            });
-            } }
-
-            else if ($(this).text() == "MODIFICAR") {
-            // Confirmación para modificar un registro existente
-                if (validarenvio()) {
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: "btn btn-success",
-                            cancelButton: "btn btn-danger"
-                        },
-                        buttonsStyling: false
-                    });
-                    swalWithBootstrapButtons.fire({
-                        title: "¿Estás seguro?",
-                        text: "¿Deseas modificar este ingreso?",
-                        icon: "question",
-                        showCancelButton: true,
-                        confirmButtonText: "Sí, modificar",
-                        cancelButtonText: "No, cancelar",
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (validarenvio()) {
-                                var datos = new FormData();
-                        datos.append('accion', 'modificar'); // Acción para modificar
-                        // Se agregan los datos del formulario
-                        datos.append('id', $("#id").val()); // Se agrega el código del producto
-                        datos.append('descripcion', $("#descripcion").val());
-                        datos.append('monto', $("#monto").val());
-                        datos.append('origen', $("#origen").val());
-                        datos.append('fecha', $("#fecha").val());
-                        datos.append('cuenta_id', $("#cuenta_id").val());
-                       
-                        enviaAjax(datos); // Envía los datos al servidor
-                    }
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    // Mensaje de cancelación
-                    swalWithBootstrapButtons.fire({
-                        title: "Cancelado",
-                        text: "El registro no ha sido modificado",
-                        icon: "error"
-                    });
-                }
-            });
-                } }
-                else if ($(this).text() == "ELIMINAR") {
-            // Validación antes de eliminar un producto
-                    
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: "btn btn-success",
-                                cancelButton: "btn btn-danger"
-                            },
-                            buttonsStyling: false
-                        });
-                        swalWithBootstrapButtons.fire({
-                            title: "¿Estás seguro?",
-                            text: "No podrás revertir esto!",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonText: "Sí, eliminar!",
-                            cancelButtonText: "No, cancelar!",
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                var datos = new FormData();
-                        datos.append('accion', 'eliminar'); // Acción para eliminar
-                        datos.append('id', $("#id").val()); // Se agrega el código del producto
-                        enviaAjax(datos); // Envía los datos al servidor
+                });
+            }
+        } else if ($(this).text() == "MODIFICAR") {
+            if (validarenvio()) {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success",
+                        cancelButton: "btn btn-danger"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "¿Estás seguro?",
+                    text: "¿Deseas modificar este ingreso?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, modificar",
+                    cancelButtonText: "No, cancelar",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (validarenvio()) {
+                            var datos = new FormData();
+                            datos.append('accion', 'modificar');
+                            datos.append('id', $("#id").val());
+                            datos.append('descripcion', $("#descripcion").val());
+                            datos.append('monto', $("#monto").val());
+                            datos.append('fecha', $("#fecha").val());
+                            datos.append('origen', $("#origen").val());
+                            datos.append('cuenta_id', $("#cuenta_id").val());
+                            enviaAjax(datos);
+                        }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        // Mensaje de cancelación
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "registro no eliminado",
+                            text: "El ingreso no ha sido modificado",
                             icon: "error"
                         });
                     }
                 });
-                    }
+            }
+        } else if ($(this).text() == "ELIMINAR") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "¿Estás seguro?",
+                text: "No podrás revertir esto!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar!",
+                cancelButtonText: "No, cancelar!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var datos = new FormData();
+                    datos.append('accion', 'eliminar');
+                    datos.append('id', $("#id").val());
+                    enviaAjax(datos);
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelado",
+                        text: "Ingreso no eliminado",
+                        icon: "error"
+                    });
                 }
-            );
-
-    // Manejo del clic en el botón incluir
-$("#incluir").on("click", function () {
-        limpia(); // Limpia los campos del formulario
-        $("#proceso").text("INCLUIR"); // Cambia el texto del botón a 'INCLUIR'
-        $("#modal1").modal("show"); // Muestra el modal
+            });
+        }
     });
 
-    // Inicializar Select2 en el select de tipo_unidad
-$('#tipo_unidad').select2({
-    placeholder: "Seleccione una opción",
-    allowClear: true,
-    width: '100%',
-    language: {
-        noResults: function() {
-            return "No se encontraron resultados";
-        },
-        searching: function() {
-            return "Buscando...";
+    // Manejo del clic en el botón incluir
+    $("#incluir").on("click", function () {
+        limpia();
+        $("#proceso").text("INCLUIR");
+        $("#modal1").modal("show");
+    });
+
+    // Inicializar Select2 en los selects
+    $('.select2').select2({
+        placeholder: "Seleccione una opción",
+        allowClear: true,
+        width: '100%',
+        language: {
+            noResults: function() {
+                return "No se encontraron resultados";
+            },
+            searching: function() {
+                return "Buscando...";
+            }
         }
-    }
+    });
 });
 
-$('#categoria').select2({
-    placeholder: "Seleccione una opción",
-    allowClear: true,
-    width: '100%',
-    language: {
-        noResults: function() {
-            return "No se encontraron resultados";
-        },
-        searching: function() {
-            return "Buscando...";
-        }
-    }
-});
-
-
-
-});
-
-// Función para validar el envío de datos
 function validarenvio() {
-    return true;
+    let valido = true;
+
+    // Validar descripción
+    if ($("#descripcion").val() === "") {
+        $("#sdescripcion").text("La descripción es obligatoria");
+        valido = false;
+    }
+
+    // Validar monto
+    if ($("#monto").val() === "") {
+        $("#smonto").text("El monto es obligatorio");
+        valido = false;
+    }
+
+    // Validar fecha
+    if ($("#fecha").val() === "") {
+        $("#sfecha").text("La fecha es obligatoria");
+        valido = false;
+    }
+
+    // Validar origen
+    if ($("#origen").val() === null) {
+        $("#sorigen").text("El origen es obligatorio");
+        valido = false;
+    }
+
+    // Validar cuenta
+    if ($("#cuenta_id").val() === null) {
+        $("#scuenta_id").text("La cuenta es obligatoria");
+        valido = false;
+    }
+
+    return valido;
 }
 
 // Función para validar la tecla presionada
