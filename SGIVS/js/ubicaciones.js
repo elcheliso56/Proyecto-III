@@ -1,3 +1,19 @@
+var datos = new FormData();
+datos.append("accion", "modalpaciente");
+enviaAjax(datos);
+
+$("#listadopaciente").on("click", function () {
+  $("#modalpaciente").modal("show");
+});
+function colocapa(linea) {
+  // Centra los valores en los campos de entrada
+  $("#cedula").val($(linea).find("td:eq(0)").text()).css("text-align", "center");
+  $("#nombre").val($(linea).find("td:eq(1)").text()).css("text-align", "center");
+  $("#Apellido").val($(linea).find("td:eq(2)").text()).css("text-align", "center");
+  $("#telefono").val($(linea).find("td:eq(3)").text()).css("text-align", "center");
+  $("#modalpaciente").modal("hide");
+}
+
 function consultar() {
     var datos = new FormData();
     datos.append('accion', 'consultar'); // Se agrega la acción 'consultar' a los datos
@@ -393,12 +409,25 @@ function validarenvio() {
         });
         return false;
     }
-
     // Fecha de consulta
-    if ($("#fechaconsulta").val().trim() === "") {
+    const fechaConsulta = $("#fechaconsulta").val().trim();
+    if (fechaConsulta === "") {
         Swal.fire({
             title: "¡ERROR!",
             text: "Debe ingresar la fecha de consulta",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+    // Validar que la fecha de consulta no sea anterior a hoy
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); // Quitar hora para comparar solo fecha
+    const fechaIngresada = new Date(fechaConsulta);
+    if (fechaIngresada < hoy) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La fecha de consulta no puede ser anterior a la fecha actual",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
@@ -599,6 +628,9 @@ function enviaAjax(datos) {
                         icon: "error"
                     });
                 }
+                  if (lee.resultado == "modalpaciente") {
+          $("#tablapaciente").html(lee.mensaje);
+        }
             } catch (e) {
                 Swal.fire({
                     title: "Error",
