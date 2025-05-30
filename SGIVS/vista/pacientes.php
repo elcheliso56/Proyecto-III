@@ -3,8 +3,9 @@ require_once("comunes/encabezado.php");//Incluye el encabezado común de la pág
 require_once('comunes/menu.php');//Incluye el menú común de la página 
 ?> 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-<div class="container"> 
+	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous"/>
+	<br>
+<div class="container-fluid"> 
 	<div class="container">
 		<div class="d-flex justify-content-between align-items-center mb-4">
 			<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people-fill me-2"></i> Gestionar Pacientes</h1>
@@ -76,19 +77,30 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 					<div class="container">	
 						<!-- Campos para cedula, nombre y apellido -->
 						<div class="row mb-3">
-							<div class="col-md-4">
-								<label for="cedula">Cédula</label>
-								<input class="form-control" type="text" id="cedula" title="El número de documento no puede ser modificado..." placeholder="Cédula obligatoria" requerid/>
+							<div class="col-md-6" title="El tipo de documento no puede ser modificado...">
+								<label for="tipo_documento">Tipo de documento</label>
+								<select class="form-control" id="tipo_documento">
+									<option value="seleccionar" selected disabled>Seleccione una opción</option>
+									<option value="V" title="Cédula Venezolana">Venezolano</option>
+									<option value="E" title="Cédula Extranjera">Extranjero</option>
+									<option value="NC" title="Sin Cédula">Sin Cédula</option>
+								</select>
+							</div>
+							<div class="col-md-6">
+								<label for="cedula">Documento</label>
+								<input class="form-control" type="text" id="cedula" title="El número de cédula no puede ser modificado..." placeholder="Ejemplo: 12345678" minlength="7" maxlength="11"/>
 								<span id="scedula"></span>
 							</div>
-							<div class="col-md-4">
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-6">
 								<label for="nombre">Nombre</label>
-								<input class="form-control" type="text" id="nombre"  placeholder="Nombre obligatorio" requerid/>
+								<input class="form-control" type="text" id="nombre"  placeholder="Ejemplo: Jhon" maxlength="20" required />
 								<span id="snombre"></span>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<label for="apellido">Apellido</label>
-								<input class="form-control" type="text" id="apellido" placeholder="Apellido obligatorio" requerid/>
+								<input class="form-control" type="text" id="apellido" placeholder="Ejemplo: Doe" maxlength="20" required />
 								<span id="sapellido"></span>
 							</div>
 						</div>
@@ -96,7 +108,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<div class="row mb-3">
 							<div class="col-md-3">
 								<label for="fecha_nacimiento">Fecha de Nacimiento</label>
-								<input class="form-control" type="date" id="fecha_nacimiento" title="Fecha de nacimiento del paciente" requerid/>
+								<input class="form-control" type="date" id="fecha_nacimiento" title="Fecha de nacimiento del paciente" required/>
 								<span id="sfecha_nacimiento"></span>
 							</div>
 							<div class="col-md-2">
@@ -111,9 +123,9 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							</div>
 							<div class="col-md-4" title="El tipo de género no puede ser modificado...">
 								<label for="genero">Género</label>
-								<select class="form-control" id="genero" title="Género del paciente" requerid/>
-									<option value="seleccionar" selected disabled>Seleccione una opción </option>
-									<option value="F"title="Género Femenino">Femenina</option>
+								<select class="form-control" id="genero" title="Género del paciente" required>
+									<option value="seleccionar" selected disabled>Seleccione una opción</option>
+									<option value="F"title="Género Femenino">Femenino</option>
 									<option value="M"title="Género Masculono">Masculino</option>
 									<option value="O"title="Otro">Otro</option>
 								</select>
@@ -123,12 +135,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="alergias">Alergia</label>
-								<input class="form-control" type="text" id="alergias" placeholder="Ejemplo: Penicilina" />
+								<input class="form-control" type="text" id="alergias" maxlength="20" placeholder="Ejemplo: Penicilina" />
 								<span id="salergias"></span>
 							</div>
 							<div class="col-md-6">
 								<label for="antecedentes">Antecendentes Familiares</label>
-								<input class="form-control" type="text" id="antecedentes" placeholder="Ejemplo: Diabetes"/>
+								<input class="form-control" type="text" id="antecedentes" maxlength="20" placeholder="Ejemplo: Diabetes"/>
 								<span id="santecedentes"></span>
 							</div>
 						</div>
@@ -136,12 +148,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="email">Correo</label>
-								<input class="form-control" type="text" id="email" placeholder="Ejemplo@email.com"/>
+								<input class="form-control" type="email" id="email" placeholder="Ejemplo@email.com" autocomplete="off"/>
 								<span id="semail"></span>
 							</div>
 							<div class="col-md-6">
 								<label for="telefono">Teléfono</label>
-								<input class="form-control" type="text" id="telefono" placeholder="Ejemplo: 04123456789" requerid/>
+								<input class="form-control" type="text" id="telefono" maxlength="15" placeholder="Ejemplo: 04123456789" required/>
 								<span id="stelefono"></span>
 							</div>
 						</div>
@@ -149,7 +161,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<div class="row mb-3">
 							<div class="col-md-8">
 								<label for="direccion">Dirección</label>
-								<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" requerid/>
+								<input class="form-control" type="text" id="direccion" maxlength="100" placeholder="Dirección de su domicilio" required/>
 								<span id="sdireccion"></span>
 							</div>
 							<div class="col-md-4">

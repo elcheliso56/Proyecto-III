@@ -1,392 +1,451 @@
-function consultar() {
-    var datos = new FormData();
-    datos.append('accion', 'consultar');
-    enviaAjax(datos);
-}
+$(document).ready(function() {
+    let tablaCitasRegistradas = $('#tablaCitasRegistradas').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        },
+        // Definición de las columnas
+        "columns": [
+            {"data": "cliente_completo"}, // Cliente (índice 0)
+            {"data": "cedula_cliente"}, // Cédula Cliente (índice 1)
+            {"data": "cedula_representante"}, // Cédula Representante (índice 2)
+            {"data": "telefono_cliente"}, // Teléfono (índice 3)
+            {"data": "motivo_cita"}, // Motivo (índice 4)
+            {"data": "doctor_atendera"}, // Doctor (índice 5)
+            {"data": "fecha_cita"}, // Fecha (índice 6)
+            {"data": "hora_cita"}, // Hora (índice 7)
+            {"data": "estado_cita_badge"}, // Estado (con badge) (índice 8)
+            // ELIMINADO: {"data": "fecha_registro"}, // Fecha Registro
+            {"data": "acciones", "orderable": false} // Acciones (no ordenable) (índice 9)
+        ],
+        // Ahora el orden debe basarse en una columna existente. Por ejemplo, por fecha de cita o estado.
+        // Si quieres ordenar por la columna de fecha de registro internamente sin mostrarla:
+        // Podrías dejar 'fecha_registro' en los datos de la fila (en tablaCitasRegistradas.row.add)
+        // y ocultarla con columnDefs, pero como el usuario no la necesita ver, lo mejor es quitarla.
+        // Si no se necesita ordenar por fecha de registro, se puede cambiar el orden predeterminado.
+        // Por ejemplo, ordenar por fecha de cita (columna 6) descendente:
+        "order": [[6, "desc"]] // Ordenar por la columna de fecha de cita (índice 6)
+    });
 
-function cargarMedicos() {
-    var datos = new FormData();
-    datos.append('accion', 'cargarMedicos');
-    $.ajax({
-        url: '',
-        type: 'POST',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(respuesta) {
-            try {
-                var datos = JSON.parse(respuesta);
-                if (datos.medicos) {
-                    // Limpiar selects
-                    $('#id_medico, #mid_medico').empty();
-                    
-                    // Agregar opción por defecto
-                    $('#id_medico, #mid_medico').append('<option value="" selected disabled>Seleccione un médico</option>');
-                    
-                    // Agregar médicos
-                    datos.medicos.forEach(function(medico) {
-                        $('#id_medico, #mid_medico').append(
-                            $('<option></option>').val(medico.id_medico).text(medico.nombre_medico)
-                        );
+    let tablaSolicitudesCitas = $('#tablaSolicitudesCitas').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        },
+        "columns": [
+            {"data": "nombre"},
+            {"data": "apellido"},
+            {"data": "telefono"},
+            {"data": "motivo"},
+            {"data": "fecha_envio"},
+            {"data": "acciones", "orderable": false}
+        ],
+        "order": [[4, "desc"]] // Ordenar por la columna de fecha de envío (índice 4) descendente
+    });
+
+    // Función para mostrar el loader
+    function showLoader() {
+        $('#loader').fadeIn();
+    }
+
+    // Función para ocultar el loader
+    function hideLoader() {
+        $('#loader').fadeOut();
+    }
+
+    // Cargar citas registradas al inicio
+    cargarCitasRegistradas();
+
+    function cargarCitasRegistradas(criterio = '') {
+        showLoader();
+        $.ajax({
+            url: '?pagina=citas', // Apunta al controlador de citas
+            type: 'POST',
+            dataType: 'json',
+            data: { accion: 'consultarCitasRegistradas', criterio_busqueda: criterio },
+            success: function(respuesta) {
+                hideLoader();
+                if (respuesta.resultado === 'error') {
+                    Swal.fire('Error', respuesta.mensaje, 'error');
+                } else {
+                    tablaCitasRegistradas.clear(); // Limpiar la tabla antes de añadir nuevos datos
+                    respuesta.forEach(function(cita) {
+                        let estadoBadge = `<span class="badge badge-${obtenerClaseEstado(cita.estado_cita)}">${cita.estado_cita}</span>`;
+                        let botonesAccion = `
+                            <button class="btn btn-primary btn-sm m-1 btnModificarCita" data-id="${cita.id}"
+                                data-cedula-cliente="${cita.cedula_cliente || ''}"
+                                data-cedula-representante="${cita.cedula_representante || ''}"
+                                data-nombre-cliente="${cita.nombre_cliente}"
+                                data-apellido-cliente="${cita.apellido_cliente}"
+                                data-telefono-cliente="${cita.telefono_cliente || ''}"
+                                data-motivo-cita="${cita.motivo_cita}"
+                                data-doctor-atendera="${cita.doctor_atendera}"
+                                data-fecha-cita="${cita.fecha_cita}"
+                                data-hora-cita="${cita.hora_cita}"
+                                title="Modificar Cita">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm m-1 btnAbrirCambiarEstado" data-id="${cita.id}" data-estado-actual="${cita.estado_cita}" title="Cambiar Estado">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </button>
+                        `;
+
+                        // Añadir los datos como un objeto para DataTables con las columnas definidas
+                        // NO se incluye 'fecha_registro' aquí si no la vamos a mostrar en la tabla.
+                        tablaCitasRegistradas.row.add({
+                            cliente_completo: cita.nombre_cliente + ' ' + cita.apellido_cliente,
+                            cedula_cliente: cita.cedula_cliente || 'N/A',
+                            cedula_representante: cita.cedula_representante || 'N/A',
+                            telefono_cliente: cita.telefono_cliente || 'N/A',
+                            motivo_cita: cita.motivo_cita,
+                            doctor_atendera: cita.doctor_atendera,
+                            fecha_cita: cita.fecha_cita,
+                            hora_cita: cita.hora_cita,
+                            estado_cita_badge: estadoBadge,
+                            acciones: botonesAccion
+                        }).draw(false);
                     });
                 }
-            } catch (e) {
-                console.error("Error al procesar la respuesta:", e);
-            }
-        },
-        error: function(request, status, err) {
-            console.error("Error en la petición AJAX:", err);
-        }
-    });
-}
-
-function destruyeDT() {
-    if ($.fn.DataTable.isDataTable("#tablacitas")) {
-        $("#tablacitas").DataTable().destroy();
-    }
-}
-
-function crearDT() {
-    if (!$.fn.DataTable.isDataTable("#tablacitas")) {
-        $("#tablacitas").DataTable({
-            language: {
-                lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron citas",
-                info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay citas registradas",
-                infoFiltered: "(filtrado de _MAX_ registros totales)",
-                search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar cita...",
-                paginate: {
-                    first: "Primera",
-                    last: "Última",
-                    next: "Siguiente",
-                    previous: "Anterior",
-                },
             },
-            pageLength: 5,
-            lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]],
-            autoWidth: false,
-            scrollX: true,
-            fixedHeader: false,
-            order: [[0, "asc"]],
+            error: function(jqXHR, textStatus, errorThrown) {
+                hideLoader();
+                Swal.fire('Error', 'Error al cargar las citas: ' + textStatus + ' ' + errorThrown, 'error');
+            }
         });
     }
-}
 
-$(document).ready(function() {
-    consultar();
-    cargarMedicos();
-
-    // Validaciones para el campo de nombre
-    $("#nombre_paciente, #mnombre_paciente").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
-    });
-
-    $("#nombre_paciente, #mnombre_paciente").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $(this), $("#snombre_paciente"), "Solo letras entre 3 y 90 caracteres");
-    });
-
-    // Validaciones para el campo de teléfono
-    $("#numero_contacto, #mnumero_contacto").on("keypress", function(e) {
-        validarkeypress(/^[0-9]*$/, e);
-    });
-
-    $("#numero_contacto, #mnumero_contacto").on("keyup", function() {
-        validarkeyup(/^[0-9]{10,15}$/, $(this), $("#snumero_contacto"), "Solo números entre 10 y 15 dígitos");
-    });
-
-    // Validaciones para el campo de fecha
-    $("#fecha_cita, #mfecha_cita").on("change", function() {
-        if ($(this).val() === "") {
-            $("#sfecha_cita").text("La fecha es obligatoria");
-        } else {
-            $("#sfecha_cita").text("");
+    function obtenerClaseEstado(estado) {
+        switch (estado) {
+            case 'Pendiente': return 'warning';
+            case 'Confirmada': return 'success';
+            case 'Cancelada': return 'danger';
+            default: return 'secondary';
         }
+    }
+
+    // Botón para registrar nueva cita
+    $('#btnRegistrarCita').click(function() {
+        $('#formCita')[0].reset(); // Limpiar formulario
+        $('#idCita').val(''); // Asegurar que el ID esté vacío para incluir
+        $('#citaContactoId').val(''); // Asegurar que el ID de contacto esté vacío
+        $('#accionCita').val('incluir'); // Establecer la acción a 'incluir'
+        $('#modalGestionCitaLabel').text('Registrar Nueva Cita');
+        $('#modalGestionCita').modal('show');
     });
 
-    // Validaciones para el campo de hora
-    $("#hora_cita, #mhora_cita").on("change", function() {
-        if ($(this).val() === "") {
-            $("#shora_cita").text("La hora es obligatoria");
-        } else {
-            $("#shora_cita").text("");
-        }
-    });
+    // Delegación de eventos para el botón de modificar
+    $('#tablaCitasRegistradas tbody').on('click', '.btnModificarCita', function() {
+        // Obtenemos los datos directamente del botón (ya están serializados)
+        const id = $(this).data('id');
+        const cedulaCliente = $(this).data('cedula-cliente');
+        const cedulaRepresentante = $(this).data('cedula-representante');
+        const nombreCliente = $(this).data('nombre-cliente');
+        const apellidoCliente = $(this).data('apellido-cliente');
+        let telefonoCliente = $(this).data('telefono-cliente');
+        const motivoCita = $(this).data('motivo-cita');
+        const doctorAtendera = $(this).data('doctor-atendera');
+        const fechaCita = $(this).data('fecha-cita');
+        const horaCita = $(this).data('hora-cita');
 
-    // Validaciones para el campo de médico
-    $("#id_medico, #mid_medico").on("change", function() {
-        if ($(this).val() === null) {
-            $("#sid_medico").text("El médico es obligatorio");
-        } else {
-            $("#sid_medico").text("");
-        }
-    });
-
-    // Validaciones para el campo de motivo
-    $("#motivo_cita, #mmotivo_cita").on("change", function() {
-        if ($(this).val() === null) {
-            $("#smotivo_cita").text("El motivo es obligatorio");
-        } else {
-            $("#smotivo_cita").text("");
-        }
-    });
-
-    // Manejo del botón solicitar cita
-    $("#solicitarCita").on("click", function() {
-        if (validarenvio()) {
-            Swal.fire({
-                title: "¿Estás seguro?",
-                text: "¿Deseas solicitar esta cita?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, solicitar",
-                cancelButtonText: "No, cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var datos = new FormData();
-                    datos.append('accion', 'incluir');
-                    datos.append('nombre_paciente', $("#nombre_paciente").val());
-                    datos.append('numero_contacto', $("#numero_contacto").val());
-                    datos.append('id_medico', $("#id_medico").val());
-                    datos.append('fecha_cita', $("#fecha_cita").val());
-                    datos.append('hora_cita', $("#hora_cita").val());
-                    datos.append('motivo_cita', $("#motivo_cita").val());
-                    datos.append('observaciones', $("#observaciones").val());
-                    
-                    enviaAjax(datos);
+        // Asegurar que el teléfono tenga el formato correcto
+        if (telefonoCliente && telefonoCliente !== 'N/A') {
+            // Si el teléfono no comienza con +58, agregarlo
+            if (!telefonoCliente.startsWith('+58')) {
+                // Si ya tiene 10 dígitos, agregar +58 al inicio
+                if (telefonoCliente.length === 10) {
+                    telefonoCliente = '+58' + telefonoCliente;
                 }
-            });
+                // Si tiene más de 10 dígitos, asumimos que ya incluye el código de país
+                else if (telefonoCliente.length > 10) {
+                    telefonoCliente = '+' + telefonoCliente;
+                }
+            }
         }
+
+        // Llenamos el formulario del modal
+        $('#idCita').val(id);
+        $('#cedulaCliente').val(cedulaCliente);
+        $('#cedulaRepresentante').val(cedulaRepresentante);
+        $('#nombreCliente').val(nombreCliente);
+        $('#apellidoCliente').val(apellidoCliente);
+        $('#telefonoCliente').val(telefonoCliente);
+        $('#motivoCita').val(motivoCita);
+        $('#doctorAtendera').val(doctorAtendera);
+        $('#fechaCita').val(fechaCita);
+        $('#horaCita').val(horaCita);
+        $('#accionCita').val('modificar'); // Establecer la acción a 'modificar'
+        $('#modalGestionCitaLabel').text('Modificar Cita');
+        $('#modalGestionCita').modal('show');
     });
 
-    // Manejo del botón proceso en el modal
-    $("#proceso").on("click", function() {
-        if ($(this).text() == "MODIFICAR") {
-            if (validarenvio()) {
-                Swal.fire({
-                    title: "¿Estás seguro?",
-                    text: "¿Deseas modificar esta cita?",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Sí, modificar",
-                    cancelButtonText: "No, cancelar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var datos = new FormData();
-                        datos.append('accion', 'modificar');
-                        datos.append('id_cita', $("#id_cita").val());
-                        datos.append('nombre_paciente', $("#mnombre_paciente").val());
-                        datos.append('numero_contacto', $("#mnumero_contacto").val());
-                        datos.append('id_medico', $("#mid_medico").val());
-                        datos.append('fecha_cita', $("#mfecha_cita").val());
-                        datos.append('hora_cita', $("#mhora_cita").val());
-                        datos.append('motivo_cita', $("#mmotivo_cita").val());
-                        datos.append('estado_cita', $("#mestado_cita").val());
-                        datos.append('observaciones', $("#mobservaciones").val());
-                        
-                        enviaAjax(datos);
+    // Delegación de eventos para ABRIR el diálogo de cambio de estado (ahora con SweetAlert2)
+    $('#tablaCitasRegistradas tbody').on('click', '.btnAbrirCambiarEstado', function(e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        const estadoActual = $(this).data('estado-actual');
+
+        Swal.fire({
+            title: 'Cambiar Estado de la Cita',
+            input: 'select',
+            inputOptions: {
+                'Pendiente': 'Pendiente',
+                'Confirmada': 'Confirmada',
+                'Cancelada': 'Cancelada'
+            },
+            inputValue: estadoActual, // Seleccionar el estado actual por defecto
+            inputPlaceholder: 'Selecciona un estado',
+            showCancelButton: true,
+            confirmButtonText: 'Cambiar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar un estado';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const nuevoEstado = result.value;
+                if (nuevoEstado === estadoActual) {
+                    Swal.fire('Información', 'El estado seleccionado es el mismo que el actual.', 'info');
+                    return;
+                }
+                showLoader();
+                $.ajax({
+                    url: '?pagina=citas',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        accion: 'cambiarEstado',
+                        id: id,
+                        estado_cita: nuevoEstado
+                    },
+                    success: function(respuesta) {
+                        hideLoader();
+                        if (respuesta.resultado === 'ok') {
+                            Swal.fire('¡Éxito!', respuesta.mensaje, 'success');
+                            cargarCitasRegistradas(); // Recargar la tabla
+                        } else {
+                            Swal.fire('Error', respuesta.mensaje, 'error');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        hideLoader();
+                        Swal.fire('Error', 'Error al cambiar estado: ' + textStatus + ' ' + errorThrown, 'error');
                     }
                 });
             }
-        } else if ($(this).text() == "ELIMINAR") {
-            Swal.fire({
-                title: "¿Estás seguro?",
-                text: "No podrás revertir esto!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "No, cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var datos = new FormData();
-                    datos.append('accion', 'eliminar');
-                    datos.append('id_cita', $("#id_cita").val());
-                    enviaAjax(datos);
-                }
-            });
+        });
+    });
+
+    // Guardar Cita (Incluir o Modificar)
+    $('#btnGuardarCita').click(function() {
+        const formData = $('#formCita').serialize(); // Obtener todos los datos del formulario
+        // Validaciones básicas de campos obligatorios del lado del cliente
+        if (!$('#nombreCliente').val() || !$('#apellidoCliente').val() || !$('#motivoCita').val() ||
+            !$('#doctorAtendera').val() || !$('#fechaCita').val() || !$('#horaCita').val()) {
+            Swal.fire('Advertencia', 'Por favor, complete todos los campos obligatorios (*).', 'warning');
+            return;
         }
+
+        showLoader();
+        $.ajax({
+            url: '?pagina=citas',
+            type: 'POST',
+            dataType: 'json',
+            data: formData, // Enviar todos los datos del formulario
+            success: function(respuesta) {
+                hideLoader();
+                if (respuesta.resultado === 'ok') {
+                    Swal.fire('¡Éxito!', respuesta.mensaje, 'success');
+                    $('#modalGestionCita').modal('hide'); // Cerrar el modal
+                    cargarCitasRegistradas(); // Recargar la tabla de citas
+                    // Si se registró desde una solicitud de contacto, recargar también las solicitudes
+                    if ($('#citaContactoId').val() !== '') {
+                        cargarSolicitudesCitasContacto();
+                    }
+                } else {
+                    Swal.fire('Error', respuesta.mensaje, 'error');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                hideLoader();
+                Swal.fire('Error', 'Error al guardar la cita: ' + textStatus + ' ' + errorThrown, 'error');
+            }
+        });
+    });
+
+    // Validaciones de KeyPress
+    $('#nombreCliente, #apellidoCliente').on('keypress', function(e) {
+        // Solo permite letras y espacios
+        const charCode = e.which ? e.which : e.keyCode;
+        // Incluye letras mayúsculas (A-Z), minúsculas (a-z), espacios (32), Ñ (209) y ñ (241)
+        if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32 || charCode === 209 || charCode === 241)) {
+            e.preventDefault();
+        }
+    });
+
+    // Validación especial para el teléfono
+    $('#telefonoCliente').on('keypress', function(e) {
+        const charCode = e.which ? e.which : e.keyCode;
+        const value = $(this).val();
+        
+        // Permitir el + solo al inicio
+        if (charCode === 43) { // Código ASCII para '+'
+            if (value.length > 0) {
+                e.preventDefault();
+            }
+            return;
+        }
+        
+        // Solo permitir números después del +
+        if (charCode < 48 || charCode > 57) { // Valores ASCII para 0-9
+            e.preventDefault();
+        }
+        
+        // Limitar la longitud total a 13 caracteres (+58 + 10 dígitos)
+        if (value.length >= 13) {
+            e.preventDefault();
+        }
+    });
+
+    // Asegurar que el teléfono comience con +58
+    $('#telefonoCliente').on('blur', function() {
+        const value = $(this).val();
+        if (value && value !== 'N/A') {
+            // Si el valor no comienza con +58
+            if (!value.startsWith('+58')) {
+                // Si ya tiene 10 dígitos, agregar +58 al inicio
+                if (value.replace(/[^0-9]/g, '').length === 10) {
+                    $(this).val('+58' + value.replace(/[^0-9]/g, ''));
+                }
+                // Si tiene más de 10 dígitos, asumimos que ya incluye el código de país
+                else if (value.replace(/[^0-9]/g, '').length > 10) {
+                    $(this).val('+' + value.replace(/[^0-9]/g, ''));
+                }
+            }
+        }
+    });
+
+    $('#cedulaCliente, #cedulaRepresentante').on('keypress', function(e) {
+        // Solo permite números
+        const charCode = e.which ? e.which : e.keyCode;
+        if (charCode < 48 || charCode > 57) { // Valores ASCII para 0-9
+            e.preventDefault();
+        }
+    });
+
+    // --- Funciones para Solicitudes de Citas de Contacto ---
+
+    // Botón para ver solicitudes de citas de contacto
+    $('#btnVerSolicitudes').click(function() {
+        cargarSolicitudesCitasContacto();
+        $('#modalSolicitudesCitas').modal('show');
+    });
+
+    function cargarSolicitudesCitasContacto() {
+        showLoader();
+        $.ajax({
+            url: '?pagina=citas',
+            type: 'POST',
+            dataType: 'json',
+            data: { accion: 'consultarSolicitudesCitasContacto' },
+            success: function(respuesta) {
+                hideLoader();
+                if (respuesta.resultado === 'error') {
+                    Swal.fire('Error', respuesta.mensaje, 'error');
+                } else {
+                    tablaSolicitudesCitas.clear();
+                    respuesta.forEach(function(solicitud) {
+                        let botonesAccion = `
+                            <button class="btn btn-success btn-sm m-1 btnRegistrarDesdeSolicitud"
+                                data-id="${solicitud.id}"
+                                data-nombre="${solicitud.nombre}"
+                                data-apellido="${solicitud.apellido}"
+                                data-telefono="${solicitud.telefono || ''}"
+                                data-motivo="${solicitud.motivo}"
+                                title="Registrar Cita">
+                                <i class="bi bi-journal-plus"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm m-1 btnBorrarSolicitud" data-id="${solicitud.id}" title="Eliminar Solicitud">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        `;
+                        
+                        tablaSolicitudesCitas.row.add({
+                            nombre: solicitud.nombre,
+                            apellido: solicitud.apellido,
+                            telefono: solicitud.telefono || 'N/A',
+                            motivo: solicitud.motivo,
+                            fecha_envio: solicitud.fecha_envio,
+                            acciones: botonesAccion
+                        }).draw(false);
+                    });
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                hideLoader();
+                Swal.fire('Error', 'Error al cargar las solicitudes de citas: ' + textStatus + ' ' + errorThrown, 'error');
+            }
+        });
+    }
+
+    // Delegación de eventos para registrar cita desde solicitud
+    $('#tablaSolicitudesCitas tbody').on('click', '.btnRegistrarDesdeSolicitud', function() {
+        const idSolicitud = $(this).data('id');
+        const nombre = $(this).data('nombre');
+        const apellido = $(this).data('apellido');
+        const telefono = $(this).data('telefono');
+        const motivo = $(this).data('motivo');
+
+        $('#formCita')[0].reset(); // Limpiar el formulario de citas
+        $('#citaContactoId').val(idSolicitud); // Establecer el ID de la solicitud
+        $('#nombreCliente').val(nombre);
+        $('#apellidoCliente').val(apellido);
+        $('#telefonoCliente').val(telefono);
+        $('#motivoCita').val(motivo);
+        $('#accionCita').val('incluir'); // La acción siempre será incluir aquí
+        $('#modalGestionCitaLabel').text('Registrar Cita desde Solicitud');
+        $('#modalSolicitudesCitas').modal('hide'); // Ocultar el modal de solicitudes
+        $('#modalGestionCita').modal('show'); // Mostrar el modal de gestión de cita
+    });
+
+    // Delegación de eventos para borrar lógicamente solicitud
+    $('#tablaSolicitudesCitas tbody').on('click', '.btnBorrarSolicitud', function() {
+        const idSolicitud = $(this).data('id');
+
+        Swal.fire({
+            title: '¿Estás seguro de eliminar esta solicitud?',
+            text: "Esta acción borrará lógicamente la solicitud de cita de contacto.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                showLoader();
+                $.ajax({
+                    url: '?pagina=citas',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        accion: 'eliminarSolicitudCitaContacto',
+                        id: idSolicitud
+                    },
+                    success: function(respuesta) {
+                        hideLoader();
+                        if (respuesta.resultado === 'ok') {
+                            Swal.fire('¡Éxito!', respuesta.mensaje, 'success');
+                            cargarSolicitudesCitasContacto(); // Recargar la tabla de solicitudes
+                        } else {
+                            Swal.fire('Error', respuesta.mensaje, 'error');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        hideLoader();
+                        Swal.fire('Error', 'Error al eliminar la solicitud: ' + textStatus + ' ' + errorThrown, 'error');
+                    }
+                });
+            }
+        });
     });
 });
-
-function validarenvio() {
-    var valido = true;
-    
-    // Validar nombre
-    if (!validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,90}$/, $("#nombre_paciente"), $("#snombre_paciente"), "Solo letras entre 3 y 90 caracteres")) {
-        valido = false;
-    }
-    
-    // Validar teléfono
-    if (!validarkeyup(/^[0-9]{10,15}$/, $("#numero_contacto"), $("#snumero_contacto"), "Solo números entre 10 y 15 dígitos")) {
-        valido = false;
-    }
-    
-    // Validar médico
-    if ($("#id_medico").val() === null) {
-        $("#sid_medico").text("El médico es obligatorio");
-        valido = false;
-    }
-    
-    // Validar fecha
-    if ($("#fecha_cita").val() === "") {
-        $("#sfecha_cita").text("La fecha es obligatoria");
-        valido = false;
-    }
-    
-    // Validar hora
-    if ($("#hora_cita").val() === "") {
-        $("#shora_cita").text("La hora es obligatoria");
-        valido = false;
-    }
-    
-    // Validar motivo
-    if ($("#motivo_cita").val() === null) {
-        $("#smotivo_cita").text("El motivo es obligatorio");
-        valido = false;
-    }
-    
-    return valido;
-}
-
-function validarkeypress(er, e) {
-    key = e.keyCode;
-    tecla = String.fromCharCode(key);
-    a = er.test(tecla);
-    if (!a) {
-        e.preventDefault();
-    }
-}
-
-function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
-    a = er.test(etiqueta.val());
-    if (a) {
-        etiquetamensaje.text("");
-        return 1;
-    } else {
-        etiquetamensaje.text(mensaje);
-        return 0;
-    }
-}
-
-function pone(pos, accion) {
-    linea = $(pos).closest('tr');
-    $("#id_cita").val($(linea).attr("data-id"));
-    
-    if (accion == 0) {
-        $("#proceso").text("MODIFICAR");
-        $("#mnombre_paciente").prop("disabled", false);
-        $("#mnumero_contacto").prop("disabled", false);
-        $("#mid_medico").prop("disabled", false);
-        $("#mfecha_cita").prop("disabled", false);
-        $("#mhora_cita").prop("disabled", false);
-        $("#mmotivo_cita").prop("disabled", false);
-        $("#mestado_cita").prop("disabled", false);
-        $("#mobservaciones").prop("disabled", false);
-    } else {
-        $("#proceso").text("ELIMINAR");
-        $("#mnombre_paciente").prop("disabled", true);
-        $("#mnumero_contacto").prop("disabled", true);
-        $("#mid_medico").prop("disabled", true);
-        $("#mfecha_cita").prop("disabled", true);
-        $("#mhora_cita").prop("disabled", true);
-        $("#mmotivo_cita").prop("disabled", true);
-        $("#mestado_cita").prop("disabled", true);
-        $("#mobservaciones").prop("disabled", true);
-    }
-
-    $("#mnombre_paciente").val($(linea).find("td:eq(1)").text());
-    $("#mnumero_contacto").val($(linea).find("td:eq(2)").text());
-    $("#mid_medico").val($(linea).find("td:eq(3)").attr("data-medico-id")).trigger('change');
-    $("#mfecha_cita").val($(linea).find("td:eq(4)").text());
-    $("#mhora_cita").val($(linea).find("td:eq(5)").text());
-    $("#mmotivo_cita").val($(linea).find("td:eq(6)").text()).trigger('change');
-    $("#mestado_cita").val($(linea).find("td:eq(7)").text().toLowerCase()).trigger('change');
-    $("#mobservaciones").val($(linea).find("td:eq(8)").text());
-    
-    $("#modal1").modal("show");
-}
-
-function enviaAjax(datos) {
-    $.ajax({
-        async: true,
-        url: "",
-        type: "POST",
-        contentType: false,
-        data: datos,
-        processData: false,
-        cache: false,
-        beforeSend: function() {
-            $("#loader").show();
-        },
-        timeout: 10000,
-        success: function(respuesta) {
-            try {
-                var lee = JSON.parse(respuesta);
-                if (lee.resultado == "consultar") {
-                    destruyeDT();
-                    $("#resultadoconsulta").html(lee.mensaje);
-                    crearDT();
-                } else if (lee.resultado == "incluir" || lee.resultado == "modificar") {
-                    Swal.fire({
-                        title: lee.mensaje.includes('éxito') ? "¡Éxito!" : "Error",
-                        text: lee.mensaje,
-                        icon: lee.mensaje.includes('éxito') ? "success" : "error"
-                    });
-                    if (lee.mensaje.includes('éxito')) {
-                        $("#modal1").modal("hide");
-                        consultar();
-                        // Limpiar formulario de solicitud
-                        $("#formCita")[0].reset();
-                    }
-                } else if (lee.resultado == "eliminar") {
-                    Swal.fire({
-                        title: lee.mensaje.includes('éxito') ? "¡Eliminado!" : "Error",
-                        text: lee.mensaje,
-                        icon: lee.mensaje.includes('éxito') ? "success" : "error"
-                    });
-                    if (lee.mensaje.includes('éxito')) {
-                        $("#modal1").modal("hide");
-                        consultar();
-                    }
-                } else if (lee.resultado == "error") {
-                    Swal.fire({
-                        title: "Error",
-                        text: lee.mensaje,
-                        icon: "error"
-                    });
-                }
-            } catch (e) {
-                Swal.fire({
-                    title: "Error",
-                    text: "Error en JSON: " + e.name,
-                    icon: "error"
-                });
-            }
-        },
-        error: function(request, status, err) {
-            if (status == "timeout") {
-                Swal.fire({
-                    title: "Error",
-                    text: "Servidor ocupado, intente de nuevo",
-                    icon: "error"
-                });
-            } else {
-                Swal.fire({
-                    title: "Error",
-                    text: "ERROR: " + request + status + err,
-                    icon: "error"
-                });
-            }
-        },
-        complete: function() {
-            $("#loader").hide();
-        }
-    });
-} 

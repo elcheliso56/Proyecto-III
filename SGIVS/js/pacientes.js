@@ -59,7 +59,25 @@ function establecerFechaActual() {
 $(document).ready(function() {
     // Llama a la función consultar al cargar el documento
 	consultar();
+
+    var hoy = new Date();
+    var dia = String(hoy.getDate()).padStart(2, '0');
+    var mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    var anio = hoy.getFullYear();
+    var fechaMax = anio + '-' + mes + '-' + dia;
+    $("#fecha_nacimiento").attr("max", fechaMax);
+
     // Validaciones para el campo de número de documento
+    $("#tipo_documento").on("change", function() {
+        var documento = document.getElementById('cedula');
+        if (this.value === 'NC') {
+            documento.value = '';
+            documento.disabled = true;
+        } else {
+            documento.disabled = false;
+        }
+    });
+
     $("#cedula").on("keypress", function(e) {
         validarkeypress(/^[0-9-\b]*$/, e);
     });
@@ -127,7 +145,7 @@ $(document).ready(function() {
         validarkeypress(/^[A-Za-z0-9\s,.\-@]*$/, e);
     });
     $("#email").on("keyup", function() {
-        validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
+        validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,100}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
     });
     // Validaciones para el campo de teléfono
     $("#telefono").on("keypress", function(e) {
@@ -162,6 +180,7 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'incluir');
+                            datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
@@ -202,6 +221,7 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'modificar');
+                            datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
@@ -273,20 +293,21 @@ $(document).ready(function() {
 });
 // Función para validar el envío de datos
 function validarenvio() {
-    // Validaciones para el campo de cédula
-    if ($("#cedula").val().trim() === "") {
+    // Validaciones para el campo de tipo de documento
+    if ($("#tipo_documento").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "la cedula del paciente es obligatorio",
+            text: "El tipo de documento del paciente es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678") == 0) {
+    // Validaciones para el campo de cédula
+    if ($("#cedula").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de CI debe ser 1234567 o 12345678",
+            text: "la cedula del paciente es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
@@ -302,15 +323,6 @@ function validarenvio() {
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $("#nombre"), $("#snombre"), "Solo letras entre 2 y 30 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El nombre debe contener solo letras y tener entre 2 y 30 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
     // Validaciones para el formato de apellido
     if ($("#apellido").val().trim() === "") {
         Swal.fire({
@@ -319,15 +331,6 @@ function validarenvio() {
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
-        return false;
-    }
-    if (validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $("#apellido"), $("#sapellido"), "Solo letras entre 2 y 30 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El apellido debe contener solo letras y tener entre 3 y 30 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });     
         return false;
     }
     // Validaciones para el fecha de nacimiento
@@ -360,15 +363,6 @@ function validarenvio() {
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $("#alergias"), $("#salergias"), "Las alergias deben tener entre 2 y 20 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Las alergias deben tener entre 2 y 20 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
     // Validaciones para antecedentes médicos
     if ($("#antecedentes").val().trim() === "") {
         Swal.fire({
@@ -379,50 +373,31 @@ function validarenvio() {
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $("#antecedentes"), $("#santecedentes"), "Los antecedentes médicos deben tener entre 2 y 20 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los antecedentes médicos deben tener entre 2 y 20 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }    
     // Validaciones para el email
-    if ($("#email").val().trim() !== "" && validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/, $("#email"), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com") == 0) {
+    if ($("#email").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de email electrónico debe ser ejemplo@email.com",
+            text: "El correo del paciente es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });  
         return false;
     }
     // Validaciones para el teléfono
-    if (validarkeyup(/^0[0-9]{10}$/, $("#telefono"), $("#stelefono"), "El formato de teléfono debe ser 04120000000") == 0) {
+    if ($("#telefono").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de teléfono debe ser 04120000000",
+            text: "El telefono del paciente es obligatrorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });   
         return false;
     }
     // Validaciones para la dirección
-    if (validarkeyup(/^[^"']{1,100}$/, $("#direccion"), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres") == 0) {
+    if ($("#direccion").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
             text: "La dirección debe tener un máximo de 100 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });   
-        return false;
-    }
-    // Validaciones para la fecha de registro
-    if (validarkeyup(/^[0-9]{4}[-/][0-9]{2}[-/][0-9]{2}$/, $("#fecha_registro"), $("#sfecha_registro"), "El formato de fecha de registro debe ser AAAA-MM-DD") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El formato de fecha de registro debe ser DD-MM-YYYY",
             icon: "error",
             confirmButtonText: "Aceptar"
         });   
@@ -473,7 +448,8 @@ function pone(pos, accion) {
     var clasificacion = $(linea).find("td:eq(6)").text();
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
-        $("#cedula").prop("disabled", true);
+        $("#tipo_documento").prop("disabled", false);
+        $("#cedula").prop("disabled", false);
         $("#nombre").prop("disabled", false);
         $("#apellido").prop("disabled", false);
         $("#fecha_nacimiento").prop("disabled", true);
@@ -490,6 +466,7 @@ function pone(pos, accion) {
         $("#fecha_registro").prop("disabled", true);
     } else {
         $("#proceso").text("ELIMINAR");
+        $("#tipo_documento").prop("disabled", true);
         $("#cedula").prop("disabled", true);
         $("#nombre").prop("disabled", true);
         $("#apellido").prop("disabled", true);
@@ -507,10 +484,16 @@ function pone(pos, accion) {
         $("#fecha_registro").prop("disabled", true);
     }
     // Llena los campos del formulario con los datos de la fila seleccionada
-    $("#cedula").val($(linea).find("td:eq(1)").text().trim());
+    var documentoCompleto = $(linea).find("td:eq(1)").text().trim();
+    var partes = documentoCompleto.split("-");
+    var tipoDocumento = partes[0];
+    var cedula = partes[1];
+
+    $("#tipo_documento").val(tipoDocumento);
+    $("#cedula").val(cedula);
     $("#nombre").val($(linea).find("td:eq(2)").text());
     $("#apellido").val($(linea).find("td:eq(3)").text());
-    $("#fecha_nacimiento").val($(linea).find("td:eq(4)").text());
+    $("#fecha_nacimiento").val(toISODate($(linea).find("td:eq(4)").text()));
     $("#edad").val(anios);
     $("#clasificacion").val(clasificacion);
     $("#genero").val($(linea).find("td:eq(7)").text());
@@ -519,8 +502,28 @@ function pone(pos, accion) {
     $("#email").val($(linea).find("td:eq(10)").text());
     $("#telefono").val($(linea).find("td:eq(11)").text());
     $("#direccion").val($(linea).find("td:eq(12)").text());
-    $("#fecha_registro").val($(linea).find("td:eq(13)").text());
+    $("#fecha_registro").val(toISODate($(linea).find("td:eq(13)").text()));
 	$("#modal1").modal("show"); // Muestra el modal
+}
+
+function toISODate(fecha) {
+    if (!fecha) return "";
+    let partes = fecha.split("-");
+    if (partes.length === 3) {
+        // Si ya está en formato yyyy-mm-dd, regresa igual
+        if (partes[0].length === 4) return fecha;
+        // Si está en formato dd-mm-yyyy, conviértelo
+        return `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+    return fecha;
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return "";
+    // Soporta formatos "yyyy-mm-dd" o "yyyy-mm-ddTHH:MM:SS"
+    let partes = fecha.split("T")[0].split("-");
+    if (partes.length !== 3) return fecha;
+    return `${partes[2]}-${partes[1]}-${partes[0]}`;
 }
 
 function enviaAjax(datos) {
@@ -537,7 +540,6 @@ function enviaAjax(datos) {
         },
         timeout: 10000, 
         success: function (respuesta) {
-            
             try {
                 var lee = JSON.parse(respuesta);
                 if (lee.resultado == "consultar") {
@@ -547,10 +549,10 @@ function enviaAjax(datos) {
                     (lee.mensaje || []).forEach(function(p, idx) {
                         filas += `<tr class='text-center'>
                             <td class='align-middle'>${idx+1}</td>
-                            <td class='align-middle'>${p.cedula}</td>
+                            <td class='align-middle'>${p.tipo_documento}-${p.cedula}</td>
                             <td class='align-middle'>${p.nombre}</td>
                             <td class='align-middle'>${p.apellido}</td>
-                            <td class='align-middle'>${p.fecha_nacimiento}</td>
+                            <td class='align-middle'>${formatearFecha(p.fecha_nacimiento)}</td>
                             <td class='align-middle'>${p.edad}</td>
                             <td class='align-middle'>${p.clasificacion}</td>
                             <td class='align-middle'>${p.genero}</td>
@@ -559,7 +561,7 @@ function enviaAjax(datos) {
                             <td class='align-middle'>${p.email}</td>
                             <td class='align-middle'>${p.telefono}</td>
                             <td class='align-middle'>${p.direccion}</td>
-                            <td class='align-middle'>${p.fecha_registro}</td>
+                            <td class='align-middle'>${formatearFecha(p.fecha_registro)}</td>
                             <td class='align-middle'>
                                 <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>
                                 <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>
@@ -646,6 +648,7 @@ function enviaAjax(datos) {
 
 function limpia() {
     // Función para limpiar los campos del formulario
+    $("#tipo_documento").prop("selectedIndex", 0);
     $("#cedula").val("");
     $("#nombre").val("");
     $("#apellido").val("");
@@ -660,7 +663,8 @@ function limpia() {
     $("#direccion").val("");
     establecerFechaActual();
     // Habilita los campos del formulario
-    $("#cedula").prop("disabled", false); 
+    $("#tipo_documento").prop("disabled", false); 
+    $("#cedula").prop("disabled", true); 
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 
     $("#fecha_nacimiento").prop("disabled", false);

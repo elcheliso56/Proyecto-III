@@ -47,6 +47,28 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
+
+					<li class="full-width">
+                        <a href="?pagina=citas" class="full-width">
+                            <div class="navLateral-body-cl">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="navLateral-body-cr" style="color: white;">
+                                Citas
+                            </div>
+                        </a>
+                    </li>
+                    <li class="full-width">
+                        <a href="?pagina=calendario" class="full-width">
+                            <div class="navLateral-body-cl">
+                                <i class="zmdi zmdi-calendar"></i>
+                            </div>
+                            <div class="navLateral-body-cr">
+                                Calendario de citas
+                            </div>
+                        </a>
+                    </li>	
+					<li class="full-width divider-menu-h"></li>                    				
 					<li class="full-width">
 						<a href="?pagina=consultas" class="full-width">
 							<div class="navLateral-body-cl">
@@ -59,7 +81,7 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 
-<li class="full-width divider-menu-h"></li>
+					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="?pagina=empleados" class="full-width">
 							<div class="navLateral-body-cl">
@@ -96,27 +118,16 @@
 					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
-				<a href="?pagina=citas" class="full-width">
+						<a href="?pagina=servicios" class="full-width">
 							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-calendar"></i>
+								<i class="bi bi-gear-fill"></i>
 							</div>
-							<div class="navLateral-body-cr" style="color: white;">
-								Citas
+							<div class="navLateral-body-cr">
+								Servicios
 							</div>
 						</a>
-					</li>
+					</li>					
 					<li class="full-width divider-menu-h"></li>
-							<li class="full-width">
-								<a href="?pagina=servicios" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-gear-fill"></i>
-									</div>
-									<div class="navLateral-body-cr">
-										Servicios
-									</div>
-								</a>
-							</li>					
-<li class="full-width divider-menu-h"></li>
 
 
 
@@ -153,8 +164,8 @@
 								</a>
 							</li>
 
-</ul>
-</li>
+						</ul>
+					</li>
 					<li class="full-width divider-menu-h"></li>				
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -167,7 +178,7 @@
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
-					<li class="full-width">
+							<li class="full-width">
 								<a href="?pagina=cuentas" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="bi bi-credit-card-fill"></i>
@@ -179,7 +190,7 @@
 							</li>
 							
 
-						<li class="full-width">
+							<li class="full-width">
 								<a href="?pagina=ingresos" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="bi bi-arrow-down-circle-fill"></i>
@@ -243,10 +254,8 @@
 									</div>
 								</a>
 							</li>
-</li>
-	
-</ul></li>
-<li class="full-width divider-menu-h"></li>
+						</ul></li>
+					<li class="full-width divider-menu-h"></li>
 
 
 
@@ -277,7 +286,7 @@
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
 							<li class="full-width">
-								<a href="?pagina=user" class="full-width">
+								<a href="?pagina=usuarios" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="bi bi-person-fill-gear"></i>
 									</div>

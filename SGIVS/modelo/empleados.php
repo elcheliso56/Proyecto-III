@@ -1,7 +1,10 @@
 <?php
 require_once('modelo/datos.php');
 class empleados extends datos{
-    // Propiedades del empleados	
+    // Propiedades del empleados		
+	private $tipo_rif;
+	private $rif;
+	private $tipo_documento;
 	private $cedula;
 	private $nombre;
 	private $apellido;
@@ -14,12 +17,21 @@ class empleados extends datos{
     private $cargo;
     private $salario;
 
-    // Métodos para establecer los valores de las propiedades
-	function set_cedula($valor){
-		$this->cedula = $valor;
+    // Métodos para establecer los valores de las     
+	function set_tipo_rif($valor){
+		$this->tipo_rif = $valor;
+	}	    
+	function set_rif($valor){
+		$this->rif = $valor;
+	}	    
+	function set_tipo_documento($valor){
+		$this->tipo_documento = $valor;
 	}	
 	function set_nombre($valor){
 		$this->nombre = $valor;
+	}	
+	function set_cedula($valor){
+		$this->cedula = $valor;
 	}	
 	function set_apellido($valor){
 		$this->apellido = $valor;
@@ -48,7 +60,17 @@ class empleados extends datos{
 	function set_salario($valor){
 		$this->salario = $valor;
 	}	
+
     // Métodos para obtener los valores de las propiedades		
+	function get_tipo_rif(){
+		return $this->tipo_rif;
+	}
+	function get_rif(){
+		return $this->rif;
+	}
+	function get_tipo_documento(){
+		return $this->tipo_documento;
+	}	
 	function get_cedula(){
 		return $this->cedula;
 	}
@@ -92,8 +114,11 @@ class empleados extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo empleado en la base de datos			
-				$co->query("Insert into empleados(cedula,nombre,apellido,fecha_nacimiento,genero,email,telefono,direccion,fecha_contratacion,cargo,salario)
+				$co->query("Insert into empleados(tipo_rif, rif, tipo_documento, cedula,nombre,apellido,fecha_nacimiento,genero,email,telefono,direccion,fecha_contratacion,cargo,salario)
 					Values(
+					'$this->tipo_rif',
+					'$this->rif',
+					'$this->tipo_documento',
 					'$this->cedula',
 					'$this->nombre',
 					'$this->apellido',
@@ -117,6 +142,7 @@ class empleados extends datos{
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Ya existe el número de cedula';
 		}
+		$co = null;
 		return $r;
 	}
 
@@ -130,6 +156,9 @@ class empleados extends datos{
 			try {
                 // Actualiza los datos del empleado en la base de datos				
 				$co->query("Update empleados set 
+					tipo_rif = '$this->tipo_rif',
+					rif = '$this->rif',
+                    tipo_documento = '$this->tipo_documento',
 					nombre = '$this->nombre',
 					apellido = '$this->apellido',
                     fecha_nacimiento = '$this->fecha_nacimiento',
@@ -154,6 +183,7 @@ class empleados extends datos{
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'El número de cédula no registrado';
 		}
+		$co = null;
 		return $r;
 	}
 
@@ -182,6 +212,7 @@ class empleados extends datos{
 			$r['resultado'] = 'eliminar';
 			$r['mensaje'] =  'No existe el número de cédula';
 		}
+		$co = null;
 		return $r;
 	}	
 
@@ -190,53 +221,26 @@ class empleados extends datos{
 		$co = $this->conecta();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
-		try{		
+		try{
 			$resultado = $co->query("Select * from empleados ORDER BY id_empleado DESC");
-			if($resultado){	
-				$respuesta = '';
-				$n=1;
-				// Recorre los resultados y genera la tabla HTML
-				foreach($resultado as $r){
-					// Calcular edad
-					$fecha_nacimiento = new DateTime($r['fecha_nacimiento']);
-					$hoy = new DateTime();
-					$edad = $hoy->diff($fecha_nacimiento)->y;
-					// Genera la fila de la tabla con los datos del empleado
-					$respuesta .= "<tr class='text-center'>";
-					$respuesta .= "<td class='align-middle'>$n</td>";
-					$respuesta .= "<td class='align-middle'>".$r['cedula']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['nombre']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['apellido']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['fecha_nacimiento']."</td>";
-					$respuesta .= "<td class='align-middle'>".$edad."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['genero']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['email']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['telefono']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['direccion']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['fecha_contratacion']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['cargo']."</td>";
-					$respuesta .= "<td class='align-middle'>".$r['salario']."</td>";
-					$respuesta .= "<td class='align-middle'>";
-					$respuesta .= "<button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar empleado' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>";
-					$respuesta .= "<button type='button'class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar empleado' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>";
-					$respuesta = $respuesta."</td>";
-					$respuesta = $respuesta."</tr>";
-					$n++;
-				}
-				$r['resultado'] = 'consultar';
-				$r['mensaje'] =  $respuesta;
+			$empleados = [];
+			foreach($resultado->fetchAll(PDO::FETCH_ASSOC) as $row){
+				// Calcular edad y clasificación
+				$fecha_nacimiento = new DateTime($row['fecha_nacimiento']);
+				$hoy = new DateTime();
+				$edad = $hoy->diff($fecha_nacimiento)->y;
+				$row['edad'] = $edad;
+				$empleados[] = $row;
 			}
-			else{
-				$r['resultado'] = 'consultar';
-				$r['mensaje'] =  '';
-			}	
+			$r['resultado'] = 'consultar';
+			$r['mensaje'] = $empleados;
 		}catch(Exception $e){
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
+		$co = null;
 		return $r;
 	}
-
 	// Método privado para verificar si un número de documento ya existe
 	private function existe($cedula){
 		$co = $this->conecta();
@@ -248,11 +252,12 @@ class empleados extends datos{
 				return true;  
 			}
 			else{	
-				return false;;
+				return false;
 			}	
 		}catch(Exception $e){
 			return false;
 		}
+		$co = null;
 	}	
 }
 ?>

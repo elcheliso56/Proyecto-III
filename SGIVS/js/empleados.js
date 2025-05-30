@@ -47,16 +47,43 @@ function crearDT() {
     });
 }
 
+function establecerFechaActual() {
+    var fecha = new Date();
+    var dia = fecha.getDate();
+    var mes = fecha.getMonth() + 1;
+    var anio = fecha.getFullYear();
+    var fechaActual = anio + "-" + (mes < 10 ? "0" + mes : mes) + "-" + (dia < 10 ? "0" + dia : dia);
+    $("#fecha_registro").val(fechaActual);
+}
+
 $(document).ready(function() {
     // Llama a la función consultar al cargar el número de cédula
 	consultar();
+
+    var hoy = new Date();
+    var dia = String(hoy.getDate()).padStart(2, '0');
+    var mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    var anio = hoy.getFullYear();
+    var fechaMax = anio + '-' + mes + '-' + dia;
+    $("#fecha_nacimiento").attr("max", fechaMax);
+    $("#fecha_contratacion").attr("max", fechaMax);
+
+    //Validaciones para el campo rif
+    $("#rif").on("keypress", function(e) {
+        validarkeypress(/^[0-9-\b]*$/, e);
+    });
+    $("#rif").on("keyup", function() {
+        validarkeyup(/^[0-9]{7,10}$/, $(this), $("#srif"), "El formato para rif debe ser 123456789");
+    });
+
     // Validaciones para el campo de número de cédula
     $("#cedula").on("keypress", function(e) {
-        validarkeypress(/^[VEJ0-9-\b]*$/, e);
+        validarkeypress(/^[0-9-\b]*$/, e);
     });
     $("#cedula").on("keyup", function() {
-        validarkeyup(/^[0-9]{7,8}$/, $(this), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
+        validarkeyup(/^[0-9]{7,10}$/, $(this), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
     });
+
     // Validaciones para el campo de nombre
     $("#nombre").on("keypress", function(e) {
         validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
@@ -64,6 +91,7 @@ $(document).ready(function() {
     $("#nombre").on("keyup", function() {
         validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#snombre"), "Solo letras entre 2 y 30 caracteres");
     });
+
     // Validaciones para el campo de apellido
     $("#apellido").on("keypress", function(e) {
         validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
@@ -71,6 +99,7 @@ $(document).ready(function() {
     $("#apellido").on("keyup", function() {
         validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
     });
+
     // Validaciones para el campo de fecha de nacimiento y coloca la edad automaticamente en el campo edad
     $("#fecha_nacimiento").on("change", function() {
         var fecha = $(this).val();
@@ -83,13 +112,24 @@ $(document).ready(function() {
         }
         $("#edad").val(edad);
     });
+
     // Validaciones para el campo de email
+    $("#email").on("blur", function() {
+        var email = $(this).val().trim();
+        var er = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!er.test(email)) {
+            $("#mensaje_email").text("Correo inválido").show();
+        } else {
+            $("#mensaje_email").hide();
+        }
+    });
     $("#email").on("keypress", function(e) {
         validarkeypress(/^[A-Za-z0-9\s,.\-@]*$/, e);
     });
     $("#email").on("keyup", function() {
-        validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
+        validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{1,100}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
     });
+
     // Validaciones para el campo de teléfono
     $("#telefono").on("keypress", function(e) {
         validarkeypress(/^[0-9\b]*$/, e);
@@ -97,6 +137,7 @@ $(document).ready(function() {
     $("#telefono").on("keyup", function() {
         validarkeyup(/^0[0-9]{10}$/, $(this), $("#stelefono"), "El formato de teléfono debe ser 04120000000");
     });
+
     // Validaciones para el campo de dirección
     $("#direccion").on("keypress", function(e) {
         validarkeypress(/^[^"']*$/, e);
@@ -104,6 +145,7 @@ $(document).ready(function() {
     $("#direccion").on("keyup", function() {
         validarkeyup(/^[^"']{1,100}$/, $(this), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres");
     });
+
     //Validaciones para el campo de salario
     $("#salario").on("keypress", function(e) {
         validarkeypress(/^[0-9\b]*$/, e);
@@ -111,6 +153,7 @@ $(document).ready(function() {
     $("#salario").on("keyup", function() {
         validarkeyup(/^[0-9]{1,10}$/, $(this), $("#ssalario"), "El salario debe ser un número entre 1 y 10 dígitos");
     });
+
     // Manejo de clic en el botón de proceso
     $("#proceso").on("click", function() {
         if ($(this).text() == "INCLUIR") {
@@ -130,6 +173,9 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'incluir');
+                            datos.append('tipo_rif', $("#tipo_rif").val());
+                            datos.append('rif', $("#rif").val());
+                            datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
@@ -170,6 +216,9 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'modificar');
+                            datos.append('tipo_rif', $("#tipo_rif").val());
+                            datos.append('rif', $("#rif").val());
+                            datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
@@ -241,82 +290,79 @@ $(document).ready(function() {
 });
 // Función para validar el envío de datos
 function validarenvio() {
+    if ($("#tipo_rif").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El campo es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    
+    if ($("#rif").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El campo es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    
+    if ($("#tipo_documento").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El campo es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
     // Validaciones para el campo de cédula
     if ($("#cedula").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La cédula del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El formato de CI debe ser 1234567 o 12345678",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
+
     // Validaciones para nombre
     if ($("#nombre").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El nombre del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $("#nombre"), $("#snombre"), "Solo letras entre 2 y 30 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El nombre debe contener solo letras y tener entre 2 y 30 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
+    
     // Validaciones para el formato de apellido
     if ($("#apellido").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El apellido del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $("#apellido"), $("#sapellido"), "Solo letras entre 2 y 30 caracteres") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El apellido debe contener solo letras y tener entre 2 y 30 caracteres",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });     
-        return false;
-    }
+    
     // Validaciones para el fecha de nacimiento y valida que sea mayor a 18 años
     if ($("#fecha_nacimiento").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La fecha de nacimiento del empleado es obligatoria",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
-    if (validarkeyup(/^\d{4}-\d{2}-\d{2}$/, $("#fecha_nacimiento"), $("#sfecha_nacimiento"), "El formato de fecha de nacimiento debe ser AAAA-MM-DD") == 0) {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "El formato de fecha de nacimiento debe ser AAAA-MM-DD",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
+    
     // Validación de mayoría de edad (18+ años)
     var fecha = $("#fecha_nacimiento").val();
     var fechaActual = new Date();
@@ -335,76 +381,84 @@ function validarenvio() {
         });
         return false;
     }
+
     //validaciones para el genero
     if ($("#genero").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El género del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     // Validaciones para el email
-    if ($("#email").val().trim() !== "" && validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,}$/, $("#email"), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com") == 0) {
+    if ($("#email").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El formato de email electrónico debe ser ejemplo@email.com",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });  
         return false;
     }
+
     // Validaciones para el teléfono
     if ($("#telefono").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El número de telefono del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     // Validaciones para la dirección
     if ($("#direccion").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La dirección del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     // Validaciones para la fecha de contratacion
     if ($("#fecha_contratacion").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La fecha de contrato del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     // Validaciones para el cargo
     if ($("#cargo").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El cargo del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     // Validaciones para el salario
     if ($("#salario").val().trim() === "") {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El salario del empleado es obligatorio",
+            text: "El campo es obligatorio",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
         return false;
     }
+
     return true; // Si todas las validaciones pasan, retorna verdadero
 }
 
@@ -433,15 +487,19 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 function pone(pos, accion) {
     // Función para llenar el formulario con los datos del empleado seleccionado
     linea = $(pos).closest('tr');
-    var fechaNacimiento = new Date($(linea).find("td:eq(4)").text());
+    var fechaNacimiento = new Date($(linea).find("td:eq(6)").text());
     var fechaActual = new Date();
     var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
     if (mes < 0 || (mes === 0 && fechaActual.getDate() < fechaNacimiento.getDate())) {
         edad--;
     }
+
     if (accion == 0) {
         $("#proceso").text("MODIFICAR");
+        $("#tipo_rif").prop("disabled", true);
+        $("#rif").prop("disabled", true);
+        $("#tipo_documento").prop("disabled", true);
         $("#cedula").prop("disabled", true);
         $("#nombre").prop("disabled", false);
         $("#apellido").prop("disabled", false);
@@ -455,8 +513,14 @@ function pone(pos, accion) {
         $("#fecha_contratacion").prop("disabled", false);
         $("#cargo").prop("disabled", false);
         $("#salario").prop("disabled", false);
-    } else {
+    } 
+    
+    else {
         $("#proceso").text("ELIMINAR");
+        $("#tipo_rif").prop("disabled", true);
+        $("#rif").prop("disabled", true);
+        $("#tipo_documento").prop("disabled", true);
+        $("#cedula").prop("disabled", true);
         $("#cedula").prop("disabled", true);
         $("#nombre").prop("disabled", true);
         $("#apellido").prop("disabled", true);
@@ -472,19 +536,52 @@ function pone(pos, accion) {
         $("#salario").prop("disabled", true);
     }
     // Llena los campos del formulario con los datos de la fila seleccionada
-    $("#cedula").val($(linea).find("td:eq(1)").text().trim());
-    $("#nombre").val($(linea).find("td:eq(2)").text());
-    $("#apellido").val($(linea).find("td:eq(3)").text());
-    $("#fecha_nacimiento").val($(linea).find("td:eq(4)").text());
+    var rifCompleto = $(linea).find("td:eq(1)").text().trim();
+    var partes = rifCompleto.split("-");
+    var tipoRif = partes[0];
+    var rif = partes[1];
+
+    var documentoCompleto = $(linea).find("td:eq(2)").text().trim();
+    var partes = documentoCompleto.split("-");
+    var tipoDocumento = partes[0];
+    var cedula = partes[1];
+
+    $("#tipo_rif").val(tipoRif);
+    $("#rif").val(rif);
+    $("#tipo_documento").val(tipoDocumento);
+    $("#cedula").val(cedula);
+    $("#nombre").val($(linea).find("td:eq(3)").text());
+    $("#apellido").val($(linea).find("td:eq(4)").text());
+    $("#fecha_nacimiento").val(toISODate($(linea).find("td:eq(5)").text()));
     $("#edad").val(edad);
-    $("#genero").val($(linea).find("td:eq(6)").text());
-    $("#email").val($(linea).find("td:eq(7)").text());
-    $("#telefono").val($(linea).find("td:eq(8)").text());
-    $("#direccion").val($(linea).find("td:eq(9)").text());
-    $("#fecha_contratacion").val($(linea).find("td:eq(10)").text());
-    $("#cargo").val($(linea).find("td:eq(11)").text());
-    $("#salario").val($(linea).find("td:eq(12)").text());
+    $("#genero").val($(linea).find("td:eq(7)").text());
+    $("#email").val($(linea).find("td:eq(8)").text());
+    $("#telefono").val($(linea).find("td:eq(9)").text());
+    $("#direccion").val($(linea).find("td:eq(10)").text());
+    $("#fecha_contratacion").val(toISODate($(linea).find("td:eq(11)").text()));
+    $("#cargo").val($(linea).find("td:eq(12)").text());
+    $("#salario").val($(linea).find("td:eq(13)").text());
     $("#modal1").modal("show"); // Muestra el modal
+}
+
+function toISODate(fecha) {
+    if (!fecha) return "";
+    let partes = fecha.split("-");
+    if (partes.length === 3) {
+        // Si ya está en formato yyyy-mm-dd, regresa igual
+        if (partes[0].length === 4) return fecha;
+        // Si está en formato dd-mm-yyyy, conviértelo
+        return `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+    return fecha;
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return "";
+    // Soporta formatos "yyyy-mm-dd" o "yyyy-mm-ddTHH:MM:SS"
+    let partes = fecha.split("T")[0].split("-");
+    if (partes.length !== 3) return fecha;
+    return `${partes[2]}-${partes[1]}-${partes[0]}`;
 }
 
 function enviaAjax(datos) {
@@ -504,8 +601,31 @@ function enviaAjax(datos) {
             try {
                 var lee = JSON.parse(respuesta);
                 if (lee.resultado == "consultar") {
-                    destruyeDT();	
-                    $("#resultadoconsulta").html(lee.mensaje);
+                    destruyeDT();
+                    let filas = "";
+                    (lee.mensaje || []).forEach(function(p, idx) {
+                        filas += `<tr class='text-center'>
+                            <td class='align-middle'>${idx+1}</td>
+                            <td class='align-middle'>${p.tipo_rif}-${p.rif}</td>
+                            <td class='align-middle'>${p.tipo_documento}-${p.cedula}</td>
+                            <td class='align-middle'>${p.nombre}</td>
+                            <td class='align-middle'>${p.apellido}</td>
+                            <td class='align-middle'>${formatearFecha(p.fecha_nacimiento)}</td>
+                            <td class='align-middle'>${p.edad}</td>
+                            <td class='align-middle'>${p.genero}</td>
+                            <td class='align-middle'>${p.email}</td>
+                            <td class='align-middle'>${p.telefono}</td>
+                            <td class='align-middle'>${p.direccion}</td>
+                            <td class='align-middle'>${formatearFecha(p.fecha_contratacion)}</td>
+                            <td class='align-middle'>${p.cargo}</td>
+                            <td class='align-middle'>${p.salario}</td>
+                            <td class='align-middle'>
+                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>
+                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>
+                            </td>
+                        </tr>`;
+                    });
+                    $("#resultadoconsulta").html(filas);
                     crearDT();
                 }
                 else if (lee.resultado == "incluir") {
@@ -585,6 +705,9 @@ function enviaAjax(datos) {
 
 function limpia() {
     // Función para limpiar los campos del formulario
+    $("#tipo_rif").prop("selectedIndex", 0);
+    $("#rif").val("");
+    $("#tipo_documento").prop("selectedIndex", 0);
     $("#cedula").val("");
     $("#nombre").val("");
     $("#apellido").val("");
@@ -597,7 +720,11 @@ function limpia() {
     $("#fecha_contratacion").val("");
     $("#cargo").prop("selectedIndex", 0);
     $("#salario").val("");
+
     // Habilita los campos del formulario
+    $("#tipo_rif").prop("disabled", false); 
+    $("#rif").prop("disabled", false);   
+    $("#tipo_documento").prop("disabled", false); 
     $("#cedula").prop("disabled", false); 
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 

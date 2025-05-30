@@ -1,266 +1,100 @@
-let calendar;
+// js/calendario.js
 
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar;
+
+    // Función para mostrar el loader
+    function showLoader(message = 'Cargando calendario...') {
+        $('#loader').find('p').text(message);
+        $('#loader').fadeIn();
+    }
+
+    // Función para ocultar el loader
+    function hideLoader() {
+        $('#loader').fadeOut();
+    }
+
     // Inicializar el calendario
-    const calendarEl = document.getElementById('calendario');
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        locale: 'es',
-        buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día'
-        },
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        events: function(info, successCallback, failureCallback) {
-            $.ajax({
-                url: '',
-                type: 'POST',
-                data: { accion: 'consultar' },
-                success: function(respuesta) {
-                    try {
-                        var datos = JSON.parse(respuesta);
-                        if (datos.resultado === 'consultar') {
-                            var eventos = [];
-                            $(datos.mensaje).each(function() {
-                                eventos.push({
-                                    id: $(this).attr('data-id'),
-                                    title: $(this).find('td:eq(1)').text(),
-                                    description: $(this).find('td:eq(2)').text(),
-                                    start: $(this).find('td:eq(3)').text(),
-                                    end: $(this).find('td:eq(4)').text(),
-                                    backgroundColor: $(this).find('td:eq(5)').css('background-color'),
-                                    borderColor: $(this).find('td:eq(5)').css('background-color')
-                                });
-                            });
-                            successCallback(eventos);
-                        }
-                    } catch (e) {
-                        console.error('Error al procesar eventos:', e);
-                        failureCallback(e);
-                    }
+    function initCalendar() {
+        showLoader(); // Mostrar loader al inicio de la inicialización
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'es', // Establecer el idioma a español
+            initialView: 'dayGridMonth', // Vista inicial por defecto
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay' // Vistas disponibles
+            },
+            editable: false, // Las citas no se pueden arrastrar/redimensionar
+            selectable: false, // No se pueden seleccionar rangos de fechas
+            eventLimit: true, // Muestra "+más" si hay muchos eventos en un día
+            
+            // Configuración para cargar eventos desde tu controlador PHP
+            // Esta es la parte CLAVE que usa "?pagina=calendario" y "accion=obtenerCitasConfirmadas"
+            events: {
+                url: '?pagina=calendario', // La URL a tu controlador (tu index.php lo redirigirá al controlador de calendario)
+                method: 'POST', // Usamos POST para la acción
+                extraParams: {
+                    accion: 'obtenerCitasConfirmadas' // Este parámetro le dice al controlador qué hacer
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error al cargar eventos:', error);
-                    failureCallback(error);
+                failure: function() {
+                    hideLoader();
+                    Swal.fire('Error', 'No se pudieron cargar las citas del calendario. Intente de nuevo más tarde.', 'error');
                 }
-            });
-        },
-        select: function(info) {
-            mostrarModalCrear(info.start, info.end);
-        },
-        eventClick: function(info) {
-            mostrarModalEditar(info.event);
-        },
-        eventDrop: function(info) {
-            actualizarEvento(info.event);
-        },
-        eventResize: function(info) {
-            actualizarEvento(info.event);
-        }
-    });
-    calendar.render();
-
-    // Cargar eventos iniciales
-    consultar();
-});
-
-function mostrarModalCrear(start, end) {
-    $('#modalTitle').text('Registrar Evento');
-    $('#accion').val('incluir');
-    $('#id').val('');
-    $('#google_event_id').val('');
-    $('#titulo').val('');
-    $('#descripcion').val('');
-    $('#fecha_inicio').val(start.toISOString().slice(0, 16));
-    $('#fecha_fin').val(end.toISOString().slice(0, 16));
-    $('#color').val('#3788d8');
-    $('#modal1').modal('show');
-}
-
-function mostrarModalEditar(evento) {
-    $('#modalTitle').text('Modificar Evento');
-    $('#accion').val('modificar');
-    $('#id').val(evento.id);
-    $('#google_event_id').val(evento.extendedProps.google_event_id || '');
-    $('#titulo').val(evento.title);
-    $('#descripcion').val(evento.extendedProps.description);
-    $('#fecha_inicio').val(evento.start.toISOString().slice(0, 16));
-    $('#fecha_fin').val(evento.end.toISOString().slice(0, 16));
-    $('#color').val(evento.backgroundColor);
-    $('#modal1').modal('show');
-}
-
-function actualizarEvento(evento) {
-    var datos = new FormData();
-    datos.append('accion', 'modificar');
-    datos.append('id', evento.id);
-    datos.append('titulo', evento.title);
-    datos.append('descripcion', evento.extendedProps.description);
-    datos.append('fecha_inicio', evento.start.toISOString());
-    datos.append('fecha_fin', evento.end.toISOString());
-    datos.append('color', evento.backgroundColor);
-    datos.append('google_event_id', evento.extendedProps.google_event_id || '');
-    
-    enviaAjax(datos);
-}
-
-$("#proceso").on("click", function() {
-    if (validarenvio()) {
-        var datos = new FormData();
-        datos.append('accion', $("#accion").val());
-        datos.append('id', $("#id").val());
-        datos.append('titulo', $("#titulo").val());
-        datos.append('descripcion', $("#descripcion").val());
-        datos.append('fecha_inicio', $("#fecha_inicio").val());
-        datos.append('fecha_fin', $("#fecha_fin").val());
-        datos.append('color', $("#color").val());
-        datos.append('google_event_id', $("#google_event_id").val());
-        
-        enviaAjax(datos);
-    }
-});
-
-function validarenvio() {
-    let valido = true;
-    
-    if ($("#titulo").val().trim() === '') {
-        $("#stitulo").text("El título es obligatorio");
-        valido = false;
-    } else {
-        $("#stitulo").text("");
-    }
-    
-    if ($("#fecha_inicio").val() === '') {
-        $("#sfecha_inicio").text("La fecha de inicio es obligatoria");
-        valido = false;
-    } else {
-        $("#sfecha_inicio").text("");
-    }
-    
-    if ($("#fecha_fin").val() === '') {
-        $("#sfecha_fin").text("La fecha de fin es obligatoria");
-        valido = false;
-    } else {
-        $("#sfecha_fin").text("");
-    }
-    
-    if (new Date($("#fecha_fin").val()) <= new Date($("#fecha_inicio").val())) {
-        $("#sfecha_fin").text("La fecha de fin debe ser posterior a la fecha de inicio");
-        valido = false;
-    }
-    
-    return valido;
-}
-
-function enviaAjax(datos) {
-    $.ajax({
-        async: true,
-        url: "",
-        type: "POST",
-        contentType: false,
-        data: datos,
-        processData: false,
-        cache: false,
-        beforeSend: function() {
-            $("#loader").show();
-        },
-        timeout: 10000,
-        success: function(respuesta) {
-            try {
-                var lee = JSON.parse(respuesta);
-                if (lee.resultado === 'consultar' || lee.resultado === 'incluir' || lee.resultado === 'modificar' || lee.resultado === 'eliminar') {
-                    Swal.fire({
-                        title: lee.mensaje.includes('éxito') ? "¡Éxito!" : "Error",
-                        text: lee.mensaje,
-                        icon: lee.mensaje.includes('éxito') ? "success" : "error"
-                    });
-                    
-                    if (lee.mensaje.includes('éxito')) {
-                        $("#modal1").modal("hide");
-                        calendar.refetchEvents();
-                    }
-                }
-            } catch (e) {
-                Swal.fire({
-                    title: "Error",
-                    text: "Error en JSON: " + e.name,
-                    icon: "error"
-                });
-            }
-        },
-        error: function(request, status, err) {
-            Swal.fire({
-                title: "Error",
-                text: status === "timeout" ? "Servidor ocupado, intente de nuevo" : "ERROR: " + request + status + err,
-                icon: "error"
-            });
-        },
-        complete: function() {
-            $("#loader").hide();
-        }
-    });
-}
-
-function consultar() {
-    calendar.refetchEvents();
-}
-
-$("#incluir").on("click", function() {
-    mostrarModalCrear(new Date(), new Date(new Date().getTime() + 60*60*1000));
-});
-
-function sincronizarGoogleCalendar() {
-    mostrarLoader();
-    $.ajax({
-        url: 'controlador/calendario.php',
-        type: 'POST',
-        data: {
-            accion: 'sincronizar'
-        },
-        success: function(response) {
-            ocultarLoader();
-            try {
-                const data = JSON.parse(response);
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sincronización exitosa',
-                        text: 'Los eventos se han sincronizado correctamente con Google Calendar'
-                    }).then(() => {
-                        consultar();
-                    });
+            },
+            
+            // Función de callback para controlar el loader mientras se cargan los eventos
+            loading: function(isLoading) {
+                if (isLoading) {
+                    showLoader('Actualizando citas...');
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.error || 'Error al sincronizar con Google Calendar'
-                    });
+                    hideLoader();
                 }
-            } catch (e) {
+            },
+            
+            // Personalizar cómo se montan los eventos (ej. para tooltips)
+            eventDidMount: function(info) {
+                // Usar jQuery.tooltip para mostrar detalles al pasar el ratón
+                // Asegúrate de que Bootstrap o alguna librería que provea $.fn.tooltip esté cargada
+                $(info.el).tooltip({
+                    title: `
+                        <strong>Cliente:</strong> ${info.event.extendedProps.cliente_completo || 'N/A'}<br>
+                        <strong>Doctor:</strong> ${info.event.extendedProps.doctor_atendera || 'N/A'}<br>
+                        <strong>Motivo:</strong> ${info.event.extendedProps.motivo_cita || 'N/A'}<br>
+                        <strong>Fecha:</strong> ${moment(info.event.start).format('DD/MM/YYYY')}<br>
+                        <strong>Hora:</strong> ${moment(info.event.start).format('hh:mm A')}
+                    `,
+                    placement: 'top',
+                    html: true,
+                    trigger: 'hover',
+                    container: 'body' // Para evitar problemas de z-index con modales
+                });
+            },
+            
+            // Acción al hacer clic en un evento (mostrar modal de detalles)
+            eventClick: function(info) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error al procesar la respuesta del servidor'
+                    title: 'Detalles de la Cita',
+                    html: `
+                        <p><strong>Cliente:</strong> ${info.event.extendedProps.cliente_completo || 'N/A'}</p>
+                        <p><strong>Cédula Cliente:</strong> ${info.event.extendedProps.cedula_cliente || 'N/A'}</p>
+                        <p><strong>Cédula Representante:</strong> ${info.event.extendedProps.cedula_representante || 'N/A'}</p>
+                        <p><strong>Teléfono:</strong> ${info.event.extendedProps.telefono_cliente || 'N/A'}</p>
+                        <p><strong>Doctor:</strong> ${info.event.extendedProps.doctor_atendera || 'N/A'}</p>
+                        <p><strong>Motivo:</strong> ${info.event.extendedProps.motivo_cita || 'N/A'}</p>
+                        <p><strong>Fecha:</strong> ${moment(info.event.start).format('DD/MM/YYYY')}</p>
+                        <p><strong>Hora:</strong> ${moment(info.event.start).format('hh:mm A')}</p>
+                    `,
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
                 });
             }
-        },
-        error: function() {
-            ocultarLoader();
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al comunicarse con el servidor'
-            });
-        }
-    });
-} 
+        });
+        calendar.render(); // Renderizar el calendario en la página
+    }
+
+    // Asegurarse de que el DOM esté completamente cargado antes de inicializar el calendario
+    initCalendar();
+});

@@ -2,6 +2,7 @@
 require_once('modelo/datos.php');
 class pacientes extends datos{
     // Propiedades del paciente	
+	private $tipo_documento;
 	private $cedula;
 	private $nombre;
 	private $apellido;
@@ -15,6 +16,9 @@ class pacientes extends datos{
 	private $fecha_registro;
 
     // Métodos para establecer los valores de las propiedades
+	function set_tipo_documento($valor){
+		$this->tipo_documento = $valor;
+	}
 	function set_cedula($valor){
 		$this->cedula = $valor;
 	}	
@@ -49,6 +53,9 @@ class pacientes extends datos{
 		$this->fecha_registro = $valor;
 	}
     // Métodos para obtener los valores de las propiedades		
+	function get_tipo_documento(){
+		return $this->tipo_documento;
+	}
 	function get_cedula(){
 		return $this->cedula;
 	}
@@ -92,8 +99,9 @@ class pacientes extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo paciente			
-				$co->query("Insert into pacientes(cedula,nombre,apellido,fecha_nacimiento,genero,alergias,antecedentes,email,telefono,direccion,fecha_registro)
+				$co->query("Insert into pacientes(tipo_documento,cedula,nombre,apellido,fecha_nacimiento,genero,alergias,antecedentes,email,telefono,direccion,fecha_registro)
 					Values(
+					'$this->tipo_documento',
 					'$this->cedula',
 					'$this->nombre',
 					'$this->apellido',
@@ -112,6 +120,7 @@ class pacientes extends datos{
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
 			}
+			$co = null;
 		}
 		else{
 			$r['resultado'] = 'incluir';
@@ -129,7 +138,8 @@ class pacientes extends datos{
 		if($this->existe($this->cedula)){
 			try {
                 // Actualiza los datos del paciente				
-				$co->query("Update pacientes set 
+				$co->query("Update pacientes set
+					tipo_documento = '$this->tipo_documento',
 					nombre = '$this->nombre',
 					apellido = '$this->apellido',
                     fecha_nacimiento = '$this->fecha_nacimiento',
@@ -153,6 +163,7 @@ class pacientes extends datos{
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'numero de documento no registrado';
 		}
+		$co = null;
 		return $r;
 	}
 
@@ -181,6 +192,7 @@ class pacientes extends datos{
 			$r['resultado'] = 'eliminar';
 			$r['mensaje'] =  'No existe el numero de documento';
 		}
+		$co = null;
 		return $r;
 	}	
 
@@ -214,6 +226,7 @@ class pacientes extends datos{
 			$r['resultado'] = 'error';
 			$r['mensaje'] =  $e->getMessage();
 		}
+		$co = null;
 		return $r;
 	}
 
@@ -228,11 +241,12 @@ class pacientes extends datos{
 				return true;  
 			}
 			else{	
-				return false;;
+				return false;
 			}	
 		}catch(Exception $e){
 			return false;
 		}
+		$co = null;
 	}	
 }
 ?>

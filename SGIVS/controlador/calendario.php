@@ -1,96 +1,53 @@
 <?php
-require_once(BASE_PATH . "/config/google_calendar.php");
-require_once(BASE_PATH . "/modelo/calendario.php");
+// controladores/calendario.php
+// Controlador para el calendario de citas
 
-if (!file_exists(BASE_PATH . "/modelo/calendario.php")) {
-    die(json_encode(['error' => 'No se encontró el archivo del modelo']));
-}
+// Asumimos que $pagina está definida en el ámbito global (viene de index.php)
+// y que su valor es 'calendario' cuando este archivo es incluido.
 
-if (!file_exists(BASE_PATH . "/vista/calendario.php")) {
-    die(json_encode(['error' => 'No se encontró el archivo de la vista']));
-}
-
-$modelo = new Calendario();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_POST['accion'])) {
-        die(json_encode(['error' => 'No se especificó una acción']));
-    }
-
-    $accion = $_POST['accion'];
-    $respuesta = [];
-
-    switch ($accion) {
-        case 'consultar':
-            $respuesta = $modelo->consultar();
-            break;
-
-        case 'incluir':
-            if (!isset($_POST['titulo']) || !isset($_POST['fecha_inicio']) || !isset($_POST['fecha_fin'])) {
-                $respuesta = ['error' => 'Faltan datos requeridos'];
-                break;
-            }
-            $respuesta = $modelo->incluir($_POST);
-            break;
-
-        case 'modificar':
-            if (!isset($_POST['id']) || !isset($_POST['titulo']) || !isset($_POST['fecha_inicio']) || !isset($_POST['fecha_fin'])) {
-                $respuesta = ['error' => 'Faltan datos requeridos'];
-                break;
-            }
-            $respuesta = $modelo->modificar($_POST);
-            break;
-
-        case 'eliminar':
-            if (!isset($_POST['id'])) {
-                $respuesta = ['error' => 'No se especificó el ID del evento'];
-                break;
-            }
-            $respuesta = $modelo->eliminar($_POST['id']);
-            break;
-
-        case 'sincronizar':
-            if (!isGoogleAuthenticated()) {
-                $respuesta = ['error' => 'No está autenticado con Google Calendar'];
-                break;
-            }
-            
-            try {
-                $service = getCalendarService();
-                $eventos = $modelo->consultar();
-                
-                foreach ($eventos as $evento) {
-                    if (empty($evento['google_event_id'])) {
-                        // Crear evento en Google Calendar
-                        $googleEvent = new Google\Service\Calendar\Event([
-                            'summary' => $evento['titulo'],
-                            'description' => $evento['descripcion'],
-                            'start' => ['dateTime' => $evento['fecha_inicio']],
-                            'end' => ['dateTime' => $evento['fecha_fin']],
-                            'colorId' => $evento['color']
-                        ]);
-                        
-                        $createdEvent = $service->events->insert('primary', $googleEvent);
-                        $modelo->actualizarGoogleEventId($evento['id'], $createdEvent->getId());
-                    }
-                }
-                
-                $respuesta = ['success' => true, 'message' => 'Sincronización completada'];
-            } catch (Exception $e) {
-                $respuesta = ['error' => 'Error al sincronizar con Google Calendar: ' . $e->getMessage()];
-            }
-            break;
-
-        default:
-            $respuesta = ['error' => 'Acción no válida'];
-            break;
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($respuesta);
+// Aseguramos que el modelo exista usando $pagina
+if (!is_file("modelo/" . $pagina . ".php")) { 
+    echo "Falta definir el modelo para el " . $pagina . ".";
     exit;
 }
 
-// Si no es POST, mostrar la vista
-require_once(BASE_PATH . "/vista/calendario.php");
-?> 
+// Incluimos el modelo usando $pagina
+require_once("modelo/" . $pagina . ".php"); 
+
+// Verificamos si la vista existe usando $pagina
+if (is_file("vista/" . $pagina . ".php")) { 
+    // Si hay una petición POST, procesamos la lógica (para llamadas AJAX)
+    if (!empty($_POST)) {
+        // La clase del modelo debe llamarse "ModeloCalendario" (nombre fijo de la clase).
+        // No se instancia dinámicamente como $o = new $pagina(); porque el nombre de la clase es 'ModeloCalendario'.
+        $o = new ModeloCalendario(); // Creamos una instancia del modelo de Calendario
+        $accion = $_POST['accion']; // Obtenemos la acción a realizar
+
+        switch ($accion) {
+            case 'obtenerCitasConfirmadas':
+                // Esta es la solicitud AJAX de FullCalendar para obtener los eventos
+                $citas = $o->obtenerCitasConfirmadas();
+                header('Content-Type: application/json'); // Fundamental para que el navegador sepa que es JSON
+                if (isset($citas['resultado']) && $citas['resultado'] === 'error') {
+                    echo json_encode([]); // Devuelve un array vacío si hay error para no romper FullCalendar
+                    error_log("Error al obtener citas para FullCalendar: " . $citas['mensaje']);
+                } else {
+                    echo json_encode($citas); // Imprime el array de eventos de FullCalendar
+                }
+                exit(); // CRUCIAL: Termina la ejecución para evitar que se renderice la vista HTML
+                break;
+
+            default:
+                echo json_encode(array('resultado' => 'error', 'mensaje' => 'Acción no válida.'));
+                exit(); // Salir si la acción no es válida en una petición POST
+                break;
+        }
+    }
+
+    // Si no hay petición POST, o después de procesarla (aunque con exit() no llegaría aquí),
+    // se incluye la vista principal del calendario. Esto ocurre en la carga inicial de la página.
+    require_once("vista/" . $pagina . ".php");
+} else {
+    echo "ERROR 404. La vista para el " . $pagina . " no existe";
+}
+?>

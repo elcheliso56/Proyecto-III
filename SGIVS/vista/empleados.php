@@ -3,8 +3,9 @@ require_once("comunes/encabezado.php");//Incluye el encabezado común de la pág
 require_once('comunes/menu.php');//Incluye el menú común de la página 
 ?> 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-	<div class="container"> 
+	integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous"/>
+	<br>
+	<div class="container-fluid"> 
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Empleados</h1>
@@ -38,6 +39,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							<tr>
 								<!-- Encabezados de la tabla -->
 								<th class="text-center">#</th>
+								<th class="text-center">RIF</th>
 								<th class="text-center">Cédula</th>
 								<th class="text-center">Nombre</th>
 								<th class="text-center">Apellido</th>
@@ -72,21 +74,46 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<form method="post" id="f" autocomplete="off"  enctype="multipart/form-data">
 							<input autocomplete="off" type="text" class="form-control" name="accion" id="accion">
 							<div class="container">	
+								<div class="row mb-3">
+									<div class="col-md-6" title="El tipo de documento no puede ser modificado...">
+										<label for="tipo_rif">Tipo de RIF</label>
+										<select class="form-control" id="tipo_rif">
+											<option value="seleccionar" selected disabled>Seleccione una opción</option>
+											<option value="V" title="Persona Natural">Persona Natural</option>
+											<option value="J" title="Persona Juridica">Persona Juridica</option>
+										</select>
+									</div>
+									<div class="col-md-6">
+										<label for="rif">RIF</label>
+										<input class="form-control" type="text" id="rif" title="El número de RIF no puede ser modificado..." placeholder="Ejemplo: 123456789" maxlength="11"/>
+										<span id="srif"></span>
+									</div>
+								</div>
 								<!-- Campos para cedula, nombre y apellido -->
 								<div class="row mb-3">
-									<div class="col-md-4">
-										<label for="cedula">Cédula</label>
-										<input class="form-control" type="text" id="cedula" title="El número de documento no puede ser modificado..." placeholder="Cédula obligatoria" required/>
+									<div class="col-md-6" title="El tipo de documento no puede ser modificado...">
+										<label for="tipo_documento">Tipo de documento</label>
+										<select class="form-control" id="tipo_documento">
+											<option value="seleccionar" selected disabled>Seleccione una opción</option>
+											<option value="V" title="Cédula Venezolana">Venezolano</option>
+											<option value="E" title="Cédula Extranjera">Extranjero</option>
+										</select>
+									</div>
+									<div class="col-md-6">
+										<label for="cedula">Documento</label>
+										<input class="form-control" type="text" id="cedula" title="El número de cédula no puede ser modificado..." placeholder="Ejemplo: 12345678" minlength="7" maxlength="11"/>
 										<span id="scedula"></span>
 									</div>
-									<div class="col-md-4">
+								</div>
+								<div class="row mb-3">
+									<div class="col-md-6">
 										<label for="nombre">Nombre</label>
-										<input class="form-control" type="text" id="nombre"  placeholder="Nombre obligatorio" required/>
+										<input class="form-control" type="text" id="nombre"  placeholder="Ejemplo: Jhon" maxlength="20" required/>
 										<span id="snombre"></span>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<label for="apellido">Apellido</label>
-										<input class="form-control" type="text" id="apellido" placeholder="Apellido obligatorio" required/>
+										<input class="form-control" type="text" id="apellido" placeholder="Ejemplo: Doe" maxlength="20" required/>
 										<span id="sapellido"></span>
 									</div>
 								</div>
@@ -105,8 +132,8 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									<div class="col-md-4" title="El tipo de género no puede ser modificado...">
 										<label for="genero">Género</label>
 										<select class="form-control" id="genero" title="Género del paciente" required>
-											<option value="" selected disabled>Seleccione una opción </option>
-											<option value="F"title="Género Femenino">Femenina</option>
+											<option value="seleccionar" selected disabled>Seleccione una opción</option>
+											<option value="F"title="Género Femenino">Femenino</option>
 											<option value="M"title="Género Masculono">Masculino</option>
 											<option value="O"title="Otro">Otro</option>
 										</select>
@@ -116,12 +143,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-8">
 										<label for="email">Correo</label>
-										<input class="form-control" type="text" id="email" placeholder="Ejemplo@email.com"/>
+										<input class="form-control" type="email" id="email" maxlength="100" placeholder="Ejemplo@email.com" autocomplete="off"/>
 										<span id="semail"></span>
 									</div>
 									<div class="col-md-4">
 										<label for="telefono">Teléfono</label>
-										<input class="form-control" type="text" id="telefono" placeholder="Ejemplo: 04123456789" required/>
+										<input class="form-control" type="text" id="telefono" maxlength="15"  placeholder="Ejemplo: 04123456789" required/>
 										<span id="stelefono"></span>
 									</div>
 								</div>
@@ -129,7 +156,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<div class="row mb-3">
 									<div class="col-md-12">
 										<label for="direccion">Dirección</label>
-										<input class="form-control" type="text" id="direccion" placeholder="Dirección de su domicilio" required/>
+										<input class="form-control" type="text" id="direccion" maxlength="100" placeholder="Dirección de su domicilio" required/>
 										<span id="sdireccion"></span>
 									</div>
 								</div>	
