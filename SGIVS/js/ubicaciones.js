@@ -189,8 +189,8 @@ $(document).ready(function () {
     });
 
    
-     $("#incluir").on("click", function () {
-        limpia(); // Limpia los campos
+    $("#incluir").on("click", function () {
+        limpia(); // Limpia los campos antes de abrir el modal
         $("#proceso").text("INCLUIR"); // Cambia el texto del botón
         $("#modal1").modal("show"); // Muestra el modal
     });
@@ -239,27 +239,197 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
 function validarenvio() {
     // Valida el envío de datos
-    if (validarkeyup(/^[^"']{3,30}$/, $("#nombre"), $("#snombre"), "Texto entre 3 y 30 caracteres") == 0) {
+
+    // Nombre
+    if (validarkeyup(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,30}$/, $("#nombre"), $("#snombre"), "El nombre solo debe contener letras y tener entre 3 y 30 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El nombre de la historia es obligatorio",
+            text: "El nombre de la historia es obligatorio y no debe contener números",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
-        return false; // Retorna falso si hay error
-    } else if (validarkeyup(/^[^"']{0,100}$/, $("#Apellido"), $("#sApellido"), "El apellido debe tener un máximo de 100 caracteres") == 0) {
+        return false;
+    }
+
+    // Apellido
+    if (validarkeyup(/^[^"']{0,100}$/, $("#Apellido"), $("#sApellido"), "El apellido debe tener un máximo de 100 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
             text: "El apellido debe tener un máximo de 100 caracteres",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
-        return false; // Retorna falso si hay error
+        return false;
     }
-    return true; // Retorna verdadero si todo es correcto
+
+    // Ocupacion
+    if ($("#Ocupacion").val().trim().length > 50) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La ocupación debe tener un máximo de 50 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Sexo
+    if ($("#Sexo").val() === "" || $("#Sexo").val() === null) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Debe seleccionar un sexo",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Persona de Contacto
+    if ($("#PersonaContacto").val().trim().length > 50) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La persona de contacto debe tener un máximo de 50 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Teléfono
+    // Teléfono (solo números de Venezuela: 0412, 0414, 0416, 0424, 0426, 0212 + 7 dígitos)
+    if (
+        $("#telefono").val().trim() !== "" &&
+        !/^(0412|0414|0416|0424|0426|0212)\d{7}$/.test($("#telefono").val().trim())
+    ) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El teléfono debe ser un número venezolano válido (ej: 04141234567, 02121234567)",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Edad
+    const edadVal = $("#Edad").val().trim();
+    if (
+        edadVal !== "" &&
+        (!/^\d{1,3}$/.test(edadVal) || parseInt(edadVal, 10) < 0)
+    ) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La edad debe ser un número entre 0 y 999",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Correo
+    if ($("#correo").val().trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("#correo").val().trim())) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El correo electrónico no es válido",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Motivo
+    if ($("#motivo").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El motivo debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Diagnóstico
+    if ($("#diagnostico").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El diagnóstico debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Tratamiento
+    if ($("#tratamiento").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El tratamiento debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Medicamentos
+    if ($("#medicamentos").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los medicamentos deben tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Dientes Afectados
+    if ($("#dientesafectados").val().trim().length > 100) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los dientes afectados deben tener un máximo de 100 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Antecedentes
+    if ($("#antecedentes").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los antecedentes deben tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Fecha de consulta
+    if ($("#fechaconsulta").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Debe ingresar la fecha de consulta",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Próxima cita (opcional, pero si existe, debe ser fecha válida)
+    // No se valida formato aquí, solo si está vacía o no
+
+    // Observaciones
+    if ($("#observaciones").val().trim().length > 300) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Las observaciones deben tener un máximo de 300 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    return true;
 }
 
 function validarkeypress(er, e) {
@@ -312,24 +482,26 @@ function pone(pos, accion) {
         // $("#imagen").prop("disabled", false); // Activa el campo imagen
     } else {
         $("#proceso").text("ELIMINAR"); // Cambia el texto a ELIMINAR
-        $("#nombre").prop("disabled", true); // Desactiva el campo nombre
-        $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
-        $("#telefono").prop("disabled", true); // Desactiva el campo telefono
-        $("#correo").prop("disabled", true); // Desactiva el campo correo
-        $("#Sexo").prop("disabled", true); // Desactiva el campo Sexo
-        $("#Ocupacion").prop("disabled", true); // Desactiva el campo Ocupacion
-        $("#PersonaContacto").prop("disabled", true); // Desactiva el campo PersonaContacto
-        $("#Edad").prop("disabled", true); // Desactiva el campo Edad
-        $("#motivo").prop("disabled", true); // Desactiva el campo motivo
-        $("#diagnostico").prop("disabled", true); // Desactiva el campo diagnostico
-        $("#tratamiento").prop("disabled", true); // Desactiva el campo tratamiento
-        $("#medicamentos").prop("disabled", true); // Desactiva el campo medicamentos
-        $("#dientesafectados").prop("disabled", true); // Desactiva el campo dientesafectados
-        $("#antecedentes").prop("disabled", true); // Desactiva el campo antecedentes
-        $("#fechaconsulta").prop("disabled", true); // Desactiva el campo fechaconsulta
-        $("#proximacita").prop("disabled", true); // Desactiva el campo proximacita
-        $("#observaciones").prop("disabled", true); // Desactiva el campo observaciones
-        // $("#imagen").prop("disabled", true); // Desactiva el campo imagen
+        // Desactiva todos los campos para que ninguno esté disponible al eliminar
+        $("#nombre").prop("disabled", true);
+        $("#Apellido").prop("disabled", true);
+        $("#telefono").prop("disabled", true);
+        $("#correo").prop("disabled", true);
+        $("#Sexo").prop("disabled", true);
+        $("#Ocupacion").prop("disabled", true);
+        $("#PersonaContacto").prop("disabled", true);
+        $("#Edad").prop("disabled", true);
+        $("#motivo").prop("disabled", true);
+        $("#diagnostico").prop("disabled", true);
+        $("#tratamiento").prop("disabled", true);
+        $("#medicamentos").prop("disabled", true);
+        $("#dientesafectados").prop("disabled", true);
+        $("#antecedentes").prop("disabled", true);
+        $("#fechaconsulta").prop("disabled", true);
+        $("#proximacita").prop("disabled", true);
+        $("#observaciones").prop("disabled", true);
+        // Si tienes campos adicionales, desactívalos aquí también
+        // $("#imagen").prop("disabled", true);
     }
     $("#nombre").val($(linea).find("td:eq(1)").text()); // Rellena el campo nombre
     $("#Apellido").val($(linea).find("td:eq(2)").text()); // Rellena el campo Apellido
@@ -468,23 +640,28 @@ function enviaAjax(datos) {
 }
 function limpia() {
     // Limpia los campos del formulario
-    $("#nombre").val("").prop("disabled", false); // Limpia el campo nombre y lo habilita
+    // Limpia todos los campos del formulario y habilita los necesarios
+    $("#nombre").val("").prop("disabled", false);
     $("#Apellido").val("").prop("disabled", false);
-    $("#Ocupacion").val("");
-    $("#Sexo").prop("selectedIndex", 0);
-    $("#PersonaContacto").val("");
+    $("#Ocupacion").val("").prop("disabled", false);
+    $("#Sexo").prop("selectedIndex", 0).prop("disabled", false);
+    $("#PersonaContacto").val("").prop("disabled", false);
     $("#telefono").val("").prop("disabled", false);
-    $("#Edad").val("");
-    $("#correo").val("");
-    $("#motivo").val("");
-    $("#diagnostico").val("");
-    $("#tratamiento").val("");
-    $("#medicamentos").val("");
-    $("#dientesafectados").val("");
-    $("#antecedentes").val("");
-    $("#fechaconsulta").val("");
-    $("#proximacita").val("");
-    $("#observaciones").val("");
+    $("#Edad").val("").prop("disabled", false);
+    $("#correo").val("").prop("disabled", false);
+    $("#motivo").val("").prop("disabled", false);
+    $("#diagnostico").val("").prop("disabled", false);
+    $("#tratamiento").val("").prop("disabled", false);
+    $("#medicamentos").val("").prop("disabled", false);
+    $("#dientesafectados").val("").prop("disabled", false);
+    $("#antecedentes").val("").prop("disabled", false);
+    $("#fechaconsulta").val("").prop("disabled", false);
+    $("#proximacita").val("").prop("disabled", false);
+    $("#observaciones").val("").prop("disabled", false);
+
+    // Limpia mensajes de error si existen
+    $("#snombre").text("");
+    $("#sApellido").text("");
     // Limpia el mensaje de error
     /*$("#descripcion").val("");
     $("#imagen").val("");
