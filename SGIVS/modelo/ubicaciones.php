@@ -340,6 +340,85 @@ class historial extends datos
 		} catch (Exception $e) {
 			return false;
 		}
+
+
 	}
+	
+		// Validaciones para cada campo según su tipo
+		public function validarCampos()
+		{
+			$errores = [];
+
+			// Validar nombre (solo letras y espacios, requerido)
+			if (empty($this->nombre) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->nombre)) {
+				$errores['nombre'] = 'El nombre es requerido y solo debe contener letras.';
+			}
+
+			// Validar Apellido (solo letras y espacios, requerido)
+			if (empty($this->Apellido) || !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Apellido)) {
+				$errores['Apellido'] = 'El apellido es requerido y solo debe contener letras.';
+			}
+
+			// Validar Ocupacion (opcional, solo letras y espacios)
+			if (!empty($this->Ocupacion) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->Ocupacion)) {
+				$errores['Ocupacion'] = 'La ocupación solo debe contener letras.';
+			}
+
+			// Validar Sexo (requerido, solo "Masculino" o "Femenino")
+			if (empty($this->Sexo) || !in_array($this->Sexo, ['Masculino', 'Femenino'])) {
+				$errores['Sexo'] = 'El sexo es requerido y debe ser Masculino o Femenino.';
+			}
+
+			// Validar PersonaContacto (opcional, solo letras y espacios)
+			if (!empty($this->PersonaContacto) && !preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', $this->PersonaContacto)) {
+				$errores['PersonaContacto'] = 'La persona de contacto solo debe contener letras.';
+			}
+
+			// Validar teléfono (requerido, solo números, mínimo 7 dígitos)
+			if (empty($this->telefono) || !preg_match('/^\d{7,15}$/', $this->telefono)) {
+				$errores['telefono'] = 'El teléfono es requerido y debe contener solo números (7 a 15 dígitos).';
+			}
+
+			// Validar Edad (requerido, número entre 0 y 120)
+			if (!is_numeric($this->Edad) || $this->Edad < 0 || $this->Edad > 120) {
+				$errores['Edad'] = 'La edad debe ser un número entre 0 y 120.';
+			}
+
+			// Validar correo (opcional, formato de email)
+			if (!empty($this->correo) && !filter_var($this->correo, FILTER_VALIDATE_EMAIL)) {
+				$errores['correo'] = 'El correo electrónico no es válido.';
+			}
+
+			// Validar diagnostico (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar tratamiento (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar medicamentos (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar dientesafectados (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar antecedentes (opcional, texto)
+			// No se aplica validación estricta
+
+			// Validar fechaconsulta (requerido, formato fecha)
+			if (empty($this->fechaconsulta) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->fechaconsulta)) {
+				$errores['fechaconsulta'] = 'La fecha de consulta es requerida y debe tener el formato YYYY-MM-DD.';
+			}
+
+			// Validar proximacita (opcional, formato fecha)
+			if (!empty($this->proximacita) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->proximacita)) {
+				$errores['proximacita'] = 'La próxima cita debe tener el formato YYYY-MM-DD.';
+			}
+
+			// Validar observaciones (opcional, texto)
+			// No se aplica validación estricta
+
+			return $errores;
+		}
 }
+	
 ?>

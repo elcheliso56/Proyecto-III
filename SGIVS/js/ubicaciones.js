@@ -239,27 +239,197 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
 function validarenvio() {
     // Valida el envío de datos
-    if (validarkeyup(/^[^"']{3,30}$/, $("#nombre"), $("#snombre"), "Texto entre 3 y 30 caracteres") == 0) {
+
+    // Nombre
+    if (validarkeyup(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,30}$/, $("#nombre"), $("#snombre"), "El nombre solo debe contener letras y tener entre 3 y 30 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El nombre de la historia es obligatorio",
+            text: "El nombre de la historia es obligatorio y no debe contener números",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
-        return false; // Retorna falso si hay error
-    } else if (validarkeyup(/^[^"']{0,100}$/, $("#Apellido"), $("#sApellido"), "El apellido debe tener un máximo de 100 caracteres") == 0) {
+        return false;
+    }
+
+    // Apellido
+    if (validarkeyup(/^[^"']{0,100}$/, $("#Apellido"), $("#sApellido"), "El apellido debe tener un máximo de 100 caracteres") == 0) {
         Swal.fire({
             title: "¡ERROR!",
             text: "El apellido debe tener un máximo de 100 caracteres",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
-        return false; // Retorna falso si hay error
+        return false;
     }
-    return true; // Retorna verdadero si todo es correcto
+
+    // Ocupacion
+    if ($("#Ocupacion").val().trim().length > 50) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La ocupación debe tener un máximo de 50 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Sexo
+    if ($("#Sexo").val() === "" || $("#Sexo").val() === null) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Debe seleccionar un sexo",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Persona de Contacto
+    if ($("#PersonaContacto").val().trim().length > 50) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La persona de contacto debe tener un máximo de 50 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Teléfono
+    // Teléfono (solo números de Venezuela: 0412, 0414, 0416, 0424, 0426, 0212 + 7 dígitos)
+    if (
+        $("#telefono").val().trim() !== "" &&
+        !/^(0412|0414|0416|0424|0426|0212)\d{7}$/.test($("#telefono").val().trim())
+    ) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El teléfono debe ser un número venezolano válido (ej: 04141234567, 02121234567)",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Edad
+    const edadVal = $("#Edad").val().trim();
+    if (
+        edadVal !== "" &&
+        (!/^\d{1,3}$/.test(edadVal) || parseInt(edadVal, 10) < 0)
+    ) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La edad debe ser un número entre 0 y 999",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Correo
+    if ($("#correo").val().trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("#correo").val().trim())) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El correo electrónico no es válido",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Motivo
+    if ($("#motivo").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El motivo debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Diagnóstico
+    if ($("#diagnostico").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El diagnóstico debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Tratamiento
+    if ($("#tratamiento").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El tratamiento debe tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Medicamentos
+    if ($("#medicamentos").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los medicamentos deben tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Dientes Afectados
+    if ($("#dientesafectados").val().trim().length > 100) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los dientes afectados deben tener un máximo de 100 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Antecedentes
+    if ($("#antecedentes").val().trim().length > 200) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los antecedentes deben tener un máximo de 200 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Fecha de consulta
+    if ($("#fechaconsulta").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Debe ingresar la fecha de consulta",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    // Próxima cita (opcional, pero si existe, debe ser fecha válida)
+    // No se valida formato aquí, solo si está vacía o no
+
+    // Observaciones
+    if ($("#observaciones").val().trim().length > 300) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Las observaciones deben tener un máximo de 300 caracteres",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+
+    return true;
 }
 
 function validarkeypress(er, e) {
