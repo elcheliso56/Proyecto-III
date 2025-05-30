@@ -311,12 +311,7 @@ require_once('comunes/menu.php');
 		</div>
 	</div>
 </div>
-<!-- Botón para abrir el modal del modelo -->
-<div class="position-fixed bottom-0 end-0 m-4" style="z-index: 1055;">
-	<button type="button" class="btn btn-secondary" id="mostrarModeloBtn" data-bs-toggle="modal" data-bs-target="#modalModelo">
-		<i class="bi bi-list-columns-reverse"></i> Ver Campos del Modelo
-	</button>
-</div>
+
 
 <script type="text/javascript" src="js/ubicaciones.js"></script>
 <!-- Loader mejorado -->
