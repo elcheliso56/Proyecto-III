@@ -410,30 +410,87 @@ function validarenvio() {
         });
         return false;
     }
-    // Fecha de consulta
-    const fechaConsulta = $("#fechaconsulta").val().trim();
-    if (fechaConsulta === "") {
+  // Fecha de Consulta
+const fechaConsulta = $("#fechaconsulta").val().trim();
+
+if (fechaConsulta === "") {
+    Swal.fire({
+        title: "¡ERROR!",
+        text: "Debe ingresar la fecha de consulta.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+    });
+    return false;
+}
+
+// Validar formato de fecha (yyyy-mm-dd)
+if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaConsulta)) {
+    Swal.fire({
+        title: "¡ERROR!",
+        text: "La fecha de consulta no es válida. Use el formato AAAA-MM-DD.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+    });
+    return false;
+}
+
+// Convertir fechaConsulta a objeto Date para comparación
+const fechaConsultaDate = new Date(fechaConsulta);
+const today = new Date();
+today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para comparar solo la fecha
+
+// Validar que la fecha de consulta no sea en el futuro
+if (fechaConsultaDate > today) {
+    Swal.fire({
+        title: "¡ERROR!",
+        text: "La fecha de consulta no puede ser una fecha futura.",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+    });
+    return false;
+}
+
+
+// Próxima Cita (opcional)
+const proximaCita = $("#proximacita").val().trim();
+
+if (proximaCita !== "") { // Solo validar si se ha ingresado un valor
+    // Validar formato de fecha (yyyy-mm-dd) para proximaCita
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(proximaCita)) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "Debe ingresar la fecha de consulta",
+            text: "La próxima cita debe tener un formato de fecha válido (AAAA-MM-DD).",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
         return false;
     }
-    // Validar que la fecha de consulta no sea anterior a hoy
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0); // Quitar hora para comparar solo fecha
-    const fechaIngresada = new Date(fechaConsulta);
-    if (fechaIngresada < hoy) {
+
+    // Convertir proximaCita a objeto Date para comparación
+    const proximaCitaDate = new Date(proximaCita);
+
+    // Validar que la próxima cita no sea anterior a la fecha actual
+    if (proximaCitaDate < today) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "La fecha de consulta no puede ser anterior a la fecha actual",
+            text: "La próxima cita no puede ser una fecha pasada.",
             icon: "error",
             confirmButtonText: "Aceptar"
         });
         return false;
     }
+
+    // Validar que la próxima cita no sea anterior a la fecha de consulta
+    if (proximaCitaDate < fechaConsultaDate) {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La próxima cita no puede ser anterior a la fecha de consulta.",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+        return false;
+    }
+}
 
     // Próxima cita (opcional, pero si existe, debe ser fecha válida)
     // No se valida formato aquí, solo si está vacía o no
@@ -472,94 +529,42 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
         return 0; // Retorna 0 si no es válido
     }
 }
-
 function pone(pos, accion) {
     // Maneja la selección de una fila en la tabla
-    linea = $(pos).closest('tr');
+    var linea = $(pos).closest('tr');
+
+    // Rellena los campos del formulario con los valores de la fila seleccionada
+    $("#cedula").val($(linea).find("td:eq(0)").text());
+    $("#nombre").val($(linea).find("td:eq(1)").text());
+    $("#Apellido").val($(linea).find("td:eq(2)").text());
+    $("#telefono").val($(linea).find("td:eq(3)").text());
+    $("#correo").val($(linea).find("td:eq(4)").text());
+    $("#Sexo").val($(linea).find("td:eq(5)").text());
+    $("#Ocupacion").val($(linea).find("td:eq(6)").text());
+    $("#PersonaContacto").val($(linea).find("td:eq(7)").text());
+    $("#Edad").val($(linea).find("td:eq(8)").text());
+    $("#motivo").val($(linea).find("td:eq(9)").text());
+    $("#diagnostico").val($(linea).find("td:eq(10)").text());
+    $("#tratamiento").val($(linea).find("td:eq(11)").text());
+    $("#medicamentos").val($(linea).find("td:eq(12)").text());
+    $("#dientesafectados").val($(linea).find("td:eq(13)").text());
+    $("#antecedentes").val($(linea).find("td:eq(14)").text());
+    $("#fechaconsulta").val($(linea).find("td:eq(15)").text());
+    $("#proximacita").val($(linea).find("td:eq(16)").text());
+    $("#observaciones").val($(linea).find("td:eq(17)").text());
+
+    // Habilita todos los campos antes de deshabilitar según la acción
+    $("#cedula, #nombre, #Apellido, #telefono, #correo, #Sexo, #Ocupacion, #PersonaContacto, #Edad, #motivo, #diagnostico, #tratamiento, #medicamentos, #dientesafectados, #antecedentes, #fechaconsulta, #proximacita, #observaciones").prop("disabled", false);
+
     if (accion == 0) {
-        $("#proceso").text("MODIFICAR"); // Cambia el texto a MODIFICAR
-        $("#nombre").prop("disabled", true); // Desactiva el campo nombre
-        $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
-        $("#Ocupacion").prop("disabled", true); // Desactiva el campo Ocupacion
-        $("#Sexo").prop("disabled", true); // Desactiva el campo Sexo
-        $("#PersonaContacto").prop("disabled", true); // Desactiva el campo PersonaContacto
-        $("#telefono").prop("disabled", true); // Desactiva el campo telefono
-        $("#Edad").prop("disabled", true); // Desactiva el campo Edad
-        $("#correo").prop("disabled", true); // Desactiva el campo correo
-        $("#motivo").prop("disabled", true); // Desactiva el campo motivo
-        $("#diagnostico").prop("disabled", true); // Desactiva el campo diagnostico
-        $("#tratamiento").prop("disabled", true); // Desactiva el campo tratamiento
-        $("#medicamentos").prop("disabled", true); // Desactiva el campo medicamentos
-        $("#dientesafectados").prop("disabled", true); // Desactiva el campo dientesafectados
-        $("#antecedentes").prop("disabled", true); // Desactiva el campo antecedentes
-        $("#fechaconsulta").prop("disabled", true); // Desactiva el campo fechaconsulta
-        $("#proximacita").prop("disabled", true); // Desactiva el campo proximacita
-        $("#observaciones").prop("disabled", true); // Desactiva el campo observaciones
-
-
-
-
-        // $("#imagen").prop("disabled", false); // Activa el campo imagen
+        $("#proceso").text("MODIFICAR");
     } else {
-        $("#proceso").text("ELIMINAR"); // Cambia el texto a ELIMINAR
-        // Desactiva todos los campos para que ninguno esté disponible al eliminar
-        $("#nombre").prop("disabled", true);
-        $("#Apellido").prop("disabled", true);
-        $("#telefono").prop("disabled", true);
-        $("#correo").prop("disabled", true);
-        $("#Sexo").prop("disabled", true);
-        $("#Ocupacion").prop("disabled", true);
-        $("#PersonaContacto").prop("disabled", true);
-        $("#Edad").prop("disabled", true);
-        $("#motivo").prop("disabled", true);
-        $("#diagnostico").prop("disabled", true);
-        $("#tratamiento").prop("disabled", true);
-        $("#medicamentos").prop("disabled", true);
-        $("#dientesafectados").prop("disabled", true);
-        $("#antecedentes").prop("disabled", true);
-        $("#fechaconsulta").prop("disabled", true);
-        $("#proximacita").prop("disabled", true);
-        $("#observaciones").prop("disabled", true);
-        // Si tienes campos adicionales, desactívalos aquí también
-        // $("#imagen").prop("disabled", true);
+        $("#proceso").text("ELIMINAR");
+        // Desactiva todos los campos para eliminar
+        $("#cedula, #nombre, #Apellido, #telefono, #correo, #Sexo, #Ocupacion, #PersonaContacto, #Edad, #motivo, #diagnostico, #tratamiento, #medicamentos, #dientesafectados, #antecedentes, #fechaconsulta, #proximacita, #observaciones").prop("disabled", true);
     }
-    $("#nombre").val($(linea).find("td:eq(1)").text()); // Rellena el campo nombre
-    $("#Apellido").val($(linea).find("td:eq(2)").text()); // Rellena el campo Apellido
-    $("#telefono").val($(linea).find("td:eq(3)").text()); // Rellena el campo telefono
-    $("#correo").val($(linea).find("td:eq(4)").text()); // Rellena el campo correo
-    $("#Sexo").val($(linea).find("td:eq(5)").text()); // Rellena el campo Sexo
-    $("#Ocupacion").val($(linea).find("td:eq(6)").text()); // Rellena el campo Ocupacion
-    $("#PersonaContacto").val($(linea).find("td:eq(7)").text()); // Rellena el campo PersonaContacto
-    $("#Edad").val($(linea).find("td:eq(8)").text()); // Rellena el campo Edad
-    $("#motivo").val($(linea).find("td:eq(9)").text()); // Rellena el campo motivo
-    $("#diagnostico").val($(linea).find("td:eq(10)").text()); // Rellena el campo diagnostico
-    $("#tratamiento").val($(linea).find("td:eq(11)").text()); // Rellena el campo tratamiento
-    $("#medicamentos").val($(linea).find("td:eq(12)").text()); // Rellena el campo medicamentos
-    $("#dientesafectados").val($(linea).find("td:eq(13)").text()); // Rellena el campo dientesafectados
-    $("#antecedentes").val($(linea).find("td:eq(14)").text()); // Rellena el campo antecedentes
-    $("#fechaconsulta").val($(linea).find("td:eq(15)").text()); // Rellena el campo fechaconsulta
-    $("#proximacita").val($(linea).find("td:eq(16)").text()); // Rellena el campo proximacita
-    $("#observaciones").val($(linea).find("td:eq(17)").text()); // Rellena el campo observaciones
 
-
-    /*   var imagenSrc = $(linea).find("td:eq(3) img").attr("src"); // Obtiene la fuente de la imagen
-       if (imagenSrc) {
-           $("#imagen_actual").attr("src", imagenSrc).show(); // Muestra la imagen actual
-           $("#imagen_url").val(imagenSrc);       
-           fetch(imagenSrc)
-           .then(res => res.blob())
-           .then(blob => {
-               const file = new File([blob], imagenSrc.split('/').pop(), { type: blob.type });
-               const dataTransfer = new DataTransfer();
-               dataTransfer.items.add(file);
-               $("#imagen")[0].files = dataTransfer.files; // Asigna el archivo a input de imagen
-           });
-       } else {
-           $("#imagen_actual").attr("src", "").hide(); // Oculta la imagen si no existe
-           $("#imagen_url").val("");
-       }*/
     $("#modal1").modal("show");
-     // Muestra el modal
 }
 function enviaAjax(datos) {
     // Envía datos al servidor mediante AJAX
@@ -736,13 +741,26 @@ document.getElementById('buscadorPacientes').addEventListener('keyup', function(
 				}
 				const tds = tr.querySelectorAll('td');
 				if (tds.length > 0) {
-					const campos = [
-						'Numero',
-						'Nombre',
-						'Apellido',
-						'Teléfono',
-						'Correo'
-					];
+                    const campos = [
+                        'Numero',
+                        'Nombre',
+                        'Apellido',
+                        'Teléfono',
+                        'Correo',
+                        'Sexo',
+                        'Ocupación',
+                        'Persona de Contacto',
+                        'Edad',
+                        'Motivo',
+                        'Diagnóstico',
+                        'Tratamiento',
+                        'Medicamentos',
+                        'Dientes Afectados',
+                        'Antecedentes',
+                        'Fecha de Consulta',
+                        'Próxima Cita',
+                        'Observaciones'
+                    ];
 					let html = '';
 					tds.forEach((td, idx) => {
 						if (idx < campos.length) {

@@ -298,17 +298,31 @@ class historial extends datos
 				foreach ($resultado as $r) {
 					$respuesta .= "<tr class='text-center'>"; // Crea una fila de tabla
 					$respuesta .= "<td class='align-middle'>$n</td>"; // Número de fila
-					$respuesta .= "<td class='align-middle'>" . $r['nombre'] . "</td>"; // Nombre
-					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Apellido
-					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Teléfono
-					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Correo
-					
-					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
 					$respuesta .= "<td class='align-middle'>";
 					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ubicación'><i class='bi bi-arrow-repeat'></i></button><br/>";
 					$respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar ubicación'><i class='bi bi-trash'></i></button>";
-					
+					//$respuesta .= "<td class='align-middle'>" . "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='ver'><i class='bi bi-eye'></i></button>". "</td>"; // Fecha de consulta
 					$respuesta .= "</td>";
+					$respuesta .= "<td class='align-middle'>" . $r['nombre'] . "</td>"; // Nombre
+					$respuesta .= "<td class='align-middle'>" . $r['Apellido'] . "</td>"; // Apellido
+					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Teléfono
+					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Correo	
+					$respuesta .= "<td class='align-middle'>" . $r['Edad'] . "</td>"; // Edad
+					$respuesta .= "<td class='align-middle'>" . $r['Sexo'] . "</td>"; // Sexo
+					$respuesta .= "<td class='align-middle'>" . $r['Ocupacion'] . "</td>"; // Ocupación
+					$respuesta .= "<td class='align-middle'>" . $r['PersonaContacto'] . "</td>"; // Persona de contacto
+					$respuesta .= "<td class='align-middle'>" . $r['diagnostico'] . "</td>"; // Diagnóstico
+					$respuesta .= "<td class='align-middle'>" . $r['tratamiento'] . "</td>"; // Tratamiento
+					$respuesta .= "<td class='align-middle'>" . $r['medicamentos'] . "</td>"; // Medicamentos
+					$respuesta .= "<td class='align-middle'>" . $r['dientesafectados'] . "</td>"; // Dientes afectados
+					$respuesta .= "<td class='align-middle'>" . $r['antecedentes'] . "</td>"; // Antecedentes
+					$respuesta .= "<td class='align-middle'>" . $r['fechaconsulta'] . "</td>"; // Fecha de consulta
+					$respuesta .= "<td class='align-middle'>" . $r['proximacita'] . "</td>"; // Próxima cita
+					
+					$respuesta .= "<td class='align-middle'>" . $r['observaciones'] . "</td>"; // Observaciones
+					
+					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
+					
 					$respuesta .= "</tr>";
 					$n++; // Incrementa el contador
 				}
