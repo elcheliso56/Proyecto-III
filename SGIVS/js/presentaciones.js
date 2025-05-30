@@ -171,6 +171,11 @@ $(document).ready(function() {
      $("#proceso").text("INCLUIR");
      $("#modal1").modal("show");
  });	
+
+    // Manejador para el botón de volver a registrar insumo
+    $("#volverRegistrarInsumo").on("click", function() {
+        window.location.href = "?pagina=gestionarInsumos&from=presentaciones";
+    });
 });
 
 // Función para validar el envío de datos

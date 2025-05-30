@@ -21,6 +21,11 @@ require_once('comunes/menu.php');
 						<button type="button" class="btn-sm btn-success w-75 small-width" id="incluir" title="Registrar Equipo">
 							<i class="bi bi-plus-square"></i>
 						</button>            
+					</div>
+					<div class="col-md-2 text-center">
+						<button type="button" class="btn-sm btn-warning w-75 small-width" id="generar_reporte" title="Generar Reporte PDF">
+							<i class="bi bi-file-pdf"></i>
+						</button>
 					</div>              
 				</div>
 				<div class="table-responsive" id="tt">
@@ -33,6 +38,7 @@ require_once('comunes/menu.php');
 								<th class="text-center">Marca</th>
 								<th class="text-center">Modelo</th>
 								<th class="text-center">Cantidad</th>
+								<th class="text-center">Precio</th>
 								<th class="text-center">Imagen</th>
 								<th class="text-center">Acciones</th>						
 							</tr>
@@ -109,12 +115,17 @@ require_once('comunes/menu.php');
 								<label for="cantidad">Cantidad</label>
 								<input class="form-control" type="text" id="cantidad" name="cantidad" placeholder="existencia del equipo obligatorio"/>
 								<span id="scantidad"></span>
-							</div>	
-							<div class="col-md-5">
+							</div>
+							<div class="col-md-3">
+								<label for="precio">Precio</label>
+								<input class="form-control" type="text" id="precio" name="precio" placeholder="precio del equipo obligatorio"/>
+								<span id="sprecio"></span>
+							</div>
+							<div class="col-md-4">
 								<label for="imagen">Imagen del equipo</label>
 								<input class="col-md-11 inpImg" type="file" id="imagen" name="imagen"accept=".png,.jpg,.jpeg" />
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<span id="simagen"></span>
 								<img id="imagen_actual" src="" alt="Imagen del equipo" class="img"/> 
 							</div>						
@@ -188,37 +199,90 @@ require_once('comunes/menu.php');
 	</div> 
 </div>
 <div class="modal fade" tabindex="-1" role="dialog"  id="modalEquipos">
-	<div class="modal-dialog modal-lg modal-equipos" role="document">
-		<div class="modal-header modal-equipos-header">
-			<h5 class="modal-title"><i></i> Listado de equipos</h5>
-		</div>
+	<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
 		<div class="modal-content">
-			<div class="modal-body modal-equipos-content">
-				<div class="row">
-					<div class="col-12 col-md-6">
+			<div class="modal-header">
+				<h5 class="modal-title">Listado de equipos</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row mb-3">
+					<div class="col-12">
 						<input type="text" class="form-control" id="buscarEquipos" placeholder="Buscar equipo...">
 					</div>
 				</div>
-			</div>				
-			<table class="table table-striped table-hover table-center">
-				<thead class="modal-equipos-table-header">
-					<tr>
-						<th style="display:none">Id</th>
-						<th class="text-center">Código</th>
-						<th class="text-center">Nombre</th>
-						<th class="text-center">Marca</th>
-						<th class="text-center">Modelo</th>						
-						<th class="text-center">Existencia</th>
-						<th class="text-center">Precio</th>
-						<th class="text-center">Imagen</th>
-					</tr>
-				</thead>
-				<tbody id="listadoEquipos"> 
-				</tbody>
-			</table>
+				<div class="table-responsive" style="max-height: 60vh;">
+					<table class="table table-striped table-hover table-sm">
+						<thead class="thead-light sticky-top bg-light">
+							<tr>
+								<th style="display:none">Id</th>
+								<th class="text-center">Código</th>
+								<th class="text-center">Nombre</th>
+								<th class="text-center">Marca</th>
+								<th class="text-center">Modelo</th>						
+								<th class="text-center">Existencia</th>
+								<th class="text-center">Precio</th>
+								<th class="text-center">Imagen</th>
+							</tr>
+						</thead>
+						<tbody id="listadoEquipos"> 
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="bi bi-x-square"></i> Cerrar</button>
+			</div>
 		</div>
-		<div class="modal-footer modal-equipos-footer">
-			<button type="button" class="btn" data-dismiss="modal" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
+	</div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalReporte">
+	<div class="modal-dialog modal-smarll" role="document" id="lm">
+		<div class="modal-header" id="hm">
+			<h5 class="modal-title">Generar Reporte de Equipos</h5>
+		</div>
+		<div class="modal-content">
+			<div class="container" id="mtm">
+				<form method="post" id="formReporte" target="_blank">
+					<input type="hidden" name="accion" value="reporte_equipos">
+					<div class="row">
+						<div class="col-md-6">
+							<label for="codigo_reporte">Código</label>
+							<input class="form-control" type="text" id="codigo_reporte" name="codigo" placeholder="Código del equipo..."/>
+						</div>
+						<div class="col-md-6">
+							<label for="nombre_reporte">Nombre</label>
+							<input class="form-control" type="text" id="nombre_reporte" name="nombre" placeholder="Nombre del equipo..."/>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-6">
+							<label for="marca_reporte">Marca</label>
+							<input class="form-control" type="text" id="marca_reporte" name="marca" placeholder="Marca del equipo..."/>
+						</div>
+						<div class="col-md-6">
+							<label for="modelo_reporte">Modelo</label>
+							<input class="form-control" type="text" id="modelo_reporte" name="modelo" placeholder="Modelo del equipo..."/>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-6">
+							<label for="cantidad_reporte">Cantidad</label>
+							<input class="form-control" type="text" id="cantidad_reporte" name="cantidad" placeholder="Cantidad..."/>
+						</div>
+						<div class="col-md-6">
+							<label for="precio_reporte">Precio</label>
+							<input class="form-control" type="text" id="precio_reporte" name="precio" placeholder="Precio..."/>
+						</div>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn" data-dismiss="modal" id="bc"><i class="bi bi-x-square"></i> Cerrar</button>
+						<button type="submit" class="btn btn-warning"><i class="bi bi-file-pdf"></i> Generar PDF</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

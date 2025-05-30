@@ -47,6 +47,15 @@ if(is_file("vista/".$pagina.".php")){
 			$o->set_codigo($_POST['codigo']); 
 			echo json_encode($o->eliminar()); 
 		}
+		elseif($accion=='reporte_equipos'){
+			$o->set_codigo($_POST['codigo']);
+			$o->set_nombre($_POST['nombre']);
+			$o->set_marca($_POST['marca']);
+			$o->set_modelo($_POST['modelo']);
+			$o->set_cantidad($_POST['cantidad']);
+			$o->set_precio($_POST['precio']);
+			$o->reporte_equipos();
+		}
 		else{         
 			if($accion=='incluir' || $accion=='modificar'){
 				$o->set_codigo($_POST['codigo']);
@@ -54,6 +63,7 @@ if(is_file("vista/".$pagina.".php")){
 				$o->set_marca($_POST['marca']);
 				$o->set_modelo($_POST['modelo']);
 				$o->set_cantidad($_POST['cantidad']);
+				$o->set_precio($_POST['precio']);
 				if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0){
 					$imagen_nombre = uniqid() . '_' . $_FILES['imagen']['name']; 
 					$imagen_ruta = 'otros/img/equipos/' . $imagen_nombre; 

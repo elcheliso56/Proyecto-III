@@ -12,7 +12,14 @@ $(document).ready(function () {
         consultar();
     });
 
-
+    // Verificar si se accedió desde la página de presentaciones
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromPresentaciones = urlParams.get('from') === 'presentaciones';
+    
+    if (fromPresentaciones) {
+        // Abrir el modal de registro automáticamente
+        $("#incluir").trigger('click');
+    }
 
     // Validaciones para el campo de código
     $("#codigo").on("keypress", function (e) {
@@ -229,11 +236,27 @@ $("#listadoDeInsumos").on("click",function(){//boton para levantar modal de insu
 });
 $("#codigoInsumos").on("keyup",function(){//evento keyup de input codigo 
     var codigo = $(this).val();
+    var insumoEncontrado = false;
+    
+    // Verificar si el código existe
     $("#listadoInsumos tr").each(function(){
         if(codigo == $(this).find("td:eq(1)").text()){
             colocaInsumo($(this));
+            insumoEncontrado = true;
         }
     });
+
+    // Si el código no existe y no está vacío, mostrar el botón de insertar
+    if (!insumoEncontrado && codigo !== '') {
+        // Verificar si el botón ya existe para no duplicarlo
+        if ($("#btnInsertarInsumo").length === 0) {
+            var btnInsertar = $('<button type="button" class="btn btn-warning" id="btnInsertarInsumo" style="margin-left: 10px;"><i class="bi bi-plus-square"></i> Insertar Insumo</button>');
+            $(this).after(btnInsertar);
+        }
+    } else {
+        // Si el código existe o está vacío, eliminar el botón si existe
+        $("#btnInsertarInsumo").remove();
+    }
 }); 
 
 $("#buscarInsumo").on("keyup", function() {
@@ -269,6 +292,16 @@ $("#incluir2").on("click",function(){
     $("#modal2").modal("show");
 }); 
 
+// Manejo del botón de reporte
+$("#generar_reporte").click(function() {
+    $("#modalReporte").modal("show");
+});
+
+// Limpiar formulario de reporte al cerrar el modal
+$("#modalReporte").on("hidden.bs.modal", function() {
+    $("#formReporte")[0].reset();
+});
+
 });
 
 function crearDT() {
@@ -298,8 +331,10 @@ function crearDT() {
             scrollCollapse: true,
             fixedHeader: false,
             order: [[0, "asc"]],
-            responsive: true, 
+            responsive: true,
         });
+         // Ajustar columnas después de la inicialización
+        $('#tablaInsumos').DataTable().columns.adjust().draw();
     }
 }
 
@@ -841,11 +876,23 @@ function enviaAjax(datos) {
                         title: lee.mensaje.includes('éxito') ? "¡Éxito!" : "Error",
                         text: lee.mensaje,
                         icon: lee.mensaje.includes('éxito') ? "success" : "error"
+                    }).then((result) => {
+                        if (lee.mensaje.includes('éxito')) {
+                            $("#modal1").modal("hide");
+                            consultar();
+                            carga_insumos(); // Recarga la lista de insumos
+                            
+                            // Verificar si venimos del modal de entrada de insumos
+                            if ($("#btnInsertarInsumo").length > 0) {
+                                // Volver a abrir el modal de entrada de insumos
+                                setTimeout(function() {
+                                    $("#modal2").modal("show");
+                                    // Restaurar los insumos seleccionados
+                                    restaurarInsumosSeleccionados();
+                                }, 500);
+                            }
+                        }
                     });
-                    if (lee.mensaje.includes('éxito')) {
-                        $("#modal1").modal("hide");
-                        consultar();
-                    }
                 } 
                 else if (lee.resultado == "eliminar") {
                     console.log("Resultado eliminar:", lee);
@@ -1049,3 +1096,66 @@ function generarTablaListadoInsumos(datos) {
     });
     return html;
 }
+
+// Agregar evento para el botón de insertar insumo
+$(document).on('click', '#btnInsertarInsumo', function() {
+    // Guardar los insumos seleccionados antes de cerrar el modal
+    var insumosSeleccionados = [];
+    $("#detalledeventa tr").each(function() {
+        var insumo = {
+            id: $(this).find("td:eq(0) input").val(),
+            codigo: $(this).find("td:eq(1)").text(),
+            nombre: $(this).find("td:eq(2)").text(),
+            cantidad: $(this).find("td:eq(3) input").val(),
+            precio: $(this).find("td:eq(4) input").val(),
+            subtotal: $(this).find("td:eq(5)").text()
+        };
+        insumosSeleccionados.push(insumo);
+    });
+    
+    // Guardar los insumos en una variable global
+    window.insumosTemporales = insumosSeleccionados;
+    
+    // Cerrar el modal actual
+    $("#modal2").modal("hide");
+    // Limpiar el formulario de insumo
+    limpia();
+    // Cambiar el texto del botón proceso
+    $("#proceso").text("INCLUIR");
+    // Mostrar el modal de insumo
+    $("#modal1").modal("show");
+    // Establecer el código en el campo correspondiente
+    $("#codigo").val($("#codigoInsumos").val());
+    // Asegurarnos que el campo código esté habilitado para nuevo insumo
+    $("#codigo").prop('disabled', false);
+});
+
+// Función para restaurar los insumos seleccionados
+function restaurarInsumosSeleccionados() {
+    if (window.insumosTemporales && window.insumosTemporales.length > 0) {
+        $("#detalledeventa").empty(); // Limpiar la tabla actual
+        window.insumosTemporales.forEach(function(insumo) {
+            var l = `
+            <tr> 
+                <td style="display:none"> <input type="text" name="idp[]" style="display:none" value="${insumo.id}"/>${insumo.id}</td>
+                <td>${insumo.codigo}</td>
+                <td>${insumo.nombre}</td>
+                <td> <input type="text" value="${insumo.cantidad}" class="btn" name="cant[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)" /></td>
+                <td> <input type="text" name="pcp[]" class="btn" value="${insumo.precio}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
+                <td>${insumo.subtotal}</td>
+                <td> <button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button> </td>
+            </tr>`;
+            $("#detalledeventa").append(l);
+        });
+        // Limpiar la variable temporal
+        window.insumosTemporales = null;
+    }
+}
+
+$(window).resize(function() {
+    $('#tablaEntradasInsumos').DataTable().columns.adjust().draw();
+});
+
+$(window).resize(function() {
+    $('#tablaInsumos').DataTable().columns.adjust().draw();
+});

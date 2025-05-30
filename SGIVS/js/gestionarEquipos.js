@@ -59,6 +59,15 @@ $(document).ready(function () {
         validarkeyup(/^[0-9]{1,10}$/, $(this), $("#scantidad"), "El stock debe ser numeros enteros");
     });
 
+    // Validaciones para el campo de precio
+    $("#precio").on("keypress", function (e) {
+        validarkeypress(/^[0-9.\b]*$/, e);
+    });
+
+    $("#precio").on("keyup", function () {
+        validarkeyup(/^[0-9.]{1,10}$/, $(this), $("#sprecio"), "El precio debe ser un número válido");
+    });
+
     // Manejo de clics en el botón de proceso
     $("#proceso").on("click", function () {
         if ($(this).text() == "INCLUIR") {
@@ -85,6 +94,7 @@ $(document).ready(function () {
                         datos.append('marca', $("#marca").val());
                         datos.append('modelo', $("#modelo").val());                        
                         datos.append('cantidad', $("#cantidad").val());
+                        datos.append('precio', $("#precio").val());
                         if ($("#imagen")[0].files[0]) {
                             datos.append('imagen', $("#imagen")[0].files[0]); // Agrega la imagen si existe
                         }
@@ -123,6 +133,7 @@ $(document).ready(function () {
                         datos.append('marca', $("#marca").val());
                         datos.append('modelo', $("#modelo").val());
                         datos.append('cantidad', $("#cantidad").val());
+                        datos.append('precio', $("#precio").val());
                         if ($("#imagen")[0].files[0]) {
                             datos.append('imagen', $("#imagen")[0].files[0]); // Agrega la imagen si existe
                         }
@@ -187,11 +198,27 @@ $("#listadoDeEquipos").on("click",function(){//boton para levantar modal de equi
 
 $("#codigoEquipo").on("keyup",function(){//evento keyup de input codigoEquipo
     var codigo = $(this).val();
+    var equipoEncontrado = false;
+    
+    // Verificar si el código existe
     $("#listadoEquipos tr").each(function(){
         if(codigo == $(this).find("td:eq(1)").text()){
             colocaEquipo($(this));
+            equipoEncontrado = true;
         }
     });
+
+    // Si el código no existe y no está vacío, mostrar el botón de insertar
+    if (!equipoEncontrado && codigo !== '') {
+        // Verificar si el botón ya existe para no duplicarlo
+        if ($("#btnInsertarEquipo").length === 0) {
+            var btnInsertar = $('<button type="button" class="btn btn-warning" id="btnInsertarEquipo" style="margin-left: 10px;"><i class="bi bi-plus-square"></i> Insertar Equipo</button>');
+            $(this).after(btnInsertar);
+        }
+    } else {
+        // Si el código existe o está vacío, eliminar el botón si existe
+        $("#btnInsertarEquipo").remove();
+    }
 }); 
 
 $("#buscarEquipos").on("keyup", function() {
@@ -238,6 +265,16 @@ $("#incluir2").on("click",function(){
     $("#entrada").text("INCLUIR");
     $("#modal2").modal("show");
 }); 
+
+// Manejo del botón de reporte
+$("#generar_reporte").click(function() {
+    $("#modalReporte").modal("show");
+});
+
+// Limpiar formulario de reporte al cerrar el modal
+$("#modalReporte").on("hidden.bs.modal", function() {
+    $("#formReporte")[0].reset();
+});
 });
 
 function crearDT() {
@@ -387,6 +424,16 @@ if (validarkeyup(/^[0-9]{1,10}$/, $("#cantidad"), $("#scantidad"), "El stock deb
     return false;
 } 
 
+if (validarkeyup(/^[0-9.]{1,10}$/, $("#precio"), $("#sprecio"), "El precio debe ser un número válido") == 0) {
+    Swal.fire({
+        title: "¡ERROR!",
+        text: "El precio del equipo es obligatorio",
+        icon: "error",
+        confirmButtonText: "Aceptar"
+    });
+    return false;
+}
+
 return true;
 }
 
@@ -443,6 +490,7 @@ function pone(pos, accion) {
         $("#marca").prop("disabled", false);
         $("#modelo").prop("disabled", false);
         $("#cantidad").prop("disabled", false);
+        $("#precio").prop("disabled", false);
         $("#imagen").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
@@ -451,6 +499,7 @@ function pone(pos, accion) {
         $("#marca").prop("disabled", true);
         $("#modelo").prop("disabled", true);
         $("#cantidad").prop("disabled", true);
+        $("#precio").prop("disabled", true);
         $("#imagen").prop("disabled", true);
     }
     $("#codigo").val($(linea).find("td:eq(1)").text());
@@ -458,9 +507,26 @@ function pone(pos, accion) {
     $("#marca").val($(linea).find("td:eq(3)").text());
     $("#modelo").val($(linea).find("td:eq(4)").text());
     $("#cantidad").val($(linea).find("td:eq(5)").text().replace(/\D/g, ''));
+    
+      // Obtener precio (puede estar en índice 7 o 6 dependiendo del rol del usuario)
+    var precioText = $(linea).find("td:eq(6)").text().trim();
+    if (precioText.includes("$")) {
+        var precio = precioText.replace("$", "");
+        $("#precio").val(precio);
+    } else {
+        // Si el precio no está en el índice 7, puede ser porque el usuario no es administrador
+        $("#precio").val("");
+    }
+    // Cargar imagen (índice puede variar según el rol del usuario)
+    var imgIndex = 8;
+    if (!precioText.includes("$")) {
+        imgIndex = 7; // Ajustar índice si no hay columna de precio
+    }  
+
+
 
     // Cargar imagen
-    var imagenSrc = $(linea).find("td:eq(6) img").attr("src");
+    var imagenSrc = $(linea).find("td:eq(7) img").attr("src");
     if (imagenSrc) {
         $("#imagen_actual").attr("src", imagenSrc).show();// Muestra la imagen actual
         $("#imagen_url").val(imagenSrc);
@@ -486,6 +552,7 @@ function limpia() {
     $("#marca").val("");
     $("#modelo").val("");    
     $("#cantidad").val("");
+    $("#precio").val("");
     $("#imagen").val("");
     $("#imagen_actual").attr("src", "").hide();
     $("#codigo").prop("disabled", false);
@@ -493,6 +560,7 @@ function limpia() {
     $("#marca").prop("disabled", false);
     $("#modelo").prop("disabled", false);
     $("#cantidad").prop("disabled", false);    
+    $("#precio").prop("disabled", false);  
     $("#imagen").prop("disabled", false);  
     $("#codigoEquipo").val("");
     $("#detalledeventa").empty();
@@ -553,14 +621,15 @@ function colocaEquipo(linea){//funcion para colocar los equipos
     });
     
     if(!encontro){
+        var precio = $(linea).find("td:eq(6)").text().replace('$', ''); // Eliminar el símbolo $
         var l = `
         <tr> 
         <td style="display:none"> <input type="text" name="idp[]" style="display:none" value="${$(linea).find("td:eq(0)").text()}"/>${$(linea).find("td:eq(0)").text()}</td>
         <td>${$(linea).find("td:eq(1)").text()}</td>
         <td>${$(linea).find("td:eq(2)").text()}</td>
         <td> <input type="text" value="1" class="btn" name="cant[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)" /></td>
-        <td> <input type="text" name="pcp[]" class="btn" value="${$(linea).find("td:eq(6)").text()}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
-        <td>${redondearDecimales($(linea).find("td:eq(6)").text()*1,2)}</td>
+        <td> <input type="text" name="pcp[]" class="btn" value="${precio}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
+        <td>${redondearDecimales(precio*1,2)}</td>
         <td> <button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button> </td>
         </tr>`;
         $("#detalledeventa").append(l);
@@ -805,11 +874,23 @@ function enviaAjax(datos) {
                         title: lee.mensaje.includes('éxito') ? "¡Éxito!" : "Error",
                         text: lee.mensaje,
                         icon: lee.mensaje.includes('éxito') ? "success" : "error"
+                    }).then((result) => {
+                        if (lee.mensaje.includes('éxito')) {
+                            $("#modal1").modal("hide");
+                            consultar();
+                            carga_equipos(); // Recarga la lista de equipos
+                            
+                            // Verificar si venimos del modal de entrada de equipos
+                            if ($("#btnInsertarEquipo").length > 0) {
+                                // Volver a abrir el modal de entrada de equipos
+                                setTimeout(function() {
+                                    $("#modal2").modal("show");
+                                    // Restaurar los equipos seleccionados
+                                    restaurarEquiposSeleccionados();
+                                }, 500);
+                            }
+                        }
                     });
-                    if (lee.mensaje.includes('éxito')) {
-                        $("#modal1").modal("hide");
-                        consultar();
-                    }
                 } 
                 else if (lee.resultado == "eliminar") {
                     Swal.fire({
@@ -876,6 +957,9 @@ function generarTablaEquipos(datos) {
             html += '<br><span class="badge bg-danger" title="Este equipo esta agotado">No disponible</span>';
         }
         html += '</td>';
+        
+        // Columna de precio
+        html += '<td>$' + parseFloat(equipo.precio).toFixed(2) + '</td>';
         
         // Columna de imagen
         html += '<td><a href="' + equipo.imagen + '" target="_blank"><img src="' + equipo.imagen + '" alt="Imagen del equipo" class="img"/></a></td>';
@@ -947,9 +1031,64 @@ function generarTablaListadoEquipos(datos) {
         }
         html += '</td>';
         
-        html += '<td>' + equipo.precio + '</td>';
+        html += '<td>$' + parseFloat(equipo.precio).toFixed(2) + '</td>';
         html += '<td class="align-middle"><img src="' + equipo.imagen + '" alt="Imagen del equipo" class="img"/></td>';
         html += '</tr>';
     });
     return html;
+}
+
+// Agregar evento para el botón de insertar equipo
+$(document).on('click', '#btnInsertarEquipo', function() {
+    // Guardar los equipos seleccionados antes de cerrar el modal
+    var equiposSeleccionados = [];
+    $("#detalledeventa tr").each(function() {
+        var equipo = {
+            id: $(this).find("td:eq(0) input").val(),
+            codigo: $(this).find("td:eq(1)").text(),
+            nombre: $(this).find("td:eq(2)").text(),
+            cantidad: $(this).find("td:eq(3) input").val(),
+            precio: $(this).find("td:eq(4) input").val(),
+            subtotal: $(this).find("td:eq(5)").text()
+        };
+        equiposSeleccionados.push(equipo);
+    });
+    
+    // Guardar los equipos en una variable global
+    window.equiposTemporales = equiposSeleccionados;
+    
+    // Cerrar el modal actual
+    $("#modal2").modal("hide");
+    // Limpiar el formulario de equipo
+    limpia();
+    // Cambiar el texto del botón proceso
+    $("#proceso").text("INCLUIR");
+    // Mostrar el modal de equipo
+    $("#modal1").modal("show");
+    // Establecer el código en el campo correspondiente
+    $("#codigo").val($("#codigoEquipo").val());
+    // Asegurarnos que el campo código esté habilitado para nuevo equipo
+    $("#codigo").prop('disabled', false);
+});
+
+// Función para restaurar los equipos seleccionados
+function restaurarEquiposSeleccionados() {
+    if (window.equiposTemporales && window.equiposTemporales.length > 0) {
+        $("#detalledeventa").empty(); // Limpiar la tabla actual
+        window.equiposTemporales.forEach(function(equipo) {
+            var l = `
+            <tr> 
+                <td style="display:none"> <input type="text" name="idp[]" style="display:none" value="${equipo.id}"/>${equipo.id}</td>
+                <td>${equipo.codigo}</td>
+                <td>${equipo.nombre}</td>
+                <td> <input type="text" value="${equipo.cantidad}" class="btn" name="cant[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)" /></td>
+                <td> <input type="text" name="pcp[]" class="btn" value="${equipo.precio}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
+                <td>${equipo.subtotal}</td>
+                <td> <button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button> </td>
+            </tr>`;
+            $("#detalledeventa").append(l);
+        });
+        // Limpiar la variable temporal
+        window.equiposTemporales = null;
+    }
 }

@@ -5,7 +5,8 @@ if (!is_file("modelo/".$pagina.".php")){
 }  
 require_once("modelo/".$pagina.".php"); 
 if(is_file("vista/".$pagina.".php")){ 
-    if(!empty($_POST)){
+    $o = new gestionarInsumos();
+ if(!empty($_POST)){
 
         $o = new gestionarInsumos();   
         $accion = $_POST['accion']; 
@@ -74,6 +75,16 @@ if(is_file("vista/".$pagina.".php")){
                 null
             );
             echo json_encode($respuesta);
+        }
+        elseif($accion=='reporte_insumos'){
+            $o->set_codigo($_POST['codigo']);
+            $o->set_nombre($_POST['nombre']);
+            $o->set_marca($_POST['marca']);
+            $o->set_stock_total($_POST['stock_total']);
+            $o->set_stock_minimo($_POST['stock_minimo']);
+            $o->set_precio($_POST['precio']);
+            $o->set_presentacion($_POST['presentacion']);
+            $o->reporte_insumos();
         }
 
         exit;

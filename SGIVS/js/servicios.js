@@ -110,15 +110,15 @@ $(document).ready(function() {
                         // Agregar insumos si existen
                         $("#InsumosSeleccionados tr").each(function(index) {
                             datos.append('id_insumo[]', $(this).find("td:eq(0) input").val());
-                            datos.append('cantidad[]', $(this).find("td:eq(3) input").val());
-                            datos.append('precio[]', $(this).find("td:eq(4) input").val());
+                            datos.append('cantidad_insumo[]', $(this).find("td:eq(3) input").val());
+                            datos.append('precio_insumo[]', $(this).find("td:eq(4) input").val());
                         });
 
                         // Agregar equipos si existen
                         $("#EquiposSeleccionados tr").each(function(index) {
                             datos.append('id_equipo[]', $(this).find("td:eq(0) input").val());
-                            datos.append('cantidad[]', $(this).find("td:eq(3) input").val());
-                            datos.append('precio[]', $(this).find("td:eq(4) input").val());
+                            datos.append('cantidad_equipo[]', $(this).find("td:eq(3) input").val());
+                            datos.append('precio_equipo[]', $(this).find("td:eq(4) input").val());
                         });
 
                         enviaAjax(datos);
@@ -158,7 +158,26 @@ $(document).ready(function() {
                   datos.append('nombre', $("#nombre").val());
                   datos.append('descripcion', $("#descripcion").val());
                   datos.append('precio', $("#precio").val());
+
+                  // Agregar insumos si existen
+                  $("#InsumosSeleccionados tr").each(function(index) {
+                      datos.append('id_insumo[]', $(this).find("td:eq(0) input").val());
+                      datos.append('cantidad_insumo[]', $(this).find("td:eq(3) input").val());
+                      datos.append('precio_insumo[]', $(this).find("td:eq(4) input").val());
+                  });
+
+                  // Agregar equipos si existen
+                  $("#EquiposSeleccionados tr").each(function(index) {
+                      datos.append('id_equipo[]', $(this).find("td:eq(0) input").val());
+                      datos.append('cantidad_equipo[]', $(this).find("td:eq(3) input").val());
+                      datos.append('precio_equipo[]', $(this).find("td:eq(4) input").val());
+                  });
+
                   enviaAjax(datos);
+                  $("#modal1").modal("hide");
+                  consultar();
+                  carga_insumos();
+                  carga_equipos();
               }
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             swalWithBootstrapButtons.fire({
@@ -231,6 +250,22 @@ $("#salida").on("click",function(){//evento click de boton salida
      $("#proceso").text("INCLUIR");
      $("#modal1").modal("show");
  });
+
+
+// Manejo del botón de reporte
+$("#generar_reporte").click(function() {
+    $("#modalReporte").modal("show");
+});
+
+// Limpiar formulario de reporte al cerrar el modal
+$("#modalReporte").on("hidden.bs.modal", function() {
+    $("#formReporte")[0].reset();
+});
+
+
+
+
+    
 });
 
 function crearDT() {
@@ -421,8 +456,8 @@ function colocaInsumo(linea){
             <td style="display:none"> <input type="text" name="id_insumo[]" style="display:none" value="`+ $(linea).find("td:eq(0)").text()+`"/>`+$(linea).find("td:eq(0)").text()+`</td>
             <td>`+ $(linea).find("td:eq(1)").text()+ `</td>
             <td>`+ $(linea).find("td:eq(2)").text()+ `</td>
-            <td> <input type="text" value="1" class="btn" name="cantidad[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>
-            <td> <input type="text" name="precio[]" class="btn" value="${$(linea).find("td:eq(6)").text()}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
+            <td> <input type="text" value="1" class="btn" name="cantidad_insumo[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>
+            <td> <input type="text" name="precio_insumo[]" class="btn" value="${$(linea).find("td:eq(6)").text()}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
             <td>`+ redondearDecimales($(linea).find("td:eq(6)").text()*1,2)+ `</td>
             <td> <button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button> </td>
         </tr>`;
@@ -448,8 +483,8 @@ function colocaEquipo(linea){
             <td style="display:none"> <input type="text" name="id_equipo[]" style="display:none" value="`+ $(linea).find("td:eq(0)").text()+`"/>`+$(linea).find("td:eq(0)").text()+`</td>
             <td>`+ $(linea).find("td:eq(1)").text()+ `</td>
             <td>`+ $(linea).find("td:eq(2)").text()+ `</td>
-            <td> <input type="text" value="1" class="btn" name="cantidad[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>
-            <td> <input type="text" name="precio[]" class="btn" value="${$(linea).find("td:eq(6)").text()}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
+            <td> <input type="text" value="1" class="btn" name="cantidad_equipo[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>
+            <td> <input type="text" name="precio_equipo[]" class="btn" value="${$(linea).find("td:eq(6)").text()}" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>
             <td>`+ redondearDecimales($(linea).find("td:eq(6)").text()*1,2)+ `</td>
             <td> <button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button> </td>
         </tr>`;
@@ -505,11 +540,29 @@ function pone(pos, accion) {
         $("#nombre").prop("disabled", true);
         $("#descripcion").prop("disabled", false);
         $("#precio").prop("disabled", false);
+        // Habilitar botones y campos para modificar
+        $("#listadoDeInsumos").prop("disabled", false);
+        $("#listadoDeEquipos").prop("disabled", false);
+        $("#codigoInsumo").prop("disabled", false);
+        $("#codigoEquipo").prop("disabled", false);
+        $("#InsumosSeleccionados input").prop("disabled", false);
+        $("#EquiposSeleccionados input").prop("disabled", false);
+        $("#InsumosSeleccionados button").prop("disabled", false);
+        $("#EquiposSeleccionados button").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
+        // Deshabilitar todos los campos y botones
         $("#nombre").prop("disabled", true);
         $("#descripcion").prop("disabled", true);
         $("#precio").prop("disabled", true);
+        $("#listadoDeInsumos").prop("disabled", true);
+        $("#listadoDeEquipos").prop("disabled", true);
+        $("#codigoInsumo").prop("disabled", true);
+        $("#codigoEquipo").prop("disabled", true);
+        $("#InsumosSeleccionados input").prop("disabled", true);
+        $("#EquiposSeleccionados input").prop("disabled", true);
+        $("#InsumosSeleccionados button").prop("disabled", true);
+        $("#EquiposSeleccionados button").prop("disabled", true);
     }
     $("#nombre").val($(linea).find("td:eq(1)").text());
     $("#descripcion").val($(linea).find("td:eq(2)").text());
@@ -532,8 +585,8 @@ function pone(pos, accion) {
                 l += '<td style="display:none"><input type="text" name="id_insumo[]" style="display:none" value="' + insumo.id + '"/>' + insumo.id + '</td>';
                 l += '<td>' + insumo.codigo + '</td>';
                 l += '<td>' + insumo.nombre + '</td>';
-                l += '<td><input type="text" value="' + insumo.cantidad + '" class="btn" name="cantidad[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>';
-                l += '<td><input type="text" name="precio[]" class="btn" value="' + parseFloat(insumo.precio).toFixed(2) + '" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>';
+                l += '<td><input type="text" value="' + insumo.cantidad + '" class="btn" name="cantidad_insumo[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>';
+                l += '<td><input type="text" name="precio_insumo[]" class="btn" value="' + parseFloat(insumo.precio).toFixed(2) + '" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>';
                 l += '<td>' + parseFloat(insumo.subtotal).toFixed(2) + '</td>';
                 l += '<td><button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button></td>';
                 l += '</tr>';
@@ -548,8 +601,8 @@ function pone(pos, accion) {
                 l += '<td style="display:none"><input type="text" name="id_equipo[]" style="display:none" value="' + equipo.id + '"/>' + equipo.id + '</td>';
                 l += '<td>' + equipo.codigo + '</td>';
                 l += '<td>' + equipo.nombre + '</td>';
-                l += '<td><input type="text" value="' + equipo.cantidad + '" class="btn" name="cantidad[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>';
-                l += '<td><input type="text" name="precio[]" class="btn" value="' + parseFloat(equipo.precio).toFixed(2) + '" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>';
+                l += '<td><input type="text" value="' + equipo.cantidad + '" class="btn" name="cantidad_equipo[]" onchange="validarCantidad(this)" onkeypress="validarkeypress(/^[0-9\b]*$/, event)"/></td>';
+                l += '<td><input type="text" name="precio_equipo[]" class="btn" value="' + parseFloat(equipo.precio).toFixed(2) + '" onchange="validarPrecio(this)" onkeypress="validarkeypress(/^[0-9.\b]*$/, event)"/></td>';
                 l += '<td>' + parseFloat(equipo.subtotal).toFixed(2) + '</td>';
                 l += '<td><button type="button" class="btn" id="bc" onclick="eliminalineadetalle(this)">X</button></td>';
                 l += '</tr>';
@@ -574,6 +627,14 @@ function limpia() {
     $("#InsumosSeleccionados").empty();
     $("#EquiposSeleccionados").empty();
     $("#datosdelcliente").html("");
+        $("#listadoDeInsumos").prop("disabled", false);
+         $("#listadoDeEquipos").prop("disabled", false);
+        $("#codigoInsumo").prop("disabled", false);
+        $("#codigoEquipo").prop("disabled", false);
+        $("#InsumosSeleccionados input").prop("disabled", false);
+        $("#EquiposSeleccionados input").prop("disabled", false);
+        $("#InsumosSeleccionados button").prop("disabled", false);
+        $("#EquiposSeleccionados button").prop("disabled", false);
 }
 
 // Función para validar la tecla presionada
@@ -663,6 +724,7 @@ function enviaAjax(datos) {
         },
         timeout: 10000,
         success: function(respuesta) {
+            $("#loader").hide();
             console.log("Respuesta recibida:", respuesta);
             try {
                 var lee = JSON.parse(respuesta);
@@ -674,22 +736,19 @@ function enviaAjax(datos) {
                     serviciosDatosGlobal = lee.datos;
                     $("#resultadoconsulta").html(generarTablaServicios(lee.datos));
                     crearDT();
-                } else if (lee.resultado == "incluir") {
-                    // Manejo de respuesta al incluir
-                    
+                }
+                else if (lee.resultado == "incluir") {
                     if (lee.mensaje == '¡Servicio registrado con éxito!') {
                         Swal.fire({
                             title: "¡Incluido!",
                             text: "El servicio ha sido incluido con éxito.",
                             icon: "success"
                         });
-                        $("#modal1").modal("hide"); // Oculta el modal
-                        consultar(); // Vuelve a consultar            
+                        $("#modal1").modal("hide");
+                        consultar();            
                         carga_insumos();
                         carga_equipos();
-                        limpia(); // Limpia el formulario       
-
-
+                        limpia();
                     } else {
                         Swal.fire({
                             title: "Error",
@@ -697,41 +756,45 @@ function enviaAjax(datos) {
                             icon: "error"
                         });
                     }
-                } else if (lee.resultado == "modificar") {
-                    // Manejo de respuesta al modificar
-                    Swal.fire({
-                        title: lee.mensaje == '¡Registro actualizado con exito!' ? "¡Modificado!" : "Error",
-                        text: lee.mensaje,
-                        icon: lee.mensaje == '¡Registro actualizado con exito!' ? "success" : "error"
-                    });
-                    if (lee.mensaje == '¡Registro actualizado con exito!') {
-                        $("#modal1").modal("hide"); // Oculta el modal
-                        consultar(); // Vuelve a consultar         
+                }
+                else if (lee.resultado == "modificar") {
+                    if (lee.mensaje == '¡Servicio actualizado con éxito!') {
+                        Swal.fire({
+                            title: "¡Modificado!",
+                            text: "El servicio ha sido modificado con éxito.",
+                            icon: "success"
+                        });
+                        $("#modal1").modal("hide");
+                        consultar();
                         carga_insumos();
                         carga_equipos();
-                        limpia(); // Limpia el formulario   
+                        limpia();
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: lee.mensaje,
+                            icon: "error"
+                        });
                     }
-                } 
+                }
                 else if (lee.resultado == "eliminar") {
-                    // Manejo de respuesta al eliminar
                     Swal.fire({
-                        title: lee.mensaje == '¡Registro eliminado con exito!' ? "¡Eliminado!" : "Error",
+                        title: lee.mensaje == '¡Servicio eliminado con éxito!' ? "¡Eliminado!" : "Error",
                         text: lee.mensaje,
-                        icon: lee.mensaje == '¡Registro eliminado con exito!' ? "success" : "error"
+                        icon: lee.mensaje == '¡Servicio eliminado con éxito!' ? "success" : "error"
                     });
-                    if (lee.mensaje == '¡Registro eliminado con exito!') {
-                        $("#modal1").modal("hide"); // Oculta el modal
-                        consultar(); // Vuelve a consultar
+                    if (lee.mensaje == '¡Servicio eliminado con éxito!') {
+                        $("#modal1").modal("hide");
+                        consultar();
                         carga_insumos();
                         carga_equipos();
-                        limpia(); // Limpia el formulario                          
+                        limpia();
                     }
-                } 
-
-                else if(lee.resultado=='listadoInsumos'){
+                }
+                else if(lee.resultado == 'listadoInsumos'){
                     $('#listadoInsumos').html(generarTablaInsumos(lee.datos));
                 }
-                else if(lee.resultado=='listadoEquipos'){
+                else if(lee.resultado == 'listadoEquipos'){
                     $('#listadoEquipos').html(generarTablaEquipos(lee.datos));
                 }
 
@@ -745,11 +808,11 @@ function enviaAjax(datos) {
             } catch (e) {
                 console.error("Error al parsear JSON:", e);
                 console.error("Respuesta que causó el error:", respuesta);
-                Swal.fire({
-                    title: "Error",
-                    text: "Error al procesar la respuesta del servidor: " + e.message,
-                    icon: "error"
-                });
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al procesar la respuesta del servidor: " + e.message,
+                        icon: "error"
+                    });
             }
         },
         error: function(request, status, err) {

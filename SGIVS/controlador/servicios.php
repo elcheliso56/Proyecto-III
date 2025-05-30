@@ -47,6 +47,12 @@ if(is_file("vista/".$pagina.".php")){
 			$respuesta = $o->listadoEquipos();
 			echo json_encode($respuesta);
 		}
+        elseif($accion=='reporte_servicios'){
+            $o->set_nombre($_POST['nombre']);
+            $o->set_descripcion($_POST['descripcion']);
+            $o->set_precio($_POST['precio']);
+            $o->reporte_servicios();
+        }		
 		exit; 
 	}	  
 	require_once("vista/".$pagina.".php"); 

@@ -1,5 +1,9 @@
 <?php
 require_once('modelo/datos.php');
+require_once('dompdf/vendor/autoload.php'); 
+
+use Dompdf\Dompdf;
+
 class gestionarInsumos extends datos{
     // Propiedades de la clase	
 	private $codigo; 
@@ -10,6 +14,7 @@ class gestionarInsumos extends datos{
 	private $precio;
 	private $imagen;
 	private $presentacion_id;
+	private $presentacion;
 	private $errores = array();
 
     // Métodos para establecer valores de las propiedades	
@@ -36,6 +41,10 @@ class gestionarInsumos extends datos{
 	}
 	function set_presentacion_id($valor){
 		$this->presentacion_id = $valor;
+	}
+
+	function set_presentacion($valor){
+		$this->presentacion = $valor;
 	}
 
 	function get_codigo(){
@@ -183,6 +192,7 @@ class gestionarInsumos extends datos{
         if (!$this->validarDatos()) {
             $r['resultado'] = 'incluir';
             $r['mensaje'] = implode(", ", $this->errores);
+            $this->registrarBitacora('Insumos', 'Incluir', 'Error al intentar incluir insumo', implode(", ", $this->errores));
             return $r;
         }
 
@@ -204,9 +214,12 @@ class gestionarInsumos extends datos{
 					)");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  '¡Registro guardado con éxito!';
+				$this->registrarBitacora('Insumos', 'Incluir', 'Insumo incluido exitosamente', 
+					"Código: $this->codigo, Nombre: $this->nombre, Marca: $this->marca");
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
+				$this->registrarBitacora('Insumos', 'Incluir', 'Error al incluir insumo', $e->getMessage());
 			} finally {
 				$co = null; // Cierra la conexión
 			}
@@ -214,6 +227,7 @@ class gestionarInsumos extends datos{
 		else{
 			$r['resultado'] = 'incluir';
 			$r['mensaje'] =  'Ya existe el código del insumo';
+			$this->registrarBitacora('Insumos', 'Incluir', 'Error: Código de insumo duplicado', "Código: $this->codigo");
 		}
 		return $r;
 	}
@@ -243,6 +257,8 @@ class gestionarInsumos extends datos{
 					");
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  '¡Registro actualizado con éxito!';                
+				$this->registrarBitacora('Insumos', 'Modificar', 'Insumo modificado exitosamente', 
+					"Código: $this->codigo, Nombre: $this->nombre, Marca: $this->marca");
 				// Elimina la imagen anterior si es necesario
 				if ($imagen_actual && $imagen_actual != 'otros/img/insumos/default.png') {
 					if (file_exists($imagen_actual)) {
@@ -252,6 +268,7 @@ class gestionarInsumos extends datos{
 			} catch(Exception $e) {
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
+				$this->registrarBitacora('Insumos', 'Modificar', 'Error al modificar insumo', $e->getMessage());
 			} finally {
 				$co = null; // Cierra la conexión
 			}
@@ -259,6 +276,7 @@ class gestionarInsumos extends datos{
 		else{
 			$r['resultado'] = 'modificar';
 			$r['mensaje'] =  'Codigo no registrado';
+			$this->registrarBitacora('Insumos', 'Modificar', 'Error: Código de insumo no encontrado', "Código: $this->codigo");
 		}
 		return $r;
 	}
@@ -273,9 +291,11 @@ class gestionarInsumos extends datos{
 		if($this->existe($this->codigo)){
 			try {                
 				// Obtiene la imagen del insumo
-				$resultado = $co->query("SELECT imagen FROM insumos WHERE codigo = '$this->codigo'");
+				$resultado = $co->query("SELECT imagen, nombre, marca FROM insumos WHERE codigo = '$this->codigo'");
 				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
 				$imagen = $fila['imagen'];
+				$nombre = $fila['nombre'];
+				$marca = $fila['marca'];
 				error_log("Imagen del insumo: " . $imagen);
 				
 				// Elimina el insumo de la base de datos
@@ -284,6 +304,8 @@ class gestionarInsumos extends datos{
 				
 				$r['resultado'] = 'eliminar';
 				$r['mensaje'] =  '¡Registro eliminado con exito!';
+				$this->registrarBitacora('Insumos', 'Eliminar', 'Insumo eliminado exitosamente', 
+					"Código: $this->codigo, Nombre: $nombre, Marca: $marca");
 				
 				// Elimina la imagen si existe
 				if ($imagen && $imagen != 'otros/img/insumos/default.png') {
@@ -300,6 +322,7 @@ class gestionarInsumos extends datos{
 				} else {
 					$r['mensaje'] = $e->getMessage();
 				}
+				$this->registrarBitacora('Insumos', 'Eliminar', 'Error al eliminar insumo', $e->getMessage());
 			} finally {
 				$co = null; // Cierra la conexión
 			}
@@ -308,6 +331,7 @@ class gestionarInsumos extends datos{
 			error_log("El insumo con código " . $this->codigo . " no existe");
 			$r['resultado'] = 'eliminar';
 			$r['mensaje'] =  'No existe el nombre de documento';
+			$this->registrarBitacora('Insumos', 'Eliminar', 'Error: Código de insumo no encontrado', "Código: $this->codigo");
 		}
 		return $r;
 	}
@@ -399,6 +423,7 @@ class gestionarInsumos extends datos{
 							$entradas[] = $entradaActual;
 						}
 						
+
 						$entradaActual = array(
 							'numero' => $n,
 							'id' => $row['id'],
@@ -504,6 +529,7 @@ class gestionarInsumos extends datos{
 		if (empty($id_insumo) || empty($cantidad) || empty($precio)) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] = 'Los datos de entrada son obligatorios';
+			$this->registrarBitacora('Insumos', 'Entrada', 'Error: Datos de entrada incompletos');
 			return $r;
 		}
 
@@ -522,6 +548,7 @@ class gestionarInsumos extends datos{
 		if (count($id_insumo) !== count($cantidad) || count($id_insumo) !== count($precio)) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] = 'Los datos de entrada están incompletos';
+			$this->registrarBitacora('Insumos', 'Entrada', 'Error: Arrays de entrada con longitudes diferentes');
 			return $r;
 		}
 
@@ -540,8 +567,9 @@ class gestionarInsumos extends datos{
 				}
 				
 				// Verificar si el insumo existe
-				$resultado = $co->query("SELECT id FROM insumos WHERE id = '$id'");
-				if (!$resultado->fetch()) {
+				$resultado = $co->query("SELECT codigo, nombre FROM insumos WHERE id = '$id'");
+				$insumo = $resultado->fetch(PDO::FETCH_ASSOC);
+				if (!$insumo) {
 					throw new Exception("Uno o más insumos no existen en el sistema");
 				}
 			}
@@ -549,6 +577,7 @@ class gestionarInsumos extends datos{
 			$co->query("INSERT INTO entradas_insumos(fecha_entrada) VALUES ('$fecha')");
 			$lid = $co->lastInsertId();
 			
+			$detalles_entrada = array();
 			$tamano = count($id_insumo);
 			for($i = 0; $i < $tamano; $i++) {
 				$gd = $co->prepare("INSERT INTO insumos_entradas (id_entradas_insumos, id_insumos, cantidad, precio) VALUES (?, ?, ?, ?)");
@@ -557,14 +586,22 @@ class gestionarInsumos extends datos{
 				// Actualizar el stock y el precio de compra del insumo
 				$actualizaInsumo = $co->prepare("UPDATE insumos SET cantidad = cantidad + ?, precio = ? WHERE id = ?");
 				$actualizaInsumo->execute([$cantidad[$i], $precio[$i], $id_insumo[$i]]);
+
+				// Obtener detalles del insumo para la bitácora
+				$resultado = $co->query("SELECT codigo, nombre FROM insumos WHERE id = '$id_insumo[$i]'");
+				$insumo = $resultado->fetch(PDO::FETCH_ASSOC);
+				$detalles_entrada[] = "Insumo: {$insumo['codigo']} - {$insumo['nombre']}, Cantidad: {$cantidad[$i]}, Precio: {$precio[$i]}";
 			}   
 			$co->commit();
 			$r['resultado'] = 'entrada';
 			$r['mensaje'] = '¡Entrada registrada con éxito!';
+			$this->registrarBitacora('Insumos', 'Entrada', 'Entrada de insumos registrada exitosamente', 
+				"ID Entrada: $lid\n" . implode("\n", $detalles_entrada));
 		} catch(Exception $e) {
 			$co->rollback();
 			$r['resultado'] = 'error';
 			$r['mensaje'] = $e->getMessage();
+			$this->registrarBitacora('Insumos', 'Entrada', 'Error al registrar entrada de insumos', $e->getMessage());
 		} finally {
 			$co = null; // Cierra la conexión
 		}
@@ -610,6 +647,80 @@ class gestionarInsumos extends datos{
 		}
 		return $r;
 	}	
+
+	function reporte_insumos(){    
+		$co = $this->conecta();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		try{
+			date_default_timezone_set('America/Caracas');//zona horaria 
+			$fecha = date('d-m-y H:i');
+			$resultado = $co->prepare("SELECT i.codigo, i.nombre, i.marca, i.cantidad as stock_total, i.cantidad_minima as stock_minimo, i.precio, p.nombre as presentacion_nombre FROM insumos i LEFT JOIN presentaciones p ON i.id_presentacion = p.id WHERE i.codigo like :codigo and i.nombre like :nombre and i.marca like :marca and i.cantidad like :stock_total and i.cantidad_minima like :stock_minimo and i.precio like :precio and p.nombre like :presentacion");
+			$resultado->bindValue(':codigo','%'.$this->codigo.'%');
+			$resultado->bindValue(':nombre','%'.$this->nombre.'%');
+			$resultado->bindValue(':marca','%'.$this->marca.'%');
+			$resultado->bindValue(':stock_total','%'.$this->stock_total.'%');
+			$resultado->bindValue(':stock_minimo','%'.$this->stock_minimo.'%');
+			$resultado->bindValue(':precio','%'.$this->precio.'%');
+			$resultado->bindValue(':presentacion','%'.$this->presentacion.'%');
+			$resultado->execute();
+			$fila = $resultado->fetchAll(PDO::FETCH_BOTH);
+			$html = "<html><head></head><body>";
+			$html = $html . "
+			<div style='position: relative;'>
+			<img src='otros/img/pdf/logo.jpg' style='width: 70px; position: absolute;  left: 650px;'>
+			<h2 style='color: #14345a; text-align: center; margin: 0; padding-top: 5px;'>Centro Odontologico Vital Sonrisa, C.A<br>J-</h2>
+			</div>";		
+			$html = $html . "<p style='color: #14345a;'><strong>Dirección: </strong>Calle 39 entre Carreras 20 y 21, Edificio La Princesa, Piso 1, Consultorio 7 / Barquisimeto.<br><strong>Telefono:</strong> 0414-1570548.<br><strong>Fecha:</strong> ".$fecha.".</p>";	
+
+
+
+
+
+
+			$html = $html . "<div style='background-color: #38bdde; border: solid;' ><h2 style='color:#14345a; text-align: center;'>Reporte Insumos</h2></div>";
+			$html = $html."<table style='width:100%; border: solid;' >";
+			$html = $html."<thead style='width:100%;'>";
+			$html = $html."<tr style='background-color: #38bdde; '>";
+			$html = $html."<th style='border: solid;'>#</th>";    
+			$html = $html."<th style='border: solid;'>Codigo</th>";
+			$html = $html."<th style='border: solid;'>Nombre</th>";
+			$html = $html."<th style='border: solid;'>Marca</th>";
+			$html = $html."<th style='border: solid;'>Stock total</th>";
+			$html = $html."<th style='border: solid;'>Stock minimo</th>";
+			$html = $html."<th style='border: solid;'>Precio</th>";
+			$html = $html."<th style='border: solid;'>Presentación</th>";
+			$html = $html."</tr>";
+			$html = $html."</thead>";
+			$html = $html."<tbody>";
+			if($fila){
+				$n=1;
+				foreach($fila as $f){
+					$html = $html."<tr>";
+					$html = $html."<td style='text-align:center; border: solid; '>".$n."</td>";
+					$html = $html."<td style='border: solid;'>".$f['codigo']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['nombre']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['marca']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['stock_total']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['stock_minimo']."</td>";
+					$html = $html."<td style='border: solid;'>$".$f['precio']."</td>";
+					$html = $html."<td style='border: solid;'>".$f['presentacion_nombre']."</td>";
+					$html = $html."</tr>";
+					$n++;
+				}
+			}
+			$html = $html."</tbody>";
+			$html = $html."</table>";
+			$html = $html."</div></div></div>";
+			$html = $html."</body></html>";    
+		}catch(Exception $e){
+		}
+		$fecha = date('d-m-y');        
+		$pdf = new DOMPDF();
+		$pdf->set_paper("letter", "portrait");
+		$pdf->load_html( mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
+		$pdf->render();
+		$pdf->stream("ReporteInsumos".$fecha.".pdf", array("Attachment" => false));    
+	}
 
 }
 ?>
