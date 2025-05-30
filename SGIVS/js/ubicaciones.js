@@ -680,6 +680,9 @@ function limpia() {
     $("#fechaconsulta").val("").prop("disabled", false);
     $("#proximacita").val("").prop("disabled", false);
     $("#observaciones").val("").prop("disabled", false);
+    $("#cedula").val("").prop("disabled", true);
+
+
 
     // Limpia mensajes de error si existen
     $("#snombre").text("");
