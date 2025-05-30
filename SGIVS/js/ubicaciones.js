@@ -189,8 +189,8 @@ $(document).ready(function () {
     });
 
    
-     $("#incluir").on("click", function () {
-        limpia(); // Limpia los campos
+    $("#incluir").on("click", function () {
+        limpia(); // Limpia los campos antes de abrir el modal
         $("#proceso").text("INCLUIR"); // Cambia el texto del botón
         $("#modal1").modal("show"); // Muestra el modal
     });
@@ -312,24 +312,26 @@ function pone(pos, accion) {
         // $("#imagen").prop("disabled", false); // Activa el campo imagen
     } else {
         $("#proceso").text("ELIMINAR"); // Cambia el texto a ELIMINAR
-        $("#nombre").prop("disabled", true); // Desactiva el campo nombre
-        $("#Apellido").prop("disabled", true); // Desactiva el campo Apellido
-        $("#telefono").prop("disabled", true); // Desactiva el campo telefono
-        $("#correo").prop("disabled", true); // Desactiva el campo correo
-        $("#Sexo").prop("disabled", true); // Desactiva el campo Sexo
-        $("#Ocupacion").prop("disabled", true); // Desactiva el campo Ocupacion
-        $("#PersonaContacto").prop("disabled", true); // Desactiva el campo PersonaContacto
-        $("#Edad").prop("disabled", true); // Desactiva el campo Edad
-        $("#motivo").prop("disabled", true); // Desactiva el campo motivo
-        $("#diagnostico").prop("disabled", true); // Desactiva el campo diagnostico
-        $("#tratamiento").prop("disabled", true); // Desactiva el campo tratamiento
-        $("#medicamentos").prop("disabled", true); // Desactiva el campo medicamentos
-        $("#dientesafectados").prop("disabled", true); // Desactiva el campo dientesafectados
-        $("#antecedentes").prop("disabled", true); // Desactiva el campo antecedentes
-        $("#fechaconsulta").prop("disabled", true); // Desactiva el campo fechaconsulta
-        $("#proximacita").prop("disabled", true); // Desactiva el campo proximacita
-        $("#observaciones").prop("disabled", true); // Desactiva el campo observaciones
-        // $("#imagen").prop("disabled", true); // Desactiva el campo imagen
+        // Desactiva todos los campos para que ninguno esté disponible al eliminar
+        $("#nombre").prop("disabled", true);
+        $("#Apellido").prop("disabled", true);
+        $("#telefono").prop("disabled", true);
+        $("#correo").prop("disabled", true);
+        $("#Sexo").prop("disabled", true);
+        $("#Ocupacion").prop("disabled", true);
+        $("#PersonaContacto").prop("disabled", true);
+        $("#Edad").prop("disabled", true);
+        $("#motivo").prop("disabled", true);
+        $("#diagnostico").prop("disabled", true);
+        $("#tratamiento").prop("disabled", true);
+        $("#medicamentos").prop("disabled", true);
+        $("#dientesafectados").prop("disabled", true);
+        $("#antecedentes").prop("disabled", true);
+        $("#fechaconsulta").prop("disabled", true);
+        $("#proximacita").prop("disabled", true);
+        $("#observaciones").prop("disabled", true);
+        // Si tienes campos adicionales, desactívalos aquí también
+        // $("#imagen").prop("disabled", true);
     }
     $("#nombre").val($(linea).find("td:eq(1)").text()); // Rellena el campo nombre
     $("#Apellido").val($(linea).find("td:eq(2)").text()); // Rellena el campo Apellido
@@ -468,23 +470,28 @@ function enviaAjax(datos) {
 }
 function limpia() {
     // Limpia los campos del formulario
-    $("#nombre").val("").prop("disabled", false); // Limpia el campo nombre y lo habilita
+    // Limpia todos los campos del formulario y habilita los necesarios
+    $("#nombre").val("").prop("disabled", false);
     $("#Apellido").val("").prop("disabled", false);
-    $("#Ocupacion").val("");
-    $("#Sexo").prop("selectedIndex", 0);
-    $("#PersonaContacto").val("");
+    $("#Ocupacion").val("").prop("disabled", false);
+    $("#Sexo").prop("selectedIndex", 0).prop("disabled", false);
+    $("#PersonaContacto").val("").prop("disabled", false);
     $("#telefono").val("").prop("disabled", false);
-    $("#Edad").val("");
-    $("#correo").val("");
-    $("#motivo").val("");
-    $("#diagnostico").val("");
-    $("#tratamiento").val("");
-    $("#medicamentos").val("");
-    $("#dientesafectados").val("");
-    $("#antecedentes").val("");
-    $("#fechaconsulta").val("");
-    $("#proximacita").val("");
-    $("#observaciones").val("");
+    $("#Edad").val("").prop("disabled", false);
+    $("#correo").val("").prop("disabled", false);
+    $("#motivo").val("").prop("disabled", false);
+    $("#diagnostico").val("").prop("disabled", false);
+    $("#tratamiento").val("").prop("disabled", false);
+    $("#medicamentos").val("").prop("disabled", false);
+    $("#dientesafectados").val("").prop("disabled", false);
+    $("#antecedentes").val("").prop("disabled", false);
+    $("#fechaconsulta").val("").prop("disabled", false);
+    $("#proximacita").val("").prop("disabled", false);
+    $("#observaciones").val("").prop("disabled", false);
+
+    // Limpia mensajes de error si existen
+    $("#snombre").text("");
+    $("#sApellido").text("");
     // Limpia el mensaje de error
     /*$("#descripcion").val("");
     $("#imagen").val("");

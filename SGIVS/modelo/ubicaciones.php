@@ -300,8 +300,6 @@ class historial extends datos
 					$respuesta .= "<td class='align-middle'>" . $r['telefono'] . "</td>"; // Teléfono
 					$respuesta .= "<td class='align-middle'>" . $r['correo'] . "</td>"; // Correo
 					
-					
-
 					//$respuesta .= "<td class='align-middle'><a href='" . $r['imagen'] . "' target='_blank'><img src='" . $r['imagen'] . "' alt='Imagen de la ubicación' class='img'/></a></td>"; // Imagen
 					$respuesta .= "<td class='align-middle'>";
 					$respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar ubicación'><i class='bi bi-arrow-repeat'></i></button><br/>";
