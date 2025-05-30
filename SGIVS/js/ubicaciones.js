@@ -687,3 +687,36 @@ document.getElementById('buscadorPacientes').addEventListener('keyup', function(
         fila.style.display = texto.includes(filtro) ? '' : 'none';
     });
 });
+// Espera a que el DOM esté listo
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('tablaPacientes').addEventListener('click', function(e) {
+			let tr = e.target.closest('tr');
+			// Evita abrir el modal si se hace clic en un botón dentro de "Acciones"
+			if (tr && tr.parentNode.tagName === 'TBODY') {
+				// Si el clic fue en la columna de Acciones (última columna), no abrir modal
+				const accionesTd = tr.querySelector('td:last-child');
+				if (accionesTd && (accionesTd.contains(e.target) || accionesTd === e.target)) {
+					return;
+				}
+				const tds = tr.querySelectorAll('td');
+				if (tds.length > 0) {
+					const campos = [
+						'Numero',
+						'Nombre',
+						'Apellido',
+						'Teléfono',
+						'Correo'
+					];
+					let html = '';
+					tds.forEach((td, idx) => {
+						if (idx < campos.length) {
+							html += `<li class="list-group-item"><strong>${campos[idx]}:</strong> ${td.textContent}</li>`;
+						}
+					});
+					document.getElementById('camposModeloLista').innerHTML = html;
+					const modal = new bootstrap.Modal(document.getElementById('modalModelo'));
+					modal.show();
+				}
+			}
+		});
+	});

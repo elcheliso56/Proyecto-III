@@ -322,6 +322,7 @@ class historial extends datos
 		return $r; // Retorna el resultado
 	}
 
+
 	
 	// Método privado para verificar si una ubicación existe
 	private function existe($nombre)
