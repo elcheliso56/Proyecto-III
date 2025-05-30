@@ -81,6 +81,7 @@ $(document).ready(function () {
     $("#Apellido").on("keyup", function () {
         validarkeyup(/^[^"']{0,100}$/, $(this), $("#sApellido"), "El Apellido debe tener un máximo de 100 caracteres");
     });
+    
 
     // Manejo de clics en el botón de proceso
     $("#proceso").on("click", function () {
@@ -311,7 +312,7 @@ function validarenvio() {
     ) {
         Swal.fire({
             title: "¡ERROR!",
-            text: "El teléfono debe ser un número venezolano válido (ej: 04141234567, 02121234567)",
+            text: "El teléfono debe ser un número válido (ej: 04141234567, 02121234567)",
             icon: "error",
             confirmButtonText: "Aceptar"
         });

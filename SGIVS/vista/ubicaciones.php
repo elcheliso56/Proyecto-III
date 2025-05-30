@@ -194,8 +194,25 @@ require_once('comunes/menu.php');
 								<input class="form-control" type="text" id="medicamentos" name="medicamentos">
 							</div>
 							<div class="col-md-4">
-								<label for="dientesafectados" class="form-label">Dientes Afectados</label>
-								<input class="form-control" type="text" id="dientesafectados" name="dientesafectados">
+								<label for="dientesafectados" class="form-label">Diente Afectado</label>
+								<select class="form-select" id="dientesafectados" name="dientesafectados" required>
+									<option value="" selected disabled>Seleccione</option>
+									<?php
+									// Piezas dentales permanentes (del 11 al 48)
+									for ($i = 11; $i <= 18; $i++) {
+										echo "<option value=\"$i\">$i</option>";
+									}
+									for ($i = 21; $i <= 28; $i++) {
+										echo "<option value=\"$i\">$i</option>";
+									}
+									for ($i = 31; $i <= 38; $i++) {
+										echo "<option value=\"$i\">$i</option>";
+									}
+									for ($i = 41; $i <= 48; $i++) {
+										echo "<option value=\"$i\">$i</option>";
+									}
+									?>
+								</select>
 							</div>
 							<div class="col-12">
 								<label for="antecedentes" class="form-label">Antecedentes Médicos</label>
