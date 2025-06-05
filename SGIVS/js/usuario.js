@@ -103,10 +103,11 @@ $(document).ready(function(){
                         var datos = new FormData();
                         datos.append('accion','incluir');
                         datos.append('usuario',$("#usuario").val());
+                        datos.append('nombre_apellido',$("#nombre_apellido").val());
                         datos.append('id_rol',$("#id_rol").val());
                         datos.append('contraseña',$("#contraseña").val());
                         datos.append('imagen', $("#imagen")[0].files[0] || new File([], ""));
-                        datos.append('estado',$("#estado").val());
+                        datos.append('estado', 'ACTIVO');
                         enviaAjax(datos);
                     }
                 });
@@ -134,6 +135,7 @@ $(document).ready(function(){
                         var datos = new FormData();
                         datos.append('accion','modificar');
                         datos.append('usuario',$("#usuario").val());
+                        datos.append('nombre_apellido',$("#nombre_apellido").val());
                         datos.append('id_rol',$("#id_rol").val());
                         datos.append('contraseña',$("#contraseña").val());
                         datos.append('imagen', $("#imagen")[0].files[0] || new File([], ""));
@@ -193,6 +195,15 @@ function validarenvio(){
         Swal.fire({
             title: "¡ERROR!",
             text: "El usuario es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    if ($("#nombre_apellido").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El nombre y apellido son obligatorios",
             icon: "error",
             confirmButtonText: "Aceptar"
         });    
@@ -261,6 +272,8 @@ function pone(pos,accion){
         $("#repetir_contraseña").show();
         $("label[for='contraseña']").show();
         $("label[for='repetir_contraseña']").show();
+        $("#listaEmpleados").hide();
+        $("#cedula").closest('.col-md-4').hide();
     }
     else{
         $("#proceso").text(" ELIMINAR");
@@ -274,15 +287,19 @@ function pone(pos,accion){
         $("#repetir_contraseña").hide();
         $("label[for='contraseña']").hide();
         $("label[for='repetir_contraseña']").hide();
+        $("#listaEmpleados").hide();
+        $("#cedula").closest('.col-md-4').hide();
     }
     
     // Obtener los valores de la fila
-    var usuario = $(linea).find("td:eq(0)").text();
-    var nombreRol = $(linea).find("td:eq(1)").text();
-    var estado = $(linea).find("td:eq(2)").text();
+    var usuario = $(linea).find("td:eq(5)").text(); // Usuario está en la columna oculta
+    var nombreApellido = $(linea).find("td:eq(1)").text(); // Nombre y Apellido
+    var rol = $(linea).find("td:eq(2)").text(); // Rol
+    var estado = $(linea).find("td:eq(3)").find("input").is(":checked") ? "ACTIVO" : "INACTIVO"; // Estado
     
     // Establecer los valores en los campos
     $("#usuario").val(usuario);
+    $("#nombre_apellido").val(nombreApellido);
     $("#estado").val(estado);
 
     // Cargar y seleccionar el rol correcto
@@ -303,9 +320,9 @@ function pone(pos,accion){
                 if(lee.resultado == "consultar") {
                     var roles = lee.mensaje;
                     var options = '<option value="" disabled>Seleccione una opción</option>';
-                    roles.forEach(function(rol) {
-                        if(rol.estado === 'ACTIVO') {
-                            options += `<option value="${rol.id}" ${rol.nombre_rol === nombreRol ? 'selected' : ''}>${rol.nombre_rol}</option>`;
+                    roles.forEach(function(rol_item) {
+                        if(rol_item.estado === 'ACTIVO') {
+                            options += `<option value="${rol_item.id}" ${rol_item.nombre_rol === rol ? 'selected' : ''}>${rol_item.nombre_rol}</option>`;
                         }
                     });
                     $("#id_rol").html(options);
@@ -324,7 +341,7 @@ function pone(pos,accion){
     $("#repetir_contraseña").val("");
 
     // Mostrar imagen actual si existe
-    var imagenSrc = $(linea).find("img").attr("src");
+    var imagenSrc = $(linea).find("td:eq(6) img").attr("src");
     if (imagenSrc) {
         $("#imagen_actual").attr("src", imagenSrc).show();
     } else {
@@ -352,15 +369,26 @@ function enviaAjax(datos) {
             if (lee.resultado == "consultar") {
                 destruyeDT();
                 let filas = "";
-                (lee.mensaje || []).forEach(function(p) {
+                (lee.mensaje || []).forEach(function(p,idx) {
                     filas += `<tr class='text-center'>
-                        <td class='align-middle'>${p.usuario}</td>
+                        <td class='align-middle'>${idx+1}</td>
+                        <td class='align-middle'>${p.nombre_apellido}</td>
                         <td class='align-middle'>${p.nombre_rol}</td>
-                        <td class='align-middle'>${p.estado}</td>
+                        <td class='align-middle'>
+                            <div class="form-check form-switch d-flex justify-content-center">
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                    ${p.estado === 'ACTIVO' ? 'checked' : ''} 
+                                    onchange="cambiarEstado(this, '${p.usuario}')"
+                                    style="width: 40px; height: 20px; cursor: pointer;"
+                                >
+                            </div>
+                        </td>
                         <td class='align-middle' style='display: flex; justify-content: center;'>
+                            <button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='verDetalle(this)' title='Ver detalles' style='margin:.2rem; width: 40px !important;'><i class='bi bi-eye-fill'></i></button><br/>
                             <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
                             <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
                         </td>
+                        <td style='display: none;'>${p.usuario}</td>
                         <td style='display: none;'><img src='${p.imagen || "otros/img/usuarios/default.png"}' /></td>
                     </tr>`;
                 });
@@ -464,6 +492,8 @@ function limpia(){
     $("#repetir_contraseña").show();
     $("label[for='contraseña']").show();
     $("label[for='repetir_contraseña']").show();   
+    $("#listaEmpleados").show(); // Mostrar botón al incluir nuevo usuario
+    $("#cedula").closest('.col-md-4').show(); // Mostrar contenedor de cédula
 }
 
 $("#imagen").on("change", function() {
@@ -535,3 +565,125 @@ function enviaAjaxEmpleados(datos) {
         }
     });
 }
+
+function verDetalle(pos) {
+    let linea = $(pos).closest('tr');
+    
+    // Obtener los valores de la fila
+    let usuario = $(linea).find("td:eq(5)").text();
+    let nombreApellido = $(linea).find("td:eq(1)").text();
+    let rol = $(linea).find("td:eq(2)").text();
+    let estado = $(linea).find("td:eq(3)").find("input").is(":checked") ? "ACTIVO" : "INACTIVO";
+    let imagen = $(linea).find("td:eq(6) img").attr("src") || "otros/img/usuarios/default.png";
+    
+    // Establecer los valores en el modal de detalles
+    $("#detalleUsuario").text(usuario);
+    $("#detalleNombreApellido").text(nombreApellido);
+    $("#detalleRol").text(rol);
+    $("#detalleEstado").text(estado);
+    $("#detalleImagen").attr("src", imagen);
+    
+    // Mostrar el modal
+    $("#modalDetalle").modal("show");
+}
+
+function cambiarEstado(checkbox, usuario) {
+    const nuevoEstado = checkbox.checked ? 'ACTIVO' : 'INACTIVO';
+    
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: `¿Deseas cambiar el estado del usuario a ${nuevoEstado}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, cambiar",
+        cancelButtonText: "No, cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var datos = new FormData();
+            datos.append('accion', 'modificar');
+            datos.append('usuario', usuario);
+            datos.append('estado', nuevoEstado);
+            
+            $.ajax({
+                async: true,
+                url: "",
+                type: "POST",
+                contentType: false,
+                data: datos,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#loader").show();
+                },
+                success: function(respuesta) {
+                    try {
+                        var lee = JSON.parse(respuesta);
+                        if(lee.resultado == 'modificar') {
+                            Swal.fire({
+                                title: "¡Actualizado!",
+                                text: "El estado del usuario ha sido actualizado.",
+                                icon: "success"
+                            });
+                            consultar(); // Actualizar la tabla
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: lee.mensaje,
+                                icon: "error"
+                            });
+                            consultar(); // Recargar la tabla para mantener el estado anterior
+                        }
+                    } catch(e) {
+                        console.error(e);
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error al procesar la respuesta del servidor",
+                            icon: "error"
+                        });
+                        consultar(); // Recargar la tabla para mantener el estado anterior
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al comunicarse con el servidor",
+                        icon: "error"
+                    });
+                    consultar(); // Recargar la tabla para mantener el estado anterior
+                },
+                complete: function() {
+                    $("#loader").hide();
+                }
+            });
+        } else {
+            consultar(); // Si el usuario cancela, recargar la tabla para mantener el estado anterior
+        }
+    });
+}
+
+// Función para filtrar la tabla de empleados
+function filtrarEmpleados() {
+    let input = $("#buscarEmpleado").val().toLowerCase();
+    $("#tablapaciente tr").filter(function() {
+        let cedula = $(this).find("td:eq(0)").text().toLowerCase();
+        let nombre = $(this).find("td:eq(1)").text().toLowerCase();
+        let apellido = $(this).find("td:eq(2)").text().toLowerCase();
+        let coincide = cedula.includes(input) || 
+                      nombre.includes(input) || 
+                      apellido.includes(input);
+        $(this).toggle(coincide);
+    });
+}
+
+// Evento para el campo de búsqueda
+$("#buscarEmpleado").on("keyup", function() {
+    filtrarEmpleados();
+});
+
+// Limpiar el campo de búsqueda cuando se cierre el modal
+$("#modalusuario").on("hidden.bs.modal", function () {
+    $("#buscarEmpleado").val("");
+    filtrarEmpleados();
+});

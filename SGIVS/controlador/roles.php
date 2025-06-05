@@ -19,6 +19,12 @@ if(is_file("vista/".$pagina.".php")){
 			$o->set_nombre_rol($_POST['nombre_rol']); // Establece el número de documento
 			echo  json_encode($o->eliminar()); // Elimina y devuelve el resultado en JSON
 		}
+        // Acción para cambiar el estado
+        elseif($accion=='cambiar_estado'){
+            $o->set_id($_POST['id']);
+            $o->set_estado($_POST['estado']);
+            echo json_encode($o->cambiar_estado());
+        }
         // Acción para consultar permisos de un rol
         elseif($accion=='consultar_permisos_rol'){
             $o->set_id($_POST['id_rol']);

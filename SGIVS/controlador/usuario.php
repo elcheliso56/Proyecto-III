@@ -34,15 +34,22 @@ if(is_file("vista/".$pagina.".php")){
 		else{		  
 			// Establece los datos del usuario
 			$o->set_usuario($_POST['usuario']);
+			
+			// Si solo se está actualizando el estado
+			if (isset($_POST['estado']) && !isset($_POST['id_rol']) && !isset($_POST['nombre_apellido'])) {
+				$o->set_estado($_POST['estado']);
+				echo json_encode($o->modificarEstado());
+				exit;
+			}
+			
+			// Para otras modificaciones, establecer todos los campos
+			$o->set_nombre_apellido($_POST['nombre_apellido']);
 			$o->set_id_rol($_POST['id_rol']);
-			$o->set_contraseña($_POST['contraseña']);
-			$o->set_estado($_POST['estado']);
-
-			// Establece la contraseña si no está vacía
 			if (!empty($_POST['contraseña'])) {
 				$o->set_contraseña($_POST['contraseña']);
 			}
-			
+			$o->set_estado($_POST['estado']);
+
 			// Manejo de la imagen del usuario
 			if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0){
 				$imagen_nombre = uniqid() . '_' . $_FILES['imagen']['name']; // Genera un nombre único para la imagen

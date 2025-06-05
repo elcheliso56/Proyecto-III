@@ -48,6 +48,8 @@ class roles extends datos{
 			$co = $this->conecta_usuarios();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
+                // Asegurarse que el estado sea ACTIVO al incluir
+                $this->estado = 'ACTIVO';
                 // Inserta el nuevo empleado en la base de datos			
 				$co->query("Insert into roles(id,nombre_rol,descripcion,estado)
 					Values(
@@ -77,44 +79,24 @@ class roles extends datos{
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$co->beginTransaction();
-
-			// Verificar si el nuevo nombre_rol ya existe
-			$stmt = $co->prepare("SELECT COUNT(*) FROM roles WHERE nombre_rol = ? AND id != ?");
-			$stmt->execute([$this->nombre_rol, $this->id]);
-			if($stmt->fetchColumn() > 0) {
-				throw new Exception("El nombre de rol ya existe en la base de datos");
-			}
-
-			// Actualizar la tabla roles
-			$stmt = $co->prepare("UPDATE roles SET 
-				nombre_rol = ?,
-				descripcion = ?,
-				estado = ?
-				WHERE id = ?");
-			
-			$stmt->execute([
-				$this->nombre_rol,
-				$this->descripcion,
-				$this->estado,
-				$this->id
-			]);
-
-			if($stmt->rowCount() > 0) {
-				$co->commit();
-				$r['resultado'] = 'modificar';
-				$r['mensaje'] = '¡Registro modificado con éxito!';
-			} else {
-				throw new Exception("No se encontró el rol a modificar");
-			}
+			// Actualiza los datos del empleado en la base de datos				
+			$co->query("Update roles set 
+				nombre_rol = '$this->nombre_rol',
+				descripcion = '$this->descripcion',
+				estado = '$this->estado'
+				where
+				id = '$this->id'
+				");
+			$r['resultado'] = 'modificar';
+			$r['mensaje'] =  '¡Registro modificado con éxito!';
 		} catch(Exception $e) {
-			$co->rollBack();
 			$r['resultado'] = 'error';
-			$r['mensaje'] = $e->getMessage();
+			$r['mensaje'] =  $e->getMessage();
 		}
 		$co = null;
 		return $r;
 	}
+
 
     // Método para eliminar un empleado	
 	function eliminar(){
@@ -237,10 +219,21 @@ class roles extends datos{
             );
         }
 
+        // Primero verificar si el rol existe
         $co = $this->conecta_usuarios();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $r = array();
-        try{
+        
+        try {
+            // Verificar si el rol existe
+            $stmt = $co->prepare("SELECT id FROM roles WHERE id = ?");
+            $stmt->execute([$this->id]);
+            if (!$stmt->fetch()) {
+                return array(
+                    'resultado' => 'error',
+                    'mensaje' => 'El rol especificado no existe'
+                );
+            }
+
             $co->beginTransaction();
             
             // Eliminar permisos actuales
@@ -251,7 +244,7 @@ class roles extends datos{
             if(!empty($permisos_seleccionados)){
                 $stmt_insert = $co->prepare("INSERT INTO rol_permiso (id_rol, id_permiso) VALUES (?, ?)");
                 foreach($permisos_seleccionados as $id_permiso){
-                    if(!empty($id_permiso)) { // Verificar que el ID no esté vacío
+                    if(!empty($id_permiso)) {
                         $stmt_insert->execute([$this->id, $id_permiso]);
                     }
                 }
@@ -264,11 +257,44 @@ class roles extends datos{
             $stmt_count->execute([$this->id]);
             $count = $stmt_count->fetch(PDO::FETCH_ASSOC);
             
-            $r['resultado'] = 'permisos';
-            $r['mensaje'] = 'Permisos actualizados exitosamente. Total de permisos guardados: ' . $count['total'];
-            $r['total_permisos'] = $count['total'];
-        }catch(Exception $e){
-            $co->rollBack();
+            return array(
+                'resultado' => 'permisos',
+                'mensaje' => 'Permisos actualizados exitosamente. Total de permisos guardados: ' . $count['total'],
+                'total_permisos' => $count['total']
+            );
+        } catch(Exception $e) {
+            if ($co->inTransaction()) {
+                $co->rollBack();
+            }
+            return array(
+                'resultado' => 'error',
+                'mensaje' => $e->getMessage()
+            );
+        } finally {
+            $co = null;
+        }
+    }
+
+    function cambiar_estado(){
+        $co = $this->conecta_usuarios();
+        $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $r = array();
+        try {
+            // Verificar si es el rol de administrador
+            $resultado = $co->query("SELECT nombre_rol FROM roles WHERE id = '$this->id'");
+            $rol = $resultado->fetch(PDO::FETCH_ASSOC);
+            
+            if($rol['nombre_rol'] === 'ADMINISTRADOR') {
+                $r['resultado'] = 'error';
+                $r['mensaje'] = 'No se puede modificar el estado del rol ADMINISTRADOR';
+                return $r;
+            }
+
+            $co->query("UPDATE roles SET estado = '$this->estado' WHERE id = '$this->id'");
+            
+            $r['resultado'] = 'modificar';
+            $r['mensaje'] = '¡Estado actualizado con éxito!';
+        } catch(Exception $e) {
             $r['resultado'] = 'error';
             $r['mensaje'] = $e->getMessage();
         }

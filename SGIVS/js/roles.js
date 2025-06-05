@@ -79,7 +79,7 @@ $(document).ready(function() {
                             datos.append('id', $("#id").val());
                             datos.append('nombre_rol', $("#nombre_rol").val());
                             datos.append('descripcion', $("#descripcion").val());
-                            datos.append('estado', $("#estado").val());
+                            datos.append('estado', 'ACTIVO'); // Establecer estado ACTIVO por defecto
                             enviaAjax(datos);
                         }
                     }
@@ -111,8 +111,69 @@ $(document).ready(function() {
                             datos.append('id', $("#id").val());
                             datos.append('nombre_rol', $("#nombre_rol").val());
                             datos.append('descripcion', $("#descripcion").val());
-                            datos.append('estado', $("#estado").val());			           
-                            enviaAjax(datos);
+                            datos.append('estado', $("#estado").val());
+
+                            // Debug
+                            console.log('Enviando datos de modificación:');
+                            for (var pair of datos.entries()) {
+                                console.log(pair[0] + ': ' + pair[1]);
+                            }
+
+                            $.ajax({
+                                async: true,
+                                url: "?pagina=roles",
+                                type: "POST",
+                                contentType: false,
+                                data: datos,
+                                processData: false,
+                                cache: false,
+                                beforeSend: function() {
+                                    $("#loader").show();
+                                },
+                                success: function(respuesta) {
+                                    console.log('Respuesta del servidor:', respuesta);
+                                    try {
+                                        var lee = JSON.parse(respuesta);
+                                        if(lee.resultado == 'modificar') {
+                                            Swal.fire({
+                                                title: "¡Modificado!",
+                                                text: lee.mensaje,
+                                                icon: "success"
+                                            }).then(() => {
+                                                $("#modal1").modal("hide");
+                                                consultar();
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                title: "Error",
+                                                text: lee.mensaje,
+                                                icon: "error"
+                                            });
+                                        }
+                                    } catch(e) {
+                                        console.error('Error al procesar respuesta:', e);
+                                        console.error('Respuesta recibida:', respuesta);
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: "Error al procesar la respuesta del servidor",
+                                            icon: "error"
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error AJAX:', error);
+                                    console.error('Estado:', status);
+                                    console.error('Respuesta:', xhr.responseText);
+                                    Swal.fire({
+                                        title: "Error",
+                                        text: "Error en la comunicación con el servidor",
+                                        icon: "error"
+                                    });
+                                },
+                                complete: function() {
+                                    $("#loader").hide();
+                                }
+                            });
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
@@ -394,6 +455,82 @@ function cargarPermisos() {
     });
 }
 
+function cambiarEstado(checkbox, id) {
+    const nuevoEstado = checkbox.checked ? 'ACTIVO' : 'INACTIVO';
+    
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: `¿Deseas cambiar el estado del rol a ${nuevoEstado}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, cambiar",
+        cancelButtonText: "No, cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var datos = new FormData();
+            datos.append('accion', 'cambiar_estado');
+            datos.append('id', id);
+            datos.append('estado', nuevoEstado);
+            
+            $.ajax({
+                async: true,
+                url: "",
+                type: "POST",
+                contentType: false,
+                data: datos,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#loader").show();
+                },
+                success: function(respuesta) {
+                    try {
+                        var lee = JSON.parse(respuesta);
+                        if(lee.resultado == 'modificar') {
+                            Swal.fire({
+                                title: "¡Actualizado!",
+                                text: "El estado del rol ha sido actualizado.",
+                                icon: "success"
+                            });
+                            consultar(); // Actualizar la tabla
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: lee.mensaje,
+                                icon: "error"
+                            });
+                            consultar(); // Recargar la tabla para mantener el estado anterior
+                        }
+                    } catch(e) {
+                        console.error(e);
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error al procesar la respuesta del servidor",
+                            icon: "error"
+                        });
+                        consultar(); // Recargar la tabla para mantener el estado anterior
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al comunicarse con el servidor",
+                        icon: "error"
+                    });
+                    consultar(); // Recargar la tabla para mantener el estado anterior
+                },
+                complete: function() {
+                    $("#loader").hide();
+                }
+            });
+        } else {
+            consultar(); // Si el usuario cancela, recargar la tabla para mantener el estado anterior
+        }
+    });
+}
+
 function enviaAjax(datos) {
     $.ajax({
         async: true,
@@ -415,14 +552,23 @@ function enviaAjax(datos) {
                     let filas = "";
                     (lee.mensaje || []).forEach(function(p,idx) {
                         filas += `<tr class='text-center'>
-                            <td class='align-middle'>${idx+1}</td>
+                            <td class='align-middle' style='display: none;'>${p.id}</td>
                             <td class='align-middle'>${p.nombre_rol}</td>
                             <td class='align-middle'>${p.descripcion}</td>
-                            <td class='align-middle'>${p.estado}</td>
+                            <td class='align-middle'>
+                                <div class="form-check form-switch d-flex justify-content-center">
+                                    <input class="form-check-input" type="checkbox" role="switch" 
+                                        ${p.estado === 'ACTIVO' ? 'checked' : ''} 
+                                        onchange="cambiarEstado(this, '${p.id}')"
+                                        style="width: 40px; height: 20px; cursor: pointer;"
+                                        ${p.nombre_rol === 'ADMINISTRADOR' ? 'disabled' : ''}
+                                    >
+                                </div>
+                            </td>
                             <td class='align-middle' style='display: flex; justify-content: center;'>
                                 <button type='button' class='btn-sm btn-warning w-50 small-width mb-1' onclick='pone(this,2)' title='Modificar permisos' style='margin:.2rem; width: 40px !important;'><i class='bi bi-shield-lock-fill'></i></button><br/>
                                 <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
-                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
+                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;' ${p.nombre_rol === 'ADMINISTRADOR' ? 'disabled' : ''}><i class='bi bi-trash-fill'></i></button><br/>
                             </td>
                         </tr>`;
                     });
@@ -516,7 +662,7 @@ function limpia() {
     $("#id").val("");
     $("#nombre_rol").val("");
     $("#descripcion").val("");
-    $("#estado").prop("selectedIndex", 0);
+    $("#estado").val("ACTIVO");
 
     // Habilita los campos del formulario
     $("#id").prop("disabled", true);

@@ -10,7 +10,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Roles y Permisos de Usuario</h1>
 				<div>
-					<button type="button" class="btn btn-info me-2" id="incluir">
+					<button type="button" class="btn btn-outline-info me-2" id="incluir">
 						<i class="bi bi-plus-circle me-1"></i> Ingresar Rol
 					</button>
 				</div>
@@ -38,7 +38,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<thead class="table-light">
 							<tr>
 								<!-- Encabezados de la tabla -->
-								<th class="text-center">#</th>
+								<th class="text-center" style="display: none;">#</th>
 								<th class="text-center">Nombre del Rol</th>
 								<th class="text-center">Descripción</th>
 								<th class="text-center">Estado</th>
@@ -81,21 +81,9 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 								</div>
 
-								<div class="row mb-3">
-									<div class="col-md-12">
-										<label for="estado">Estado</label>
-										<select class="form-select" id="estado" style="text-align: center;">
-											<option value="ACTIVO">ACTIVO</option>
-											<option value="INACTIVO">INACTIVO</option>
-										</select>
-									</div>
-								</div>
-
 								<div class="modal-footer justify-content-between">
 									<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="bi bi-x-circle"></i> CERRAR</button>
-									<button type="button" class="btn btn-info" id="proceso">
-										<i class="bi bi-check-circle"></i> INCLUIR
-									</button>
+									<button type="button" class="btn btn-info bi bi-check-circle" id="proceso"></button>
 								</div>
 							</div>
 						</form>

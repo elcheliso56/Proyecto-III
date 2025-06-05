@@ -3,6 +3,7 @@ require_once('modelo/datos.php');
 class usuarios extends datos{    
 // Propiedades de la clase
 	private $usuario;
+	private $nombre_apellido;
 	private $id_rol; 
 	private $contraseña;
 	private $imagen;
@@ -11,6 +12,9 @@ class usuarios extends datos{
 	// Métodos para establecer los valores de las propiedades
 	function set_usuario($valor){
 		$this->usuario = $valor; 
+	}
+	function set_nombre_apellido($valor){
+		$this->nombre_apellido = $valor;
 	}
 	function set_id_rol($valor){
 		$this->id_rol = $valor;
@@ -27,6 +31,9 @@ class usuarios extends datos{
 
 	function get_usuario(){
 		return $this->usuario;
+	}
+	function get_nombre_apellido(){
+		return $this->nombre_apellido;
 	}
 	function get_id_rol(){
 		return $this->id_rol;
@@ -48,15 +55,17 @@ class usuarios extends datos{
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
 				$contraseña_hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
-				$co->query("START TRANSACTION;
+				$co->query("START TRANSACTION");
 
-							INSERT INTO usuario (usuario, contrasena, imagen) 
-							VALUES ('$this->usuario', '$contraseña_hash', '$this->imagen');
+				$co->query("INSERT INTO usuario (usuario, nombre_apellido, contrasena, imagen) 	
+							VALUES ('$this->usuario', '$this->nombre_apellido', '$contraseña_hash', '$this->imagen')");
 
-							INSERT INTO usuario_rol (usuario, id_rol, estado)
-							VALUES ('$this->usuario', '$this->id_rol', '$this->estado');
+				// Asegurar que el estado sea ACTIVO al crear un nuevo usuario
+				$estado = 'ACTIVO';
+				$co->query("INSERT INTO usuario_rol (usuario, id_rol, estado)
+							VALUES ('$this->usuario', '$this->id_rol', '$estado')");
 
-							COMMIT;");
+				$co->query("COMMIT");
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  '¡Registro guardado con exito!';
 			} catch(Exception $e) {
@@ -88,11 +97,13 @@ class usuarios extends datos{
 				if(!empty($this->contraseña)) {
 					$contraseña_hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
 					$co->query("UPDATE usuario SET 
+								nombre_apellido = '$this->nombre_apellido',
 								contrasena = '$contraseña_hash',
 								imagen = '$this->imagen'
 								WHERE usuario = '$this->usuario'");
 				} else {
 					$co->query("UPDATE usuario SET 
+								nombre_apellido = '$this->nombre_apellido',
 								imagen = '$this->imagen'
 								WHERE usuario = '$this->usuario'");
 				}
@@ -173,10 +184,11 @@ class usuarios extends datos{
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try{
-			$resultado = $co->query("SELECT u.usuario, u.imagen, r.nombre_rol, ur.estado 
+			$resultado = $co->query("SELECT u.usuario, u.nombre_apellido, u.imagen, r.nombre_rol, ur.estado 
                                     FROM usuario_rol AS ur 
                                     INNER JOIN roles AS r ON ur.id_rol = r.id 
                                     INNER JOIN usuario AS u ON ur.usuario = u.usuario");
+			$usuario = [];
 			$usuario = [];
 			foreach($resultado->fetchAll(PDO::FETCH_ASSOC) as $row){
 				$usuario[] = $row;
@@ -280,6 +292,27 @@ class usuarios extends datos{
 		} catch (Exception $e) {
 			$r['resultado'] = 'error';
 			$r['mensaje'] = $e->getMessage();
+		}
+		return $r;
+	}
+
+	function modificarEstado(){
+		$co = $this->conecta_usuarios();
+		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$r = array();
+		if($this->existe($this->usuario)){
+			try {
+				$co->query("UPDATE usuario_rol SET estado = '$this->estado' WHERE usuario = '$this->usuario'");
+				$r['resultado'] = 'modificar';
+				$r['mensaje'] =  '¡Estado modificado con éxito!';
+			} catch(Exception $e) {
+				$r['resultado'] = 'error';
+				$r['mensaje'] =  $e->getMessage();
+			}
+		}
+		else{
+			$r['resultado'] = 'modificar';
+			$r['mensaje'] =  'Usuario no registrado';
 		}
 		return $r;
 	}

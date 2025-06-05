@@ -10,7 +10,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Usuarios</h1>
 				<div>
-					<button type="button" class="btn btn-info me-2" id="incluir">
+					<button type="button" class="btn btn-outline-info me-2" id="incluir">
 						<i class="bi bi-plus-circle me-1"></i> Ingresar Usuario
 					</button>
 				</div>
@@ -38,10 +38,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<thead class="table-light">
 							<tr>
 								<!-- Encabezados de la tabla -->
-								<th class="text-center">Usuario</th>
+								<th class="text-center">#</th>
+								<th class="text-center">Nombre y Apellido</th>
 								<th class="text-center">Rol</th>
 								<th class="text-center">Estado</th>
 								<th class="text-center">Acciones</th>
+								<th class="text-center" style="display: none;">Usuario</th>
 								<th class="text-center" style="display: none;">Imagen</th>
 							</tr>
 						</thead>
@@ -120,16 +122,6 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
                                     </div>
                                 </div>
 
-								<div class="row mb-3">
-									<div class="col-md-12">
-										<label for="estado">Estado</label>
-										<select class="form-select" id="estado" style="text-align: center;">
-											<option value="ACTIVO">ACTIVO</option>
-											<option value="INACTIVO">INACTIVO</option>
-										</select>
-									</div>
-								</div>
-
 								<div class="row">
 									<div class="col-md-12">
 									</div>
@@ -153,6 +145,13 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
                         <h5 class="modal-title">Usuarios</h5>
                     </div>
                     <div class="modal-body">
+                        <!-- Agregar campo de búsqueda -->
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" id="buscarEmpleado" placeholder="Buscar por cédula, nombre o apellido...">
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped-columns table-hover table-sm">
                                 <thead>
@@ -166,6 +165,49 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
                                     <!-- Aquí se cargarán dinámicamente los datos de los clientes -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-start">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="bi bi-x-circle"></i> CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para ver detalles del usuario -->
+        <div class="modal fade" id="modalDetalle" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title"><i class="bi bi-person-lines-fill me-2"></i>Detalles del Usuario</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-4">
+                                <img id="detalleImagen" src="" alt="Imagen del usuario" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="fw-bold">Nombre y Apellido:</label>
+                                        <p id="detalleNombreApellido"></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="fw-bold">Usuario:</label>
+                                        <p id="detalleUsuario"></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="fw-bold">Rol:</label>
+                                        <p id="detalleRol"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="fw-bold">Estado:</label>
+                                        <p id="detalleEstado"></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-start">
