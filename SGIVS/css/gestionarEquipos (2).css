@@ -1,0 +1,21 @@
+.modal-equipos {
+    border: 1px solid black;
+}
+
+.modal-equipos-header {
+    border: 1px solid black;
+    background-color: #14345a;
+    color: #ffffff;
+}
+
+.modal-equipos-content {
+    background-color: #14345a;
+}
+
+.modal-equipos-table-header {
+    background-color: #f1c40f;
+}
+
+.modal-equipos-footer {
+    background-color: #f8f9fa;
+}
