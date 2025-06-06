@@ -151,6 +151,17 @@ $(document).ready(function(){
                muestraMensaje("la cedula debe coincidir con el formato solicitado <br/>"+ 
                   "12345678");  
             }
+            // Verificar si el rol es ADMINISTRADOR
+            let rol = $(linea).find("td:eq(2)").text();
+            if(rol === 'ADMINISTRADOR') {
+                Swal.fire({
+                    title: "¡Acción no permitida!",
+                    text: "No se puede eliminar un usuario ADMINISTRADOR",
+                    icon: "error",
+                    confirmButtonText: "Aceptar"
+                });
+                return;
+            }
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-success",

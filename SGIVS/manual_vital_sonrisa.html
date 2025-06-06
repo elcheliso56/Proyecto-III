@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual de Usuario - Centro Odontológico Vital Sonrisa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #16a085;
+        }
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .feature-box {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .tip {
+            background-color: #e8f6f3;
+            border-left: 4px solid #16a085;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .warning {
+            background-color: #fdedec;
+            border-left: 4px solid #c0392b;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ul {
+            list-style-type: none;
+        }
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .procedure-list {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .treatment-category {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f1f8ff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manual de Usuario - Sistema de Gestión Integral<br>Centro Odontológico Vital Sonrisa</h1>
+
+    <div class="toc">
+        <h2>Índice de Contenidos</h2>
+        <ul>
+            <li><a href="#introduccion">1. Introducción</a></li>
+            <li><a href="#acceso">2. Acceso al Sistema</a></li>
+            <li><a href="#modulos">3. Módulos del Sistema</a>
+                <ul>
+                    <li><a href="#citas">3.1 Gestión de Citas Odontológicas</a></li>
+                    <li><a href="#consultas">3.2 Registro de Consultas y Tratamientos</a></li>
+                    <li><a href="#pacientes">3.3 Gestión de Pacientes</a></li>
+                    <li><a href="#inventario">3.4 Control de Insumos y Equipos</a></li>
+                    <li><a href="#finanzas">3.5 Gestión Financiera</a></li>
+                    <li><a href="#reportes">3.6 Reportes y Estadísticas</a></li>
+                    <li><a href="#admin">3.7 Administración del Sistema</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <section id="introduccion">
+        <h2>1. Introducción</h2>
+        <p>Bienvenido al Sistema de Gestión Integral del Centro Odontológico Vital Sonrisa. Esta plataforma ha sido diseñada específicamente para optimizar la gestión de nuestra clínica dental, facilitando el manejo de citas, historiales clínicos, tratamientos y procesos administrativos.</p>
+        <div class="tip">
+            <strong>Nota:</strong> Este sistema está optimizado para navegadores modernos como Chrome, Firefox y Edge.
+        </div>
+        <img src="img/manual/dashboard.png" alt="Dashboard del sistema" class="screenshot">
+    </section>
+
+    <section id="acceso">
+        <h2>2. Acceso al Sistema</h2>
+        <div class="feature-box">
+            <h3>Inicio de Sesión</h3>
+            <ol>
+                <li>Ingrese al sistema usando su nombre de usuario asignado</li>
+                <li>Introduzca su contraseña personal</li>
+                <li>Haga clic en "Iniciar Sesión"</li>
+            </ol>
+            <p>El sistema mostrará diferentes opciones según su rol:</p>
+            <ul>
+                <li>Administrador: Acceso completo a todas las funciones</li>
+                <li>Doctor: Acceso a historiales, citas y consultas</li>
+                <li>Asistente: Acceso a citas y registro básico</li>
+                <li>Recepcionista: Gestión de citas y pacientes</li>
+            </ul>
+        </div>
+        <img src="img/manual/login.png" alt="Pantalla de inicio de sesión" class="screenshot">
+    </section>
+
+    <section id="modulos">
+        <h2>3. Módulos del Sistema</h2>
+
+        <section id="citas">
+            <h3>3.1 Gestión de Citas Odontológicas</h3>
+            <div class="feature-box">
+                <h4>Programación de Citas</h4>
+                <ol>
+                    <li>Haga clic en "Nueva Cita"</li>
+                    <li>Seleccione o registre al paciente</li>
+                    <li>Elija fecha y hora disponible</li>
+                    <li>Seleccione el doctor y tipo de consulta</li>
+                    <li>Registre el motivo de la consulta</li>
+                    <li>Guarde la cita</li>
+                </ol>
+            </div>
+            <img src="img/manual/citas.png" alt="Gestión de citas" class="screenshot">
+            
+            <div class="feature-box">
+                <h4>Gestión de Solicitudes</h4>
+                <ul>
+                    <li>Visualización de solicitudes pendientes</li>
+                    <li>Confirmación de citas</li>
+                    <li>Reprogramación</li>
+                    <li>Cancelaciones</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="consultas">
+            <h3>3.2 Registro de Consultas y Tratamientos</h3>
+            <div class="feature-box">
+                <h4>Tipos de Tratamientos Disponibles</h4>
+                <div class="treatment-category">
+                    <h5>ORTODONCIA</h5>
+                    <ul>
+                        <li>Instalación y Limpieza</li>
+                        <li>Media Instalación</li>
+                        <li>Desinstalación</li>
+                        <li>Control</li>
+                        <li>Reposición de Brackets</li>
+                    </ul>
+                </div>
+                
+                <div class="treatment-category">
+                    <h5>RADIOGRAFÍAS (RX)</h5>
+                    <ul>
+                        <li>Periapical</li>
+                        <li>Periapical Milimetrada</li>
+                        <li>Bitewing</li>
+                        <li>A.T.M</li>
+                        <li>Cefalométrica</li>
+                    </ul>
+                </div>
+
+                <div class="treatment-category">
+                    <h5>TRATAMIENTOS GENERALES</h5>
+                    <ul>
+                        <li>Consultas</li>
+                        <li>Limpiezas</li>
+                        <li>Restauraciones</li>
+                        <li>Extracciones</li>
+                        <li>Diseño de Sonrisa</li>
+                    </ul>
+                </div>
+            </div>
+            <img src="img/manual/consultas.png" alt="Registro de consultas" class="screenshot">
+        </section>
+
+        <section id="pacientes">
+            <h3>3.3 Gestión de Pacientes</h3>
+            <div class="feature-box">
+                <h4>Registro de Pacientes</h4>
+                <ol>
+                    <li>Datos personales del paciente</li>
+                    <li>Historial médico</li>
+                    <li>Historial de tratamientos</li>
+                    <li>Seguimiento de pagos</li>
+                </ol>
+            </div>
+            <img src="img/manual/pacientes.png" alt="Gestión de pacientes" class="screenshot">
+        </section>
+
+        <section id="inventario">
+            <h3>3.4 Control de Insumos y Equipos</h3>
+            <div class="feature-box">
+                <h4>Gestión de Inventario</h4>
+                <ul>
+                    <li>Control de insumos odontológicos</li>
+                    <li>Seguimiento de equipamiento</li>
+                    <li>Alertas de stock mínimo</li>
+                    <li>Registro de mantenimientos</li>
+                </ul>
+            </div>
+            <img src="img/manual/inventario.png" alt="Control de inventario" class="screenshot">
+        </section>
+
+        <section id="finanzas">
+            <h3>3.5 Gestión Financiera</h3>
+            <div class="feature-box">
+                <h4>Control Financiero</h4>
+                <ul>
+                    <li>Registro de pagos por tratamiento</li>
+                    <li>Control de cuentas por cobrar</li>
+                    <li>Gestión de ingresos y egresos</li>
+                    <li>Reportes financieros</li>
+                </ul>
+            </div>
+            <img src="img/manual/finanzas.png" alt="Gestión financiera" class="screenshot">
+        </section>
+
+        <section id="reportes">
+            <h3>3.6 Reportes y Estadísticas</h3>
+            <div class="feature-box">
+                <h4>Tipos de Reportes</h4>
+                <ul>
+                    <li>Estadísticas de tratamientos</li>
+                    <li>Reportes de ingresos</li>
+                    <li>Historial de pacientes</li>
+                    <li>Control de inventario</li>
+                </ul>
+            </div>
+            <img src="img/manual/reportes.png" alt="Reportes y estadísticas" class="screenshot">
+        </section>
+
+        <section id="admin">
+            <h3>3.7 Administración del Sistema</h3>
+            <div class="feature-box">
+                <h4>Gestión de Usuarios y Permisos</h4>
+                <ul>
+                    <li>Creación y gestión de usuarios</li>
+                    <li>Asignación de roles</li>
+                    <li>Control de permisos por módulo</li>
+                    <li>Configuración del sistema</li>
+                </ul>
+            </div>
+            <img src="img/manual/admin.png" alt="Panel de administración" class="screenshot">
+        </section>
+    </section>
+
+    <div class="warning">
+        <strong>Importante:</strong>
+        <ul>
+            <li>Mantenga su contraseña segura y cámbiela periódicamente</li>
+            <li>Cierre sesión al terminar de usar el sistema</li>
+            <li>Realice respaldos periódicos de la información</li>
+            <li>En caso de dudas, contacte al administrador del sistema</li>
+        </ul>
+    </div>
+</body>
+</html> 

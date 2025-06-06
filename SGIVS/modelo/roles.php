@@ -50,7 +50,10 @@ class roles extends datos{
 			try {
                 // Asegurarse que el estado sea ACTIVO al incluir
                 $this->estado = 'ACTIVO';
-                // Inserta el nuevo empleado en la base de datos			
+                
+                $co->beginTransaction();
+                
+                // Inserta el nuevo rol en la base de datos			
 				$co->query("Insert into roles(id,nombre_rol,descripcion,estado)
 					Values(
 					'$this->id',
@@ -58,9 +61,28 @@ class roles extends datos{
 					'$this->descripcion',
 					'$this->estado'
 					)");
+                
+                // Obtener el ID del rol recién insertado
+                $id_rol = $co->lastInsertId();
+                
+                // Obtener todos los permisos disponibles
+                $stmt = $co->query("SELECT id_permiso FROM permisos");
+                $permisos = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                
+                // Insertar todos los permisos para el nuevo rol
+                $stmt = $co->prepare("INSERT INTO rol_permiso (id_rol, id_permiso) VALUES (?, ?)");
+                foreach($permisos as $id_permiso) {
+                    $stmt->execute([$id_rol, $id_permiso]);
+                }
+                
+                $co->commit();
+                
 				$r['resultado'] = 'incluir';
 				$r['mensaje'] =  '¡Registro guardado con exito!';
 			} catch(Exception $e) {
+                if ($co->inTransaction()) {
+                    $co->rollBack();
+                }
 				$r['resultado'] = 'error';
 				$r['mensaje'] =  $e->getMessage();
 			}

@@ -2,33 +2,17 @@
 require_once('modelo/datos.php');
 class perfil extends datos{
     // Propiedades privadas del perfil
-    private $cedula;
-    private $nombre;
-    private $apellido;
-    private $correo;
-    private $telefono;
-    private $nombre_usuario;
+    private $usuario;
+    private $nombre_apellido;
     private $contraseña;
     private $imagen;
 
     // Métodos para establecer los valores de las propiedades
-    function set_cedula($valor){
-        $this->cedula = $valor;
+    function set_usuario($valor){
+        $this->usuario = $valor;
     }
-    function set_nombre($valor){
-        $this->nombre = $valor;
-    }
-    function set_apellido($valor){
-        $this->apellido = $valor;
-    }
-    function set_correo($valor){
-        $this->correo = $valor;
-    }
-    function set_telefono($valor){
-        $this->telefono = $valor;
-    }
-    function set_nombre_usuario($valor){
-        $this->nombre_usuario = $valor;
+    function set_nombre_apellido($valor){
+        $this->nombre_apellido = $valor;
     }
     function set_contraseña($valor){
         $this->contraseña = $valor;
@@ -38,12 +22,12 @@ class perfil extends datos{
     }
 
     // Método para cargar el perfil del usuario
-    function cargarPerfil($id){
+    function cargarPerfil($usuario){
         $co = $this->conecta_usuarios(); // Conectar a la base de datos de usuarios
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             // Consultar los datos del usuario por ID
-            $resultado = $co->query("SELECT * FROM usuarios WHERE id = '$id'");
+            $resultado = $co->query("SELECT * FROM usuario WHERE usuario = '$usuario'");
             $usuario = $resultado->fetch(PDO::FETCH_ASSOC);
             unset($usuario['contraseña']); // Eliminar la contraseña del resultado
             return ['resultado' => 'ok', 'datos' => $usuario]; // Retornar datos del usuario
@@ -53,22 +37,19 @@ class perfil extends datos{
     }
 
     // Método para modificar el perfil del usuario
-    function modificarPerfil($id){
+    function modificarPerfil($usuario){
         $co = $this->conecta_usuarios(); // Conectar a la base de datos de usuarios
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             // Obtener la imagen actual del usuario
-            $resultado = $co->query("SELECT imagen FROM usuarios WHERE id = '$id'");
+            $resultado = $co->query("SELECT imagen FROM usuario WHERE usuario = '$usuario'");
             $usuario = $resultado->fetch(PDO::FETCH_ASSOC);
             $imagen_actual = $usuario['imagen'];
 
             // Preparar la consulta de actualización
-            $query = "UPDATE usuarios SET 
-            nombre = '$this->nombre',
-            apellido = '$this->apellido',
-            correo = '$this->correo',
-            telefono = '$this->telefono',
-            nombre_usuario = '$this->nombre_usuario'";
+            $query = "UPDATE usuario SET 
+                usuario = '$this->usuario',
+                nombre_apellido = '$this->nombre_apellido'";
 
             // Si se proporciona una nueva contraseña, se encripta
             if(!empty($this->contraseña)) {
@@ -88,7 +69,7 @@ class perfil extends datos{
                 $nueva_imagen = $imagen_actual; // Mantener imagen actual
             }
             
-            $query .= " WHERE id = '$id'"; // Condición para la actualización
+                $query .= " WHERE usuario = '$usuario'"; // Condición para la actualización
             
             $co->query($query); // Ejecutar la consulta
             

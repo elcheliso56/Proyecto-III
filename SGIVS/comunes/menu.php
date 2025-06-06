@@ -28,13 +28,14 @@
 				<figcaption>
 					<span>
 						<!-- Nombre y tipo de usuario -->
-						<?php echo $_SESSION['nombre_usuario']; ?><br>
-						<small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small>
+						<?php echo $_SESSION['nombre_apellido']; ?><br>
+						<small><?php echo ucfirst($_SESSION['rol_nombre']); ?></small>
 					</span>
 				</figcaption>
 			</figure>
 			<nav class="full-width">
 				<ul class="full-width list-unstyle menu-principal">
+
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="?pagina=principal" class="full-width">
@@ -46,8 +47,8 @@
 							</div>
 						</a>
 					</li>
-					<li class="full-width divider-menu-h"></li>
 
+					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
                         <a href="?pagina=citas" class="full-width">
                             <div class="navLateral-body-cl">
@@ -58,8 +59,8 @@
                             </div>
                         </a>
                     </li>
-					<li class="full-width divider-menu-h"></li>
 
+					<li class="full-width divider-menu-h"></li>
                     <li class="full-width">
                         <a href="?pagina=calendario" class="full-width">
                             <div class="navLateral-body-cl">
@@ -70,6 +71,7 @@
                             </div>
                         </a>
                     </li>	
+
 					<li class="full-width divider-menu-h"></li>                    				
 					<li class="full-width">
 						<a href="?pagina=consultas" class="full-width">
@@ -105,6 +107,7 @@
 							</div>
 						</a>
 					</li>
+
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="?pagina=servicios" class="full-width">
@@ -116,10 +119,8 @@
 							</div>
 						</a>
 					</li>					
+
 					<li class="full-width divider-menu-h"></li>
-
-
-
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
@@ -130,6 +131,7 @@
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
+
 						<ul class="full-width menu-principal sub-menu-options">
 
 							<li class="full-width">
@@ -142,6 +144,7 @@
 									</div>
 								</a>
 							</li>
+
 							<li class="full-width">
 								<a href="?pagina=gestionarEquipos" class="full-width">
 									<div class="navLateral-body-cl">
@@ -155,6 +158,7 @@
 
 						</ul>
 					</li>
+
 					<li class="full-width divider-menu-h"></li>				
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -166,7 +170,9 @@
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
+
 						<ul class="full-width menu-principal sub-menu-options">
+
 							<li class="full-width">
 								<a href="?pagina=cuentas" class="full-width">
 									<div class="navLateral-body-cl">
@@ -178,7 +184,6 @@
 								</a>
 							</li>
 							
-
 							<li class="full-width">
 								<a href="?pagina=ingresos" class="full-width">
 									<div class="navLateral-body-cl">
@@ -222,6 +227,7 @@
 									</div>
 								</a>
 							</li>
+
 							<li class="full-width">
 								<a href="?pagina=dashboard" class="full-width">
 									<div class="navLateral-body-cl">
@@ -243,36 +249,13 @@
 									</div>
 								</a>
 							</li>
-						</ul></li>
+
+						</ul>
+					</li>
+
 					<li class="full-width divider-menu-h"></li>
 
-
-
-
-
-
-
-
-
-
-
-
-					<li class="full-width">
-								<a href="?pagina=usuario" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-person-fill-gear"></i>
-									</div>
-									<div class="navLateral-body-cr" style="color: white;">
-										Usuarios
-									</div>
-								</a>
-							</li>
-							<li class="full-width divider-menu-h"></li>
-
-
-
-
-<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
+	<?php if ($_SESSION['id_rol'] == '1'): ?>
 
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -284,17 +267,9 @@
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
+
 						<ul class="full-width menu-principal sub-menu-options">
-							<li class="full-width">
-								<a href="?pagina=usuarios" class="full-width">
-									<div class="navLateral-body-cl">
-										<i class="bi bi-person-fill-gear"></i>
-									</div>
-									<div class="navLateral-body-cr" style="color: white;">
-										Usuarios
-									</div>
-								</a>
-							</li>
+
 							<li class="full-width">
 								<a href="?pagina=roles" class="full-width">
 									<div class="navLateral-body-cl">
@@ -305,6 +280,18 @@
 									</div>
 								</a>
 							</li>
+
+							<li class="full-width">
+								<a href="?pagina=usuario" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="bi bi-person-fill-gear"></i>
+									</div>
+									<div class="navLateral-body-cr" style="color: white;">
+										Usuarios
+									</div>
+								</a>
+							</li>
+
 							<li class="full-width">
 								<a href="?pagina=bitacora" class="full-width">
 									<div class="navLateral-body-cl">
@@ -314,15 +301,15 @@
 										Bitácora
 									</div>
 								</a>
-							</li>								
-							<li class="full-width">
+							</li>	
 						</ul>
 					</li>
-					<?php endif; ?>			
+						<?php endif; ?>		
 				</ul>
 			</nav>
 		</div>
 	</section>
+
 	<!-- Contenido de la página -->
 	<section class="full-width pageContent">
 		<!-- Barra de navegación -->
@@ -351,7 +338,7 @@
 							<a href="#" id="cerrarSesion"><i class="zmdi zmdi-power"></i></a>
 							<div class="mdl-tooltip" for="btn-exit">Cerrar Sesión</div>
 						</li>
-						<li class="text-condensedLight noLink" ><small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small></li>
+						<li class="text-condensedLight noLink" ><small><?php echo ucfirst($_SESSION['rol_nombre']); ?></small></li>
 						<li class="noLink">
 							<figure>
 								<!-- Imagen de usuario en la barra de navegación -->

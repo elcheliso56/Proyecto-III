@@ -54,6 +54,25 @@ class usuarios extends datos{
 			$co = $this->conecta_usuarios();
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
+				// Verificar si el rol es ADMINISTRADOR
+				$resultado = $co->query("SELECT nombre_rol FROM roles WHERE id = '$this->id_rol'");
+				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
+
+				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
+					// Verificar si ya existe un usuario ADMINISTRADOR activo
+					$resultado = $co->query("SELECT COUNT(*) as total FROM usuario_rol ur 
+										   INNER JOIN roles r ON ur.id_rol = r.id 
+										   WHERE r.nombre_rol = 'ADMINISTRADOR' 
+										   AND ur.estado = 'ACTIVO'");
+					$count = $resultado->fetch(PDO::FETCH_ASSOC);
+
+					if($count['total'] > 0) {
+						$r['resultado'] = 'error';
+						$r['mensaje'] = 'Ya existe un usuario con rol ADMINISTRADOR activo. No se pueden crear más.';
+						return $r;
+					}
+				}
+
 				$contraseña_hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
 				$co->query("START TRANSACTION");
 
@@ -87,6 +106,28 @@ class usuarios extends datos{
 		$r = array();
 		if($this->existe($this->usuario)){
 			try {
+				// Verificar si el usuario es ADMINISTRADOR
+				$resultado = $co->query("SELECT r.nombre_rol 
+									  FROM usuario_rol ur 
+									  INNER JOIN roles r ON ur.id_rol = r.id 
+									  WHERE ur.usuario = '$this->usuario'");
+				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
+
+				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
+					// Verificar si se está intentando cambiar el rol
+					$resultado = $co->query("SELECT id_rol FROM usuario_rol WHERE usuario = '$this->usuario'");
+					$rol_actual = $resultado->fetch(PDO::FETCH_ASSOC);
+					
+					if($rol_actual['id_rol'] != $this->id_rol) {
+						$r['resultado'] = 'error';
+						$r['mensaje'] = 'No se puede cambiar el rol de un usuario ADMINISTRADOR';
+						return $r;
+					}
+					
+					// Forzar el estado a ACTIVO para administradores
+					$this->estado = 'ACTIVO';
+				}
+
 				$resultado = $co->query("SELECT imagen FROM usuario WHERE usuario = '$this->usuario'");
 				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
 				$imagen_actual = $fila['imagen'];
@@ -143,6 +184,19 @@ class usuarios extends datos{
 		$r = array();
 		if($this->existe($this->usuario)){
 			try {
+				// Verificar si el usuario es ADMINISTRADOR
+				$resultado = $co->query("SELECT r.nombre_rol 
+									  FROM usuario_rol ur 
+									  INNER JOIN roles r ON ur.id_rol = r.id 
+									  WHERE ur.usuario = '$this->usuario'");
+				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
+
+				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
+					$r['resultado'] = 'error';
+					$r['mensaje'] = 'No se puede eliminar un usuario ADMINISTRADOR';
+					return $r;
+				}
+
 				$resultado = $co->query("SELECT imagen FROM usuario WHERE usuario = '$this->usuario'");
 				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
 				$imagen = $fila['imagen'];
@@ -221,11 +275,18 @@ class usuarios extends datos{
 
 
 	// Método para obtener datos de un usuario específico
-	function obtenerDatosUsuario($id){
+	function obtenerDatosUsuario($usuario){
 		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			$resultado = $co->query("SELECT * FROM usuarios WHERE id = '$id'");
+			$resultado = $co->query("SELECT u.*, r.nombre_rol, p.nombre_permiso
+				FROM usuario u
+				INNER JOIN usuario_rol ur 
+				INNER JOIN roles r 
+                INNER JOIN rol_permiso rp
+                INNER JOIN permisos p 
+                ON rp.id_permiso = p.id_permiso AND ur.id_rol = r.id AND u.usuario = ur.usuario
+				WHERE ur.usuario = u.usuario AND ur.estado = 'ACTIVO'");
 			return $resultado->fetch(PDO::FETCH_ASSOC);
 		} catch(Exception $e){
 			return false;
@@ -233,17 +294,15 @@ class usuarios extends datos{
 	}
 
 	// Método para modificar el perfil de un usuario
-	function modificarPerfil($id){
+	function modificarPerfil($usuario){
 		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$query = "UPDATE usuarios SET 
-			nombre = '$this->nombre',
-			apellido = '$this->apellido',
-			correo = '$this->correo',
-			telefono = '$this->telefono',
-			nombre_usuario = '$this->nombre_usuario'";
+			$query = "UPDATE usuario SET 
+			usuario = '$this->usuario',
+			nombre_apellido = '$this->nombre_apellido',
+			imagen = '$this->imagen'";
 			
 			if(!empty($this->contraseña)){
 				$contraseña_hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
@@ -254,7 +313,7 @@ class usuarios extends datos{
 				$query .= ", imagen = '$this->imagen'";
 			}
 			
-			$query .= " WHERE id = '$id'";
+			$query .= " WHERE usuario = '$usuario'";
 			
 			$co->query($query);
 			
@@ -302,6 +361,19 @@ class usuarios extends datos{
 		$r = array();
 		if($this->existe($this->usuario)){
 			try {
+				// Verificar si el usuario es ADMINISTRADOR
+				$resultado = $co->query("SELECT r.nombre_rol 
+									  FROM usuario_rol ur 
+									  INNER JOIN roles r ON ur.id_rol = r.id 
+									  WHERE ur.usuario = '$this->usuario'");
+				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
+
+				if($rol['nombre_rol'] === 'ADMINISTRADOR' && $this->estado === 'INACTIVO') {
+					$r['resultado'] = 'error';
+					$r['mensaje'] = 'No se puede cambiar el estado de un usuario ADMINISTRADOR a inactivo';
+					return $r;
+				}
+
 				$co->query("UPDATE usuario_rol SET estado = '$this->estado' WHERE usuario = '$this->usuario'");
 				$r['resultado'] = 'modificar';
 				$r['mensaje'] =  '¡Estado modificado con éxito!';
