@@ -275,18 +275,11 @@ class usuarios extends datos{
 
 
 	// Método para obtener datos de un usuario específico
-	function obtenerDatosUsuario($usuario){
+	function obtenerDatosUsuario($id){
 		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
-			$resultado = $co->query("SELECT u.*, r.nombre_rol, p.nombre_permiso
-				FROM usuario u
-				INNER JOIN usuario_rol ur 
-				INNER JOIN roles r 
-                INNER JOIN rol_permiso rp
-                INNER JOIN permisos p 
-                ON rp.id_permiso = p.id_permiso AND ur.id_rol = r.id AND u.usuario = ur.usuario
-				WHERE ur.usuario = u.usuario AND ur.estado = 'ACTIVO'");
+			$resultado = $co->query("SELECT  * FROM usuarios WHERE id = '$id'");
 			return $resultado->fetch(PDO::FETCH_ASSOC);
 		} catch(Exception $e){
 			return false;
@@ -294,15 +287,17 @@ class usuarios extends datos{
 	}
 
 	// Método para modificar el perfil de un usuario
-	function modificarPerfil($usuario){
+	function modificarPerfil($id){
 		$co = $this->conecta_usuarios();
 		$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$r = array();
 		try {
-			$query = "UPDATE usuario SET 
-			usuario = '$this->usuario',
-			nombre_apellido = '$this->nombre_apellido',
-			imagen = '$this->imagen'";
+			$query = "UPDATE usuarios SET 
+			nombre = '$this->nombre',
+			apellido = '$this->apellido',
+			correo = '$this->correo',
+			telefono = '$this->telefono',
+			nombre_usuario = '$this->nombre_usuario'";
 			
 			if(!empty($this->contraseña)){
 				$contraseña_hash = password_hash($this->contraseña, PASSWORD_DEFAULT);
@@ -313,7 +308,7 @@ class usuarios extends datos{
 				$query .= ", imagen = '$this->imagen'";
 			}
 			
-			$query .= " WHERE usuario = '$usuario'";
+			$query .= " WHERE id = '$id'";
 			
 			$co->query($query);
 			

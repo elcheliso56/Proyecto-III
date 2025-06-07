@@ -16,7 +16,7 @@ if(is_file("vista/login.php")){
         $accion = $_POST['accion']; // Obtiene la acción del formulario
         // Si la acción es 'login', autentica al usuario
         if($accion == 'login'){
-            echo json_encode($o->autenticar($_POST['usuario'], $_POST['contraseña'])); // Devuelve el resultado de la autenticación en formato JSON
+            echo json_encode($o->autenticar($_POST['nombre_usuario'], $_POST['contraseña'])); // Devuelve el resultado de la autenticación en formato JSON
         }
         exit; // Termina la ejecución después de procesar la acción
     }

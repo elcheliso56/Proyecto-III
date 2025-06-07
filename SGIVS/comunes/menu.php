@@ -28,8 +28,8 @@
 				<figcaption>
 					<span>
 						<!-- Nombre y tipo de usuario -->
-						<?php echo $_SESSION['nombre_apellido']; ?><br>
-						<small><?php echo ucfirst($_SESSION['rol_nombre']); ?></small>
+						<?php echo $_SESSION['nombre_usuario']; ?><br>
+						<small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small>
 					</span>
 				</figcaption>
 			</figure>
@@ -255,7 +255,7 @@
 
 					<li class="full-width divider-menu-h"></li>
 
-	<?php if ($_SESSION['id_rol'] == '1'): ?>
+					<?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
 
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -338,7 +338,7 @@
 							<a href="#" id="cerrarSesion"><i class="zmdi zmdi-power"></i></a>
 							<div class="mdl-tooltip" for="btn-exit">Cerrar Sesión</div>
 						</li>
-						<li class="text-condensedLight noLink" ><small><?php echo ucfirst($_SESSION['rol_nombre']); ?></small></li>
+						<li class="text-condensedLight noLink" ><small><?php echo ucfirst($_SESSION['tipo_usuario']); ?></small></li>
 						<li class="noLink">
 							<figure>
 								<!-- Imagen de usuario en la barra de navegación -->

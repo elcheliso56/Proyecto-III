@@ -5,7 +5,7 @@ $(document).ready(function() {
         
         var datos = new FormData(); // Crea un nuevo objeto FormData para enviar datos
         datos.append('accion', 'login'); // Agrega la acción 'login' a los datos
-        datos.append('usuario', $('#usuario').val()); // Agrega el nombre de usuario
+        datos.append('nombre_usuario', $('#nombre_usuario').val()); // Agrega el nombre de usuario
         datos.append('contraseña', $('#contraseña').val()); // Agrega la contraseña
 
         // Realiza una solicitud AJAX

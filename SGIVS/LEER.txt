@@ -1,2 +1,0 @@
-Usuario: 12345678
-contaseña: Administrador.2025

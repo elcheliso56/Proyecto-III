@@ -9,8 +9,8 @@
             <p class="text-center text-condensedLight">Iniciar Sesión</p> <!-- Título del formulario -->
             <form id="loginForm"> <!-- Formulario para el inicio de sesión -->
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> <!-- Campo para nombre de usuario -->
-                    <input class="mdl-textfield__input" type="text" id="usuario" name="usuario" required>
-                    <label class="mdl-textfield__label" for="usuario">Nombre de Usuario</label>
+                    <input class="mdl-textfield__input" type="text" id="nombre_usuario" name="nombre_usuario" required>
+                    <label class="mdl-textfield__label" for="nombre_usuario">Nombre de Usuario</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> <!-- Campo para contraseña -->
                     <input class="mdl-textfield__input" type="password" id="contraseña" name="contraseña" required>
