@@ -214,11 +214,11 @@ class roles extends datos{
         $r = array();
         try{
             $resultado = $co->query("SELECT p.id_permiso, p.nombre_permiso, 
-                                   CASE WHEN rp.id_rol IS NOT NULL THEN 1 ELSE 0 END as tiene_permiso
-                                   FROM permisos p
-                                   LEFT JOIN rol_permiso rp ON p.id_permiso = rp.id_permiso 
-                                   AND rp.id_rol = '$this->id'
-                                   ORDER BY p.id_permiso ASC");
+									CASE WHEN rp.id_rol IS NOT NULL THEN 1 ELSE 0 END as tiene_permiso
+									FROM permisos p
+									LEFT JOIN rol_permiso rp ON p.id_permiso = rp.id_permiso 
+									AND rp.id_rol = '$this->id'
+									ORDER BY p.id_permiso ASC");
             $permisos = [];
             foreach($resultado->fetchAll(PDO::FETCH_ASSOC) as $row){
                 $permisos[] = $row;
@@ -305,12 +305,12 @@ class roles extends datos{
             // Verificar si es el rol de administrador
             $resultado = $co->query("SELECT nombre_rol FROM roles WHERE id = '$this->id'");
             $rol = $resultado->fetch(PDO::FETCH_ASSOC);
-            
+/*
             if($rol['nombre_rol'] === 'ADMINISTRADOR') {
                 $r['resultado'] = 'error';
                 $r['mensaje'] = 'No se puede modificar el estado del rol ADMINISTRADOR';
                 return $r;
-            }
+            }*/
 
             $co->query("UPDATE roles SET estado = '$this->estado' WHERE id = '$this->id'");
             

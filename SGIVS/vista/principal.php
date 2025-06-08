@@ -51,7 +51,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Historiales</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['historial']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['pacientes']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-clipboard2-pulse fa-2x text-gray-300"></i>
@@ -71,7 +71,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Citas</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['publicidad']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['citas']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-tags-fill fa-2x text-gray-300"></i>
@@ -91,7 +91,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                 Servicios</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['proveedores']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['servicios']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-truck fa-2x text-gray-300"></i>
@@ -111,7 +111,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                Insumos </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['productos']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['servicios_insumos']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-box-seam-fill fa-2x text-gray-300"></i>
@@ -131,7 +131,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Equipos</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['clientes']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['servicios_equipos']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-people-fill fa-2x text-gray-300"></i>
@@ -151,7 +151,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Cuentas por cobrar</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['apartados']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['pagos_cuentas_por_cobrar']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-bag-check-fill fa-2x text-gray-300"></i>
@@ -170,7 +170,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Usuarios</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['usuarios']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['usuario']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-person-lock fa-2x text-gray-300"></i>

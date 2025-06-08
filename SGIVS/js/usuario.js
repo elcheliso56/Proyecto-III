@@ -48,28 +48,28 @@ function destruyeDT(){
 function crearDT(){
     if (!$.fn.DataTable.isDataTable("#tablausuario")) {
         $("#tablausuario").DataTable({
-          language: {
-            lengthMenu: "Mostrar _MENU_ por página",
-            zeroRecords: "No se encontraron usuarios",
-            info: "Mostrando página _PAGE_ de _PAGES_",
-            infoEmpty: "No hay usuarios registrados",
-            infoFiltered: "(filtrado de _MAX_ registros totales)",
-            search: "<i class='bi bi-search'></i>",
-            searchPlaceholder: "Buscar usuario...",
-            paginate: {
-              first: "Primera",
-              last: "Última",
-              next: "Siguiente",
-              previous: "Anterior",
-          },
-      },
+            language: {
+                lengthMenu: "Mostrar _MENU_ por página",
+                zeroRecords: "No se encontraron usuarios",
+                info: "Mostrando página _PAGE_ de _PAGES_",
+                infoEmpty: "No hay usuarios registrados",
+                infoFiltered: "(filtrado de _MAX_ registros totales)",
+                search: "<i class='bi bi-search'></i>",
+                searchPlaceholder: "Buscar usuario...",
+                paginate: {
+                first: "Primera",
+                last: "Última",
+                next: "Siguiente",
+                previous: "Anterior",
+            },
+    },
       pageLength: 5, // Establece el número de registros por página a 5
       lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Opciones de número de registros por página
-      autoWidth: false,
-      scrollX: true,
-      fixedHeader: false,               
-      order: [[0, "asc"]],
-  });
+            autoWidth: false,
+            scrollX: true,
+            fixedHeader: false,               
+            order: [[0, "asc"]],
+        });
     }         
 }
 $(document).ready(function(){
@@ -151,17 +151,17 @@ $(document).ready(function(){
                muestraMensaje("la cedula debe coincidir con el formato solicitado <br/>"+ 
                   "12345678");  
             }
-            // Verificar si el rol es ADMINISTRADOR
-            let rol = $(linea).find("td:eq(2)").text();
-            if(rol === 'ADMINISTRADOR') {
-                Swal.fire({
-                    title: "¡Acción no permitida!",
-                    text: "No se puede eliminar un usuario ADMINISTRADOR",
-                    icon: "error",
-                    confirmButtonText: "Aceptar"
-                });
-                return;
-            }
+            // Eliminar la restricción para ADMINISTRADOR
+            // let rol = $(linea).find("td:eq(2)").text();
+            // if(rol === 'ADMINISTRADOR') {
+            //     Swal.fire({
+            //         title: "¡Acción no permitida!",
+            //         text: "No se puede eliminar un usuario ADMINISTRADOR",
+            //         icon: "error",
+            //         confirmButtonText: "Aceptar"
+            //     });
+            //     return;
+            // }
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-success",
@@ -387,12 +387,7 @@ function enviaAjax(datos) {
                         <td class='align-middle'>${p.nombre_rol}</td>
                         <td class='align-middle'>
                             <div class="form-check form-switch d-flex justify-content-center">
-                                <input class="form-check-input" type="checkbox" role="switch" 
-                                    ${p.estado === 'ACTIVO' ? 'checked' : ''} 
-                                    onchange="cambiarEstado(this, '${p.usuario}')"
-                                    style="width: 40px; height: 20px; cursor: pointer;"
-                                    ${p.nombre_rol === 'ADMINISTRADOR' ? 'disabled' : ''}
-                                >
+                                <input class="form-check-input" type="checkbox" role="switch" ${p.estado === 'ACTIVO' ? 'checked' : ''} onchange="cambiarEstado(this, '${p.usuario}')" style="width: 40px; height: 20px; cursor: pointer;">
                             </div>
                         </td>
                         <td class='align-middle' style='display: flex; justify-content: center;'>
@@ -579,14 +574,14 @@ function enviaAjaxEmpleados(datos) {
 }
 
 function verDetalle(pos) {
-    let linea = $(pos).closest('tr');
+    var linea = $(pos).closest('tr');
     
     // Obtener los valores de la fila
-    let usuario = $(linea).find("td:eq(5)").text();
-    let nombreApellido = $(linea).find("td:eq(1)").text();
-    let rol = $(linea).find("td:eq(2)").text();
-    let estado = $(linea).find("td:eq(3)").find("input").is(":checked") ? "ACTIVO" : "INACTIVO";
-    let imagen = $(linea).find("td:eq(6) img").attr("src") || "otros/img/usuarios/default.png";
+    var usuario = $(linea).find("td:eq(5)").text();
+    var nombreApellido = $(linea).find("td:eq(1)").text();
+    var rol = $(linea).find("td:eq(2)").text();
+    var estado = $(linea).find("td:eq(3)").find("input").is(":checked") ? "ACTIVO" : "INACTIVO";
+    var imagen = $(linea).find("td:eq(6) img").attr("src") || "otros/img/usuarios/default.png";
     
     // Establecer los valores en el modal de detalles
     $("#detalleUsuario").text(usuario);
@@ -683,8 +678,8 @@ function filtrarEmpleados() {
         let nombre = $(this).find("td:eq(1)").text().toLowerCase();
         let apellido = $(this).find("td:eq(2)").text().toLowerCase();
         let coincide = cedula.includes(input) || 
-                      nombre.includes(input) || 
-                      apellido.includes(input);
+                        nombre.includes(input) || 
+                        apellido.includes(input);
         $(this).toggle(coincide);
     });
 }

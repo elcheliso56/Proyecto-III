@@ -86,18 +86,18 @@ $(document).ready(function() {
 
     // Validaciones para el campo de nombre
     $("#nombre").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
     $("#nombre").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#snombre"), "Solo letras entre 2 y 30 caracteres");
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#snombre"), "Solo letras entre 2 y 30 caracteres");
     });
 
     // Validaciones para el campo de apellido
     $("#apellido").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });	
     $("#apellido").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
     });
 
     // Validaciones para el campo de fecha de nacimiento y coloca la edad automaticamente en el campo edad
@@ -124,7 +124,7 @@ $(document).ready(function() {
         }
     });
     $("#email").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z0-9\s,.\-@]*$/, e);
+        validarkeypress(/^[A-Z0-9\s,.\-@]*$/, e);
     });
     $("#email").on("keyup", function() {
         validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{1,100}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
@@ -487,7 +487,7 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 function pone(pos, accion) {
     // Función para llenar el formulario con los datos del empleado seleccionado
     linea = $(pos).closest('tr');
-    var fechaNacimiento = new Date($(linea).find("td:eq(6)").text());
+    var fechaNacimiento = new Date($(linea).find("td:eq(4)").text());
     var fechaActual = new Date();
     var edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     var mes = fechaActual.getMonth() - fechaNacimiento.getMonth();
@@ -546,21 +546,26 @@ function pone(pos, accion) {
     var tipoDocumento = partes[0];
     var cedula = partes[1];
 
+    var nombreCompleto = $(linea).find("td:eq(3)").text().trim();
+    var partes = nombreCompleto.split(" ");
+    var nombre = partes[0];
+    var apellido = partes[1];
+
     $("#tipo_rif").val(tipoRif);
     $("#rif").val(rif);
     $("#tipo_documento").val(tipoDocumento);
     $("#cedula").val(cedula);
-    $("#nombre").val($(linea).find("td:eq(3)").text());
-    $("#apellido").val($(linea).find("td:eq(4)").text());
-    $("#fecha_nacimiento").val(toISODate($(linea).find("td:eq(5)").text()));
+    $("#nombre").val(nombre);
+    $("#apellido").val(apellido);
+    $("#fecha_nacimiento").val(toISODate($(linea).find("td:eq(4)").text()));
     $("#edad").val(edad);
-    $("#genero").val($(linea).find("td:eq(7)").text());
-    $("#email").val($(linea).find("td:eq(8)").text());
-    $("#telefono").val($(linea).find("td:eq(9)").text());
-    $("#direccion").val($(linea).find("td:eq(10)").text());
-    $("#fecha_contratacion").val(toISODate($(linea).find("td:eq(11)").text()));
-    $("#cargo").val($(linea).find("td:eq(12)").text());
-    $("#salario").val($(linea).find("td:eq(13)").text());
+    $("#genero").val($(linea).find("td:eq(6)").text());
+    $("#email").val($(linea).find("td:eq(7)").text());
+    $("#telefono").val($(linea).find("td:eq(8)").text());
+    $("#direccion").val($(linea).find("td:eq(9)").text());
+    $("#fecha_contratacion").val(toISODate($(linea).find("td:eq(10)").text()));
+    $("#cargo").val($(linea).find("td:eq(11)").text());
+    $("#salario").val($(linea).find("td:eq(12)").text());
     $("#modal1").modal("show"); // Muestra el modal
 }
 
@@ -606,20 +611,20 @@ function enviaAjax(datos) {
                     (lee.mensaje || []).forEach(function(p, idx) {
                         filas += `<tr class='text-center'>
                             <td class='align-middle'>${idx+1}</td>
-                            <td class='align-middle'>${p.tipo_rif}-${p.rif}</td>
+                            <td class='align-middle' style='display:none' >${p.tipo_rif}-${p.rif}</td>
                             <td class='align-middle'>${p.tipo_documento}-${p.cedula}</td>
-                            <td class='align-middle'>${p.nombre}</td>
-                            <td class='align-middle'>${p.apellido}</td>
-                            <td class='align-middle'>${formatearFecha(p.fecha_nacimiento)}</td>
-                            <td class='align-middle'>${p.edad}</td>
-                            <td class='align-middle'>${p.genero}</td>
-                            <td class='align-middle'>${p.email}</td>
+                            <td class='align-middle'>${p.nombre} ${p.apellido}</td>
+                            <td class='align-middle' style='display:none'>${formatearFecha(p.fecha_nacimiento)}</td>
+                            <td class='align-middle' style='display:none'>${p.edad}</td>
+                            <td class='align-middle' style='display:none'>${p.genero}</td>
+                            <td class='align-middle' style='display:none'>${p.email}</td>
                             <td class='align-middle'>${p.telefono}</td>
-                            <td class='align-middle'>${p.direccion}</td>
-                            <td class='align-middle'>${formatearFecha(p.fecha_contratacion)}</td>
+                            <td class='align-middle' style='display:none'>${p.direccion}</td>
+                            <td class='align-middle' style='display:none'>${formatearFecha(p.fecha_contratacion)}</td>
                             <td class='align-middle'>${p.cargo}</td>
-                            <td class='align-middle'>${p.salario}</td>
+                            <td class='align-middle' style='display:none'>${p.salario}</td>
                             <td class='align-middle' style='display: flex; justify-content: center;'>
+                                <button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='verDetalle(this)' title='Ver detalle' style='margin:.2rem; width: 40px !important;'><i class='bi bi-eye-fill'></i></button><br/>
                                 <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
                                 <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
                             </td>
@@ -737,4 +742,51 @@ function limpia() {
     $("#fecha_contratacion").prop("disabled", false);
     $("#cargo").prop("disabled", false);
     $("#salario").prop("disabled", false);    
+}
+
+function verDetalle(pos) {
+    var linea = $(pos).closest('tr');
+    
+    // Obtener los valores de la fila
+    var rifCompleto = $(linea).find("td:eq(1)").text().trim();
+    var partes = rifCompleto.split("-");
+    var tipoRif = partes[0];
+    var rif = partes[1];
+    
+    var documentoCompleto = $(linea).find("td:eq(2)").text().trim();
+    var partes = documentoCompleto.split("-");
+    var tipoDocumento = partes[0];
+    var cedula = partes[1];
+
+    var nombreCompleto = $(linea).find("td:eq(3)").text().trim();
+    var partes = nombreCompleto.split(" ");
+    var nombre = partes[0];
+    var apellido = partes[1];
+
+    var fechaNacimiento = $(linea).find("td:eq(4)").text().trim();
+    var edad = $(linea).find("td:eq(5)").text().trim();
+    var genero = $(linea).find("td:eq(6)").text().trim();
+    var email = $(linea).find("td:eq(7)").text().trim();
+    var telefono = $(linea).find("td:eq(8)").text().trim();
+    var direccion = $(linea).find("td:eq(9)").text().trim();
+    var fechaContratacion = $(linea).find("td:eq(10)").text().trim();
+    var cargo = $(linea).find("td:eq(11)").text().trim();
+    var salario = $(linea).find("td:eq(12)").text().trim();
+    
+    // Establecer los valores en el modal de detalles
+    $("#detalle_rif").text(tipoRif + "-" + rif);
+    $("#detalle_cedula").text(tipoDocumento + "-" + cedula);
+    $("#detalle_nombre").text(nombre + " " + apellido);
+    $("#detalle_fecha_nacimiento").text(fechaNacimiento);
+    $("#detalle_edad").text(edad);
+    $("#detalle_genero").text(genero);
+    $("#detalle_email").text(email);
+    $("#detalle_telefono").text(telefono);
+    $("#detalle_direccion").text(direccion);
+    $("#detalle_fecha_contratacion").text(fechaContratacion);
+    $("#detalle_cargo").text(cargo);
+    $("#detalle_salario").text(salario);
+    
+    // Mostrar el modal
+    $("#modalDetalle").modal("show");
 }

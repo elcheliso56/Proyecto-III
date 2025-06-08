@@ -1,0 +1,2 @@
+USUARIO: 12345678
+CONTRASEÑA: Administrador.2025

@@ -61,9 +61,9 @@ class usuarios extends datos{
 				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
 					// Verificar si ya existe un usuario ADMINISTRADOR activo
 					$resultado = $co->query("SELECT COUNT(*) as total FROM usuario_rol ur 
-										   INNER JOIN roles r ON ur.id_rol = r.id 
-										   WHERE r.nombre_rol = 'ADMINISTRADOR' 
-										   AND ur.estado = 'ACTIVO'");
+											INNER JOIN roles r ON ur.id_rol = r.id 
+											WHERE r.nombre_rol = 'ADMINISTRADOR' 
+											AND ur.estado = 'ACTIVO'");
 					$count = $resultado->fetch(PDO::FETCH_ASSOC);
 
 					if($count['total'] > 0) {
@@ -108,9 +108,9 @@ class usuarios extends datos{
 			try {
 				// Verificar si el usuario es ADMINISTRADOR
 				$resultado = $co->query("SELECT r.nombre_rol 
-									  FROM usuario_rol ur 
-									  INNER JOIN roles r ON ur.id_rol = r.id 
-									  WHERE ur.usuario = '$this->usuario'");
+										FROM usuario_rol ur 
+										INNER JOIN roles r ON ur.id_rol = r.id 
+										WHERE ur.usuario = '$this->usuario'");
 				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
 
 				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
@@ -186,9 +186,9 @@ class usuarios extends datos{
 			try {
 				// Verificar si el usuario es ADMINISTRADOR
 				$resultado = $co->query("SELECT r.nombre_rol 
-									  FROM usuario_rol ur 
-									  INNER JOIN roles r ON ur.id_rol = r.id 
-									  WHERE ur.usuario = '$this->usuario'");
+										FROM usuario_rol ur 
+										INNER JOIN roles r ON ur.id_rol = r.id 
+										WHERE ur.usuario = '$this->usuario'");
 				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
 
 				if($rol['nombre_rol'] === 'ADMINISTRADOR') {
@@ -358,16 +358,16 @@ class usuarios extends datos{
 			try {
 				// Verificar si el usuario es ADMINISTRADOR
 				$resultado = $co->query("SELECT r.nombre_rol 
-									  FROM usuario_rol ur 
-									  INNER JOIN roles r ON ur.id_rol = r.id 
-									  WHERE ur.usuario = '$this->usuario'");
+										FROM usuario_rol ur 
+										INNER JOIN roles r ON ur.id_rol = r.id 
+										WHERE ur.usuario = '$this->usuario'");
 				$rol = $resultado->fetch(PDO::FETCH_ASSOC);
-
+/*
 				if($rol['nombre_rol'] === 'ADMINISTRADOR' && $this->estado === 'INACTIVO') {
 					$r['resultado'] = 'error';
 					$r['mensaje'] = 'No se puede cambiar el estado de un usuario ADMINISTRADOR a inactivo';
 					return $r;
-				}
+				}*/
 
 				$co->query("UPDATE usuario_rol SET estado = '$this->estado' WHERE usuario = '$this->usuario'");
 				$r['resultado'] = 'modificar';

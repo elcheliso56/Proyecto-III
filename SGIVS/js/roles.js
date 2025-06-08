@@ -372,16 +372,16 @@ function pone(pos, accion) {
     var id = $(linea).find("td:eq(0)").text(); // Obtener el ID de la primera columna
     var nombre_rol = $(linea).find("td:eq(1)").text(); // Obtener el nombre del rol
 
-    // Verificar si es el rol ADMINISTRADOR
-    if (nombre_rol === 'ADMINISTRADOR' && (accion == 0 || accion == 1 || accion == 2)) {
-        Swal.fire({
-            title: "¡Acción no permitida!",
-            text: "No se pueden modificar las características del rol ADMINISTRADOR",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        return;
-    }
+    // Quitar la restricción para ADMINISTRADOR
+    // if (nombre_rol === 'ADMINISTRADOR' && (accion == 0 || accion == 1 || accion == 2)) {
+    //     Swal.fire({
+    //         title: "¡Acción no permitida!",
+    //         text: "No se pueden modificar las características del rol ADMINISTRADOR",
+    //         icon: "error",
+    //         confirmButtonText: "Aceptar"
+    //     });
+    //     return;
+    // }
 
     if (accion == 0) {
         $("#proceso").text(" MODIFICAR");
@@ -472,18 +472,18 @@ function cambiarEstado(checkbox, id) {
     const fila = $(checkbox).closest('tr');
     const nombre_rol = $(fila).find("td:eq(1)").text();
 
-    // Verificar si es el rol ADMINISTRADOR
-    if (nombre_rol === 'ADMINISTRADOR') {
-        Swal.fire({
-            title: "¡Acción no permitida!",
-            text: "No se puede cambiar el estado del rol ADMINISTRADOR",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });
-        // Revertir el cambio en el checkbox
-        checkbox.checked = !checkbox.checked;
-        return;
-    }
+    // Quitar la restricción para ADMINISTRADOR
+    // if (nombre_rol === 'ADMINISTRADOR') {
+    //     Swal.fire({
+    //         title: "¡Acción no permitida!",
+    //         text: "No se puede cambiar el estado del rol ADMINISTRADOR",
+    //         icon: "error",
+    //         confirmButtonText: "Aceptar"
+    //     });
+    //     // Revertir el cambio en el checkbox
+    //     checkbox.checked = !checkbox.checked;
+    //     return;
+    // }
 
     const nuevoEstado = checkbox.checked ? 'ACTIVO' : 'INACTIVO';
     
@@ -580,27 +580,24 @@ function enviaAjax(datos) {
                     destruyeDT();
                     let filas = "";
                     (lee.mensaje || []).forEach(function(p) {
-                        const esAdmin = p.nombre_rol === 'ADMINISTRADOR';
                         filas += `<tr class='text-center'>
-                            <td class='align-middle' style='display: none;'>${p.id}</td>
-                            <td class='align-middle'>${p.nombre_rol}</td>
-                            <td class='align-middle'>${p.descripcion}</td>
-                            <td class='align-middle'>
-                                <div class="form-check form-switch d-flex justify-content-center">
-                                    <input class="form-check-input" type="checkbox" role="switch" 
-                                        ${p.estado === 'ACTIVO' ? 'checked' : ''} 
-                                        onchange="cambiarEstado(this, '${p.id}')"
-                                        style="width: 40px; height: 20px; cursor: ${esAdmin ? 'not-allowed' : 'pointer'};"
-                                        ${esAdmin ? 'disabled' : ''}
-                                    >
-                                </div>
-                            </td>
-                            <td class='align-middle' style='display: flex; justify-content: center;'>
-                                <button type='button' class='btn-sm btn-warning w-50 small-width mb-1' onclick='pone(this,2)' title='Modificar permisos' style='margin:.2rem; width: 40px !important;'><i class='bi bi-shield-lock-fill'></i></button><br/>
-                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
-                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
-                            </td>
-                        </tr>`;
+                                        <td class='align-middle' style='display: none;'>${p.id}</td>
+                                        <td class='align-middle'>${p.nombre_rol}</td>
+                                        <td class='align-middle'>${p.descripcion}</td>
+                                        <td class='align-middle'>
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                    ${p.estado === 'ACTIVO' ? 'checked' : ''} 
+                                                    onchange="cambiarEstado(this, '${p.id}')"
+                                                    style="width: 40px; height: 20px; cursor: pointer;">
+                                            </div>
+                                        </td>
+                                        <td class='align-middle' style='display: flex; justify-content: center;'>
+                                            <button type='button' class='btn-sm btn-warning w-50 small-width mb-1' onclick='pone(this,2)' title='Modificar permisos' style='margin:.2rem; width: 40px !important;'><i class='bi bi-shield-lock-fill'></i></button><br/>
+                                            <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
+                                            <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
+                                        </td>
+                                    </tr>`;
                     });
                     $("#resultadoconsulta").html(filas);
                     crearDT();
