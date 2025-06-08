@@ -8,10 +8,10 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 	<div class="container-fluid"> 
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center mb-4">
-				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Roles y Permisos de Usuario</h1>
+				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> GESTIONAR ROLES Y PERMISOS DE USUARIO</h1>
 				<div>
 					<button type="button" class="btn btn-outline-info me-2" id="incluir">
-						<i class="bi bi-plus-circle me-1"></i> Ingresar Rol
+						<i class="bi bi-plus-circle me-1"></i> INGRESAR ROL
 					</button>
 				</div>
 			</div>
@@ -19,16 +19,16 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 	<!-- Tabla de empleados -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
-			<h6 class="m-0 font-weight-bold text-info">Listado de Roles</h6>
+			<h6 class="m-0 font-weight-bold text-info">LISTADO DE ROLES</h6>
 			<div class="dropdown no-arrow">
 				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
 					<i class="bi bi-three-dots-vertical"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right shadow">
-					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
-						Excel</a>
-					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
-						Listado</a>
+					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>EXPORTAR A
+						EXCEL</a>
+					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>IMPRIMIR
+						LISTADO</a>
 				</div>
 			</div>
 		</div>
@@ -39,9 +39,9 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							<tr>
 								<!-- Encabezados de la tabla -->
 								<th class="text-center" style="display: none;">#</th>
-								<th class="text-center">Nombre del Rol</th>
-								<th class="text-center">Descripción</th>
-								<th class="text-center">Estado</th>
+								<th class="text-center">NOMBRE DEL ROL</th>
+								<th class="text-center">DESCRIPCION</th>
+								<th class="text-center">ESTADO</th>
 								<th class="text-center">Acciones</th>
 							</tr>
 						</thead>
@@ -56,7 +56,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 		<div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 			<div class="modal-dialog" role="document" id="lm">
 					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title"><i class="bi bi-person-fill-gear me-2"></i> Rol</h5>
+						<h5 class="modal-title"><i class="bi bi-person-fill-gear me-2"></i> ROL</h5>
 					</div>
 				<div class="modal-content">
 					<div class="container" id="mtm"> 
@@ -67,7 +67,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							<div class="container">
 								<div class="row mb-3">
 									<div class="col-md-12">
-										<label for="nombre_rol">Nombre del Rol</label>
+										<label for="nombre_rol">NOMBRE DEL ROL</label>
 										<input class="form-control" type="text" id="nombre_rol" name="nombre_rol" placeholder="Ejemplo: Administrador"/>
 										<span id="snombre_rol" class="text-danger"></span>
 									</div>
@@ -75,8 +75,8 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 
 								<div class="row mb-3">
 									<div class="col-md-12">
-										<label for="descripcion">Descripción</label>
-										<textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del rol"></textarea>
+										<label for="descripcion">DESCRIPCION</label>
+										<textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="DESCRIPCION DEL ROL"></textarea>
 										<span id="sdescripcion" class="text-danger"></span>
 									</div>
 								</div>
@@ -97,7 +97,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title"><i class="bi bi-shield-lock-fill me-2"></i> Gestionar Permisos del Rol</h5>
+						<h5 class="modal-title"><i class="bi bi-shield-lock-fill me-2"></i> GESTIONAR PERMISOS DEL ROL</h5>
 					</div>
 					<div class="modal-body">
 						<form method="post" id="f_permisos" autocomplete="off">
@@ -130,7 +130,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 		<script type="text/javascript" src="js/roles.js"></script><!-- Inclusión del archivo JavaScript de pacientes -->
 		<div id="loader" class="loader-container" style="display: none;">
 			<div class="loader"></div>
-			<p>Procesando solicitud...</p>
+			<p>PROCESANDO SOLICITUD...</p>
 		</div>
 	</body>
 </html>

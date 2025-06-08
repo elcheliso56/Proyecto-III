@@ -40,9 +40,9 @@ class bitacora extends datos {
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $r = array();
         try {
-            $resultado = $co->query("SELECT b.*, u.nombre_usuario 
+            $resultado = $co->query("SELECT b.*, u.usuario, u.nombre_apellido 
                                    FROM bitacora b 
-                                   LEFT JOIN usuarios u ON b.usuario_id = u.id 
+                                   LEFT JOIN usuario u ON b.usuario_id = u.usuario 
                                    ORDER BY b.fecha_hora DESC");
             if ($resultado) {
                 $respuesta = '';
@@ -53,7 +53,8 @@ class bitacora extends datos {
                     $respuesta = $respuesta . "<td class='align-middle'>$n</td>";
                     $respuesta = $respuesta . "<td class='align-middle'>" . $fecha_hora->format('d-m-Y') . "</td>";
                     $respuesta = $respuesta . "<td class='align-middle'>" . $fecha_hora->format('H:i:s') . "</td>";
-                    $respuesta = $respuesta . "<td class='align-middle'>" . $r['nombre_usuario'] . "</td>";
+                    $respuesta = $respuesta . "<td class='align-middle'>" . $r['usuario'] . "</td>";
+                    $respuesta = $respuesta . "<td class='align-middle'>" . $r['nombre_apellido'] . "</td>";
                     $respuesta = $respuesta . "<td class='align-middle'>" . $r['accion'] . "</td>";
                     $respuesta = $respuesta . "<td class='align-middle'>" . $r['descripcion'] . "</td>";
                     $respuesta = $respuesta . "<td class='align-middle'>" . $r['modulo'] . "</td>";
@@ -79,9 +80,9 @@ class bitacora extends datos {
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $r = array();
         try {
-            $resultado = $co->query("SELECT b.*, u.nombre_usuario 
+            $resultado = $co->query("SELECT b.*, u.usuario, u.nombre_apellido 
                                    FROM bitacora b 
-                                   LEFT JOIN usuarios u ON b.usuario_id = u.id 
+                                   LEFT JOIN usuario u ON b.usuario_id = u.usuario 
                                    ORDER BY b.fecha_hora DESC");
             
             $html = "<!DOCTYPE html><html><head><meta charset='UTF-8'>";
@@ -115,7 +116,8 @@ class bitacora extends datos {
                     $html = $html . "<td style='text-align:center'>" . $n . "</td>";
                     $html = $html . "<td>" . $fecha_hora->format('d-m-Y') . "</td>";
                     $html = $html . "<td>" . $fecha_hora->format('H:i:s') . "</td>";
-                    $html = $html . "<td>" . $fila['nombre_usuario'] . "</td>";
+                    $html = $html . "<td>" . $fila['usuario'] . "</td>";
+                    $html = $html . "<td>" . $fila['nombre_apellido'] . "</td>";
                     $html = $html . "<td>" . $fila['accion'] . "</td>";
                     $html = $html . "<td>" . $fila['descripcion'] . "</td>";
                     $html = $html . "<td>" . $fila['modulo'] . "</td>";

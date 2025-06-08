@@ -19,17 +19,17 @@ function crearDT() {
             language: {
                 // Configuración de idioma para la tabla
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron empleados",
+                zeroRecords: "NO SE ENCONTRARON RESULTADOS",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay empleados registrados",
+                infoEmpty: "NO HAY REGISTROS",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar...",
+                searchPlaceholder: "BUSCAR...",
                 paginate: {
-                    first: "Primera",
-                    last: "Última",
-                    next: "Siguiente",
-                    previous: "Anterior",
+                    first: "PRIMERA",
+                    last: "ÚLTIMA",
+                    next: "SIGUENTE",
+                    previous: "ANTERIOR",
                 },
             },
             pageLength: 5, // Establece el número de registros por página a 5
@@ -52,10 +52,18 @@ $(document).ready(function() {
 
     // Validaciones para el campo de nombre
     $("#nombre_rol").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
     $("#nombre_rol").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{5,30}$/, $(this), $("#snombre_rol"), "Solo letras entre 5 y 30 caracteres");
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{5,30}$/, $(this), $("#snombre_rol"), "Solo letras entre 5 y 30 caracteres");
+    });
+
+    // Validaciones para el campo de descripción
+    $("#descripcion").on("keypress", function(e) {
+        validarkeypress(/^[A-Z0-9\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    });
+    $("#descripcion").on("keyup", function() {
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{5,100}$/, $(this), $("#sdescripcion"), "Solo letras entre 5 y 100 caracteres");
     });
 
     // Manejo de clic en el botón de proceso
@@ -188,7 +196,7 @@ $(document).ready(function() {
         // Manejo de eliminación de un empleado
         if ($(this).text() == " ELIMINAR") {
             var validacion;
-            validacion = validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{5,30}$/, $(this), $("#snombre_rol"), "Solo letras entre 5 y 30 caracteres");
+            validacion = validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{5,30}$/, $(this), $("#snombre_rol"), "Solo letras entre 5 y 30 caracteres");
             if (validacion == 'ADMINISTRADOR') {
                 muestraMensaje("No se puede eliminar el rol ADMINISTRADOR");
             } else {
@@ -439,13 +447,8 @@ function cargarPermisos() {
                     lee.mensaje.forEach(function(p) {
                         permisos += `
                             <div class="form-check col-md-6 mb-2">
-                                <input class="form-check-input permiso-check" type="checkbox" 
-                                        id="permiso_${p.id_permiso}" 
-                                        value="${p.id_permiso}" 
-                                        ${p.tiene_permiso == 1 ? 'checked' : ''}>
-                                <label class="form-check-label" for="permiso_${p.id_permiso}">
-                                    ${p.nombre_permiso}
-                                </label>
+                                <input class="form-check-input permiso-check" type="checkbox" id="permiso_${p.id_permiso}" value="${p.id_permiso}" ${p.tiene_permiso == 1 ? 'checked' : ''}>
+                                <label class="form-check-label" for="permiso_${p.id_permiso}"> ${p.nombre_permiso} </label>
                             </div>`;
                     });
                     $("#rol_permisos").html(permisos);

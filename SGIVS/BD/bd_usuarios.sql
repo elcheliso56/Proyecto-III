@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2025 a las 15:45:00
+-- Tiempo de generación: 08-06-2025 a las 22:38:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 
 --
 -- Base de datos: `bd_usuarios`
---
-CREATE DATABASE IF NOT EXISTS `bd_usuarios` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `bd_usuarios` 
+DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `bd_usuarios`;
 
 --
@@ -57,25 +57,25 @@ CREATE TABLE `permisos` (
 --
 
 INSERT INTO `permisos` (`id_permiso`, `nombre_permiso`) VALUES
-(1, 'Principal'),
-(2, 'Citas'),
-(3, 'Calendario'),
-(4, 'Consultas'),
-(5, 'Empleados'),
-(6, 'Historiales'),
-(7, 'Servicios'),
-(8, 'Insumo'),
-(9, 'Equipo'),
-(10, 'Cuentas'),
-(11, 'Ingresos'),
-(12, 'Egresos'),
-(13, 'Cuentas'),
-(14, 'Movimiento'),
-(15, 'Dashboard'),
-(16, 'Reportes'),
-(17, 'Roles'),
-(18, 'Usuarios'),
-(19, 'Bitacora');
+(1, 'PRINCIPAL'),
+(2, 'CITAS'),
+(3, 'CALENDARIO'),
+(4, 'CONSULTAS'),
+(5, 'EMPLEADOS'),
+(6, 'HISTORIALES'),
+(7, 'SERVICIOS'),
+(8, 'INSUMO'),
+(9, 'EQUIPO'),
+(10, 'CUENTAS'),
+(11, 'INGRESOS'),
+(12, 'EGRESOS'),
+(13, 'CUENTAS'),
+(14, 'MOVIMIENTO'),
+(15, 'DASHBOARD'),
+(16, 'REPORTES'),
+(17, 'ROLES'),
+(18, 'USUARIOS'),
+(19, 'BITACORA');
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,7 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `nombre_rol`, `descripcion`, `estado`) VALUES
-(1, 'ADMINISTRADOR', 'SUPER USUARIO', 'ACTIVO'),
+(1, 'ADMINISTRADOR', 'SUPER USUARIO', 'ACTIVO');
 
 -- --------------------------------------------------------
 
@@ -105,36 +105,33 @@ INSERT INTO `roles` (`id`, `nombre_rol`, `descripcion`, `estado`) VALUES
 
 CREATE TABLE `rol_permiso` (
   `id_rol` int(11) NOT NULL,
-  `id_permiso` int(11) NOT NULL,
-  `incluir` int(11) NOT NULL,
-  `modificar` int(11) NOT NULL,
-  `eliminar` int(11) NOT NULL
+  `id_permiso` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `rol_permiso`
 --
 
-INSERT INTO `rol_permiso` (`id_rol`, `id_permiso`, `incluir`, `modificar`, `eliminar`) VALUES
-(1, 1, 1, 1, 1),
-(1, 2, 1, 1, 1),
-(1, 3, 1, 1, 1),
-(1, 4, 1, 1, 1),
-(1, 5, 1, 1, 1),
-(1, 6, 1, 1, 1),
-(1, 7, 1, 1, 1),
-(1, 8, 1, 1, 1),
-(1, 9, 1, 1, 1),
-(1, 10, 1, 1, 1),
-(1, 11, 1, 1, 1),
-(1, 12, 1, 1, 1),
-(1, 13, 1, 1, 1),
-(1, 14, 1, 1, 1),
-(1, 15, 1, 1, 1),
-(1, 16, 1, 1, 1),
-(1, 17, 1, 1, 1),
-(1, 18, 1, 1, 1),
-(1, 19, 1, 1, 1),
+INSERT INTO `rol_permiso` (`id_rol`, `id_permiso`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 11),
+(1, 12),
+(1, 13),
+(1, 14),
+(1, 15),
+(1, 16),
+(1, 17),
+(1, 18),
+(1, 19);
 
 -- --------------------------------------------------------
 
@@ -154,33 +151,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`usuario`, `nombre_apellido`, `contrasena`, `imagen`) VALUES
-(12345678, 'Juan Lopez', '$2y$10$E2B6J6Enuw8CTkaf3Bd5t.2N9JB9XFLp1hkoy7wDr2GUbD6tpsYW2', 'otros/img/usuarios/default.png');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuarios`
---
-
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `cedula` varchar(15) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `telefono` varchar(15) DEFAULT NULL,
-  `correo` varchar(25) DEFAULT NULL,
-  `nombre_usuario` varchar(50) NOT NULL,
-  `contraseña` varchar(255) NOT NULL,
-  `tipo_usuario` varchar(50) NOT NULL,
-  `imagen` varchar(255) DEFAULT 'img/usuarios/default.jpg'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id`, `cedula`, `nombre`, `apellido`, `telefono`, `correo`, `nombre_usuario`, `contraseña`, `tipo_usuario`, `imagen`) VALUES
-(1, '', '', '', '', '', 'Administrador', '$2y$10$jsMp89hwkYf4f1C02XjqqegoRgT3UdXg13P8NKxq5AbVAtjQbVkia', 'administrador', 'otros/img/usuarios/default.png');
+(12345678, 'JUAN LOPEZ', '$2y$10$E2B6J6Enuw8CTkaf3Bd5t.2N9JB9XFLp1hkoy7wDr2GUbD6tpsYW2', 'otros/img/usuarios/default.png');
 
 -- --------------------------------------------------------
 
@@ -228,7 +199,7 @@ ALTER TABLE `roles`
 -- Indices de la tabla `rol_permiso`
 --
 ALTER TABLE `rol_permiso`
-  ADD KEY `id_rol` (`id_rol`),
+  ADD KEY `id_rol` (`id_rol`,`id_permiso`),
   ADD KEY `id_permiso` (`id_permiso`);
 
 --
@@ -238,45 +209,21 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`usuario`);
 
 --
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cedula` (`cedula`),
-  ADD UNIQUE KEY `nombre_usuario` (`nombre_usuario`);
-
---
 -- Indices de la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
-  ADD KEY `id_rol` (`id_rol`),
-  ADD KEY `usuario` (`usuario`) USING BTREE;
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `bitacora`
---
-ALTER TABLE `bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  ADD KEY `usuario` (`usuario`,`id_rol`),
+  ADD KEY `id_rol` (`id_rol`);
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `bitacora`
+--
+ALTER TABLE `bitacora`
+  ADD CONSTRAINT `bitacora_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `rol_permiso`
@@ -289,8 +236,8 @@ ALTER TABLE `rol_permiso`
 -- Filtros para la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
-  ADD CONSTRAINT `usuario_rol_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `usuario_rol_ibfk_2` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `usuario_rol_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `usuario_rol_ibfk_2` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

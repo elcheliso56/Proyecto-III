@@ -19,17 +19,17 @@ function crearDT() {
             language: {
                 // Configuración de idioma para la tabla
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron empleados",
+                zeroRecords: "NO SE ENCONTRARON REGISTROS",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay empleados registrados",
+                infoEmpty: "NO HAY EMPLEADOS REGISTRADOS",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar empleado...",
+                searchPlaceholder: "BUSCAR...",
                 paginate: {
-                    first: "Primera",
-                    last: "Última",
-                    next: "Siguiente",
-                    previous: "Anterior",
+                    first: "PRIMERA",
+                    last: "ULTIMA",
+                    next: "SIGUIENTE",
+                    previous: "ANTERIOR",
                 },
             },
             pageLength: 5, // Establece el número de registros por página a 5
@@ -140,10 +140,10 @@ $(document).ready(function() {
 
     // Validaciones para el campo de dirección
     $("#direccion").on("keypress", function(e) {
-        validarkeypress(/^[^"']*$/, e);
+        validarkeypress(/^[A-Z0-9\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
     $("#direccion").on("keyup", function() {
-        validarkeyup(/^[^"']{1,100}$/, $(this), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres");
+        validarkeyup(/^[A-Z0-9\b\s\u00f1\u00d1\u00E0-\u00FC]{5,100}$/, $(this), $("#sdireccion"), "Solo letras entre 5 y 100 caracteres");
     });
 
     //Validaciones para el campo de salario
@@ -156,7 +156,7 @@ $(document).ready(function() {
 
     // Manejo de clic en el botón de proceso
     $("#proceso").on("click", function() {
-        if ($(this).text() == "INCLUIR") {
+        if ($(this).text() == " INCLUIR") {
             if (validarenvio()) {
             // Confirmación para incluir un nuevo empleado
                 Swal.fire({
@@ -193,7 +193,7 @@ $(document).ready(function() {
                 });
             }
         }
-        else if ($(this).text() == "MODIFICAR") {
+        else if ($(this).text() == " MODIFICAR") {
             if (validarenvio()) {
             // Confirmación para modificar un empleado existente
                 const swalWithBootstrapButtons = Swal.mixin({
@@ -243,7 +243,7 @@ $(document).ready(function() {
             }
         }
         // Manejo de eliminación de un empleado
-        if ($(this).text() == "ELIMINAR") {
+        if ($(this).text() == " ELIMINAR") {
             var validacion;
             validacion = validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
             if (validacion == 0) {
@@ -284,7 +284,7 @@ $(document).ready(function() {
     // Manejo del clic en el botón incluir
     $("#incluir").on("click", function() {
         limpia(); // Limpia los campos
-        $("#proceso").text("INCLUIR"); // Cambia el texto del botón
+        $("#proceso").text(" INCLUIR"); // Cambia el texto del botón
         $("#modal1").modal("show"); // Muestra el modal
     });	
 });
@@ -496,7 +496,7 @@ function pone(pos, accion) {
     }
 
     if (accion == 0) {
-        $("#proceso").text("MODIFICAR");
+        $("#proceso").text(" MODIFICAR");
         $("#tipo_rif").prop("disabled", true);
         $("#rif").prop("disabled", true);
         $("#tipo_documento").prop("disabled", true);
@@ -516,7 +516,7 @@ function pone(pos, accion) {
     } 
     
     else {
-        $("#proceso").text("ELIMINAR");
+        $("#proceso").text(" ELIMINAR");
         $("#tipo_rif").prop("disabled", true);
         $("#rif").prop("disabled", true);
         $("#tipo_documento").prop("disabled", true);

@@ -21,7 +21,7 @@ function cargarRoles() {
                 var lee = JSON.parse(respuesta);
                 if(lee.resultado == "consultar") {
                     var roles = lee.mensaje;
-                    var options = '<option value="" selected disabled>Seleccione una opción</option>';
+                    var options = '<option value="" selected disabled>SELECCIONE UNA OPCION</option>';
                     roles.forEach(function(rol) {
                         if(rol.estado === 'ACTIVO') {
                             options += `<option value="${rol.id}">${rol.nombre_rol}</option>`;
@@ -50,17 +50,17 @@ function crearDT(){
         $("#tablausuario").DataTable({
             language: {
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron usuarios",
+                zeroRecords: "NO SE ENCONTRARON RESULTADOS",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay usuarios registrados",
+                infoEmpty: "NO HAY REGISTROS DISPONIBLES",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar usuario...",
+                searchPlaceholder: "BUSCAR...",
                 paginate: {
-                first: "Primera",
-                last: "Última",
-                next: "Siguiente",
-                previous: "Anterior",
+                first: "PRIMERA",
+                last: "ÚLTIMA",
+                next: "SIGUENTE",
+                previous: "ANTERIOR",
             },
     },
       pageLength: 5, // Establece el número de registros por página a 5
@@ -85,7 +85,7 @@ $(document).ready(function(){
             $("#srepetir_contraseña").text("");
         }
     });
-
+    
     $("#proceso").on("click",function(){
         if($(this).text()==" INCLUIR"){
             if (validarenvio()) {

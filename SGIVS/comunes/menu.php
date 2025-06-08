@@ -48,7 +48,7 @@ function tienePermiso($permiso) {
 									<i class="zmdi zmdi-view-dashboard"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Principal
+									PRINCIPAL
 								</div>
 							</a>
 						</li>
@@ -62,7 +62,7 @@ function tienePermiso($permiso) {
 									<i class="bi bi-calendar-check"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Citas
+									CITAS
 								</div>
 							</a>
 						</li>
@@ -76,7 +76,7 @@ function tienePermiso($permiso) {
 									<i class="zmdi zmdi-calendar"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Calendario de citas
+									CALENDARIO
 								</div>
 							</a>
 						</li>
@@ -90,7 +90,7 @@ function tienePermiso($permiso) {
 									<i class="zmdi zmdi-view-dashboard"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Consultas
+									CONSULTAS
 								</div>
 							</a>
 						</li>
@@ -104,7 +104,7 @@ function tienePermiso($permiso) {
 									<i class="zmdi zmdi-account"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Empleados
+									EMPLEADOS
 								</div>
 							</a>
 						</li>
@@ -118,7 +118,7 @@ function tienePermiso($permiso) {
 									<i class="bi bi-clipboard2-pulse"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Historiales
+									HISTORIALES
 								</div>
 							</a>
 						</li>
@@ -132,7 +132,7 @@ function tienePermiso($permiso) {
 									<i class="bi bi-gear-fill"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Servicios
+									SERVICIOS
 								</div>
 							</a>
 						</li>
@@ -146,7 +146,7 @@ function tienePermiso($permiso) {
 									<i class="bi bi-box-seam"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									Recursos
+									RECURSOS
 								</div>
 								<span class="zmdi zmdi-chevron-left"></span>
 							</a>
@@ -158,7 +158,7 @@ function tienePermiso($permiso) {
 												<i class="bi bi-box-seam-fill"></i>
 											</div>
 											<div class="navLateral-body-cr">
-												Gestionar Insumos
+												GESTIONAR INSUMOS
 											</div>
 										</a>
 									</li>
@@ -171,7 +171,7 @@ function tienePermiso($permiso) {
 												<i class="bi bi-tools"></i>
 											</div>
 											<div class="navLateral-body-cr">
-												Gestionar Equipos
+												GESTIONAR EQUIPOS
 											</div>
 										</a>
 									</li>
@@ -187,7 +187,7 @@ function tienePermiso($permiso) {
 								<i class="zmdi zmdi-money"></i>
 							</div>
 							<div class="navLateral-body-cr">
-								Transacciones
+								TRANSACCIONES
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
@@ -199,7 +199,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-credit-card-fill"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Cuentas
+											CUENTAS
 										</div>
 									</a>
 								</li>
@@ -211,7 +211,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-arrow-down-circle-fill"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Ingresos
+											INGRESOS
 										</div>
 									</a>
 								</li>
@@ -223,7 +223,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-arrow-up-circle-fill"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Egresos
+											EGRESOS
 										</div>
 									</a>
 								</li>
@@ -235,7 +235,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-wallet2"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Cuentas por Cobrar
+											CUENTAS POR COBRAR
 										</div>
 									</a>
 								</li>
@@ -247,7 +247,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-arrow-left-right"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Movimientos
+											MOVIMIENTOS
 										</div>
 									</a>
 								</li>
@@ -259,7 +259,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-graph-up"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Dashboard
+											DASHBOARD
 										</div>
 									</a>
 								</li>
@@ -271,7 +271,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-file-earmark-pdf"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											reportes cuentas
+											REPORTES CUENTAS
 										</div>
 									</a>
 								</li>
@@ -288,7 +288,7 @@ function tienePermiso($permiso) {
 								<i class="zmdi zmdi-settings"></i>
 							</div>
 							<div class="navLateral-body-cr" style="color: white;">
-								Administrador
+								ADMINISTRADOR
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
@@ -300,7 +300,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-person-fill-gear"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Roles
+											ROLES
 										</div>
 									</a>
 								</li>
@@ -312,7 +312,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-person-fill-gear"></i>
 										</div>
 										<div class="navLateral-body-cr" style="color: white;">
-											Usuarios
+											USUARIOS
 										</div>
 									</a>
 								</li>
@@ -324,7 +324,7 @@ function tienePermiso($permiso) {
 											<i class="bi bi-file-earmark-text"></i>
 										</div>
 										<div class="navLateral-body-cr">
-											Bitácora
+											BITACORA
 										</div>
 									</a>
 								</li>

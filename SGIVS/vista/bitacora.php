@@ -4,7 +4,6 @@ require_once('comunes/menu.php');
 ?> 
 <div class="container"> 
     <h1>Bitácora del Sistema</h1>
-    <p style="text-align:justify;">"Bienvenido al módulo de Bitácora del Sistema. Aquí podrás visualizar el registro de todas las acciones realizadas en el sistema, incluyendo la fecha, hora, usuario y tipo de acción. Esta información es importante para mantener un control y seguimiento de las actividades realizadas en el sistema."</p>
     <div class="container">
         <div class="row mt-1 justify-content-center">
             <div class="col-md-2 text-center">
@@ -20,12 +19,13 @@ require_once('comunes/menu.php');
                 <thead class="tableh">
                     <tr>
                         <th class="text-center">#</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Hora</th>
-                        <th class="text-center">Usuario</th>
-                        <th class="text-center">Acción</th>
-                        <th class="text-center">Descripción</th>
-                        <th class="text-center">Módulo</th>
+                        <th class="text-center">FECHA</th>
+                        <th class="text-center">HORA</th>
+                        <th class="text-center">USUARIO</th>
+                        <th class="text-center">NOMBRE Y APELLIDO</th>
+                        <th class="text-center">ACCION</th>
+                        <th class="text-center">DESCRIPCION</th>
+                        <th class="text-center">MODULO</th>
                     </tr>
                 </thead>
                 <tbody id="resultadoconsulta">              

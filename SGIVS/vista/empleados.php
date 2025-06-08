@@ -8,10 +8,10 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 	<div class="container-fluid"> 
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center mb-4">
-				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> Gestionar Empleados</h1>
+				<h1 class="h3 mb-0 text-gray-800"><i class="bi bi-person-fill me-2"></i> GESTIONAR EMPLEADOS</h1>
 				<div>
 					<button type="button" class="btn btn-outline-info me-2" id="incluir">
-						<i class="bi bi-plus-circle me-1"></i> Ingresar Empleado
+						<i class="bi bi-plus-circle me-1"></i> INGRESAR EMPLEADO
 					</button>
 				</div>
 			</div>
@@ -19,16 +19,16 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 	<!-- Tabla de empleados -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3 d-flex justify-content-between align-items-center">
-			<h6 class="m-0 font-weight-bold text-info">Listado de Empleados</h6>
+			<h6 class="m-0 font-weight-bold text-info">LISTADO DE EMPLEADOS</h6>
 			<div class="dropdown no-arrow">
 				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
 					<i class="bi bi-three-dots-vertical"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right shadow">
-					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>Exportar a
-						Excel</a>
-					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>Imprimir
-						Listado</a>
+					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>EXPORTAR A
+						EXCEL</a>
+					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>IMPRIMIR
+						LISTADO</a>
 				</div>
 			</div>
 		</div>
@@ -41,7 +41,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 								<th class="text-center">#</th>
 								<th class="text-center" style="display: none;">RIF</th>
 								<th class="text-center">CEDULA</th>
-								<th class="text-center">NOMBRE y APELLIDO</th>
+								<th class="text-center">NOMBRE Y APELLIDO</th>
 								<th class="text-center" style="display: none;">FECHA DE NACIMIENTO</th>
 								<th class="text-center" style="display: none;">EDAD</th>
 								<th class="text-center" style="display: none;">GENERO</th>
