@@ -5,8 +5,10 @@ $(document).ready(function() {
         
         var datos = new FormData(); // Crea un nuevo objeto FormData para enviar datos
         datos.append('accion', 'login'); // Agrega la acción 'login' a los datos
-        datos.append('nombre_usuario', $('#nombre_usuario').val()); // Agrega el nombre de usuario
-        datos.append('contraseña', $('#contraseña').val()); // Agrega la contraseña
+        datos.append('usuario', $('#usuario').val()); // Agrega el nombre de usuario
+        datos.append('id_rol', $('#id_rol').val()); // Agrega el tipo de usuario
+        datos.append('id_permiso', $('#id_permiso').val()); // Agrega el tipo de usuario
+        datos.append('contrasena', $('#contrasena').val()); // Agrega la contraseña
 
         // Realiza una solicitud AJAX
         $.ajax({

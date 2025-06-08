@@ -373,7 +373,7 @@ function pone(pos, accion) {
     var nombre_rol = $(linea).find("td:eq(1)").text(); // Obtener el nombre del rol
 
     // Verificar si es el rol ADMINISTRADOR
-    if (nombre_rol === 'ADMINISTRADOR') {
+    if (nombre_rol === 'ADMINISTRADOR' && (accion == 0 || accion == 1 || accion == 2)) {
         Swal.fire({
             title: "¡Acción no permitida!",
             text: "No se pueden modificar las características del rol ADMINISTRADOR",
@@ -440,9 +440,9 @@ function cargarPermisos() {
                         permisos += `
                             <div class="form-check col-md-6 mb-2">
                                 <input class="form-check-input permiso-check" type="checkbox" 
-                                       id="permiso_${p.id_permiso}" 
-                                       value="${p.id_permiso}" 
-                                       ${p.tiene_permiso == 1 ? 'checked' : ''}>
+                                        id="permiso_${p.id_permiso}" 
+                                        value="${p.id_permiso}" 
+                                        ${p.tiene_permiso == 1 ? 'checked' : ''}>
                                 <label class="form-check-label" for="permiso_${p.id_permiso}">
                                     ${p.nombre_permiso}
                                 </label>
@@ -579,7 +579,7 @@ function enviaAjax(datos) {
                 if (lee.resultado == "consultar") {
                     destruyeDT();
                     let filas = "";
-                    (lee.mensaje || []).forEach(function(p,idx) {
+                    (lee.mensaje || []).forEach(function(p) {
                         const esAdmin = p.nombre_rol === 'ADMINISTRADOR';
                         filas += `<tr class='text-center'>
                             <td class='align-middle' style='display: none;'>${p.id}</td>
@@ -596,9 +596,9 @@ function enviaAjax(datos) {
                                 </div>
                             </td>
                             <td class='align-middle' style='display: flex; justify-content: center;'>
-                                <button type='button' class='btn-sm btn-warning w-50 small-width mb-1' onclick='pone(this,2)' title='Modificar permisos' style='margin:.2rem; width: 40px !important; ${esAdmin ? 'opacity: 0.5;' : ''}' ${esAdmin ? 'disabled' : ''}><i class='bi bi-shield-lock-fill'></i></button><br/>
-                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important; ${esAdmin ? 'opacity: 0.5;' : ''}' ${esAdmin ? 'disabled' : ''}><i class='bi bi-arrow-repeat'></i></button><br/>
-                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important; ${esAdmin ? 'opacity: 0.5;' : ''}' ${esAdmin ? 'disabled' : ''}><i class='bi bi-trash-fill'></i></button><br/>
+                                <button type='button' class='btn-sm btn-warning w-50 small-width mb-1' onclick='pone(this,2)' title='Modificar permisos' style='margin:.2rem; width: 40px !important;'><i class='bi bi-shield-lock-fill'></i></button><br/>
+                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-arrow-repeat'></i></button><br/>
+                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar rol' style='margin:.2rem; width: 40px !important;'><i class='bi bi-trash-fill'></i></button><br/>
                             </td>
                         </tr>`;
                     });

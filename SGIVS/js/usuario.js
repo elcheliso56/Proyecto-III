@@ -391,6 +391,7 @@ function enviaAjax(datos) {
                                     ${p.estado === 'ACTIVO' ? 'checked' : ''} 
                                     onchange="cambiarEstado(this, '${p.usuario}')"
                                     style="width: 40px; height: 20px; cursor: pointer;"
+                                    ${p.nombre_rol === 'ADMINISTRADOR' ? 'disabled' : ''}
                                 >
                             </div>
                         </td>

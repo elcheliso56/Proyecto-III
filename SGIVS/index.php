@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['usuario_id']) && (!isset($_GET['pagina']) || ($_GET['pagina'] != 'login' && $_GET['pagina'] != 'publicidad'))){
+if(!isset($_SESSION['usuario']) && (!isset($_GET['pagina']) || ($_GET['pagina'] != 'login' && $_GET['pagina'] != 'publicidad'))){
     header("Location: ?pagina=publicidad");
     exit;
 }

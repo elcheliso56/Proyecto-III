@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-06-2025 a las 07:09:04
+-- Tiempo de generación: 08-06-2025 a las 15:45:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -19,12 +19,11 @@ SET time_zone = "+00:00";
 
 --
 -- Base de datos: `bd_usuarios`
+--
+CREATE DATABASE IF NOT EXISTS `bd_usuarios` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `bd_usuarios`;
 
-create database bd_usuarios IF NOT EXISTS bd_usuarios
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-  use bd_usuarios;
+--
 
 -- --------------------------------------------------------
 
@@ -41,47 +40,6 @@ CREATE TABLE `bitacora` (
   `detalles` text DEFAULT NULL,
   `usuario_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `bitacora`
---
-
-INSERT INTO `bitacora` (`id`, `fecha_hora`, `modulo`, `accion`, `descripcion`, `detalles`, `usuario_id`) VALUES
-(39, '2025-06-05 22:11:51', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Administrador', 1),
-(40, '2025-06-05 22:12:16', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: 25961374', 1),
-(44, '2025-06-05 22:15:51', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(45, '2025-06-05 22:41:07', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Administrador', 1),
-(46, '2025-06-05 22:48:37', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(47, '2025-06-05 22:50:40', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(48, '2025-06-05 22:51:19', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: ', 1),
-(49, '2025-06-05 22:51:28', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: ', 1),
-(50, '2025-06-05 22:51:42', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(51, '2025-06-05 22:52:31', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: ', 1),
-(52, '2025-06-05 22:52:56', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Array', 1),
-(53, '2025-06-05 22:53:07', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Array', 1),
-(54, '2025-06-05 22:53:29', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(55, '2025-06-05 22:54:10', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: ', 1),
-(56, '2025-06-05 22:56:24', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(57, '2025-06-05 22:56:58', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(58, '2025-06-05 22:56:58', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(59, '2025-06-05 22:57:32', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(60, '2025-06-05 23:03:28', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(61, '2025-06-05 23:08:00', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(62, '2025-06-06 00:11:28', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: ', 1),
-(63, '2025-06-06 00:11:42', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(64, '2025-06-06 00:28:25', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(65, '2025-06-06 00:28:36', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(66, '2025-06-06 00:28:37', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(67, '2025-06-06 00:28:50', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(68, '2025-06-06 00:29:27', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(69, '2025-06-06 00:30:12', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(70, '2025-06-06 00:32:10', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(71, '2025-06-06 00:53:56', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(72, '2025-06-06 00:58:16', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Array', 1),
-(73, '2025-06-06 00:58:34', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Array', 1),
-(74, '2025-06-06 00:59:25', 'Login', 'Intento Fallido', 'Intento de inicio de sesión fallido', 'Usuario: Array', 1),
-(75, '2025-06-06 01:01:28', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1),
-(76, '2025-06-06 01:07:11', 'Login', 'Inicio de Sesión', 'Usuario inició sesión exitosamente', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -101,12 +59,23 @@ CREATE TABLE `permisos` (
 INSERT INTO `permisos` (`id_permiso`, `nombre_permiso`) VALUES
 (1, 'Principal'),
 (2, 'Citas'),
-(3, 'Consultas'),
-(4, 'Empleados'),
-(5, 'Historiales'),
-(6, 'Servicios'),
-(7, 'Gestionar Insumo'),
-(8, 'Gestionar Equipo');
+(3, 'Calendario'),
+(4, 'Consultas'),
+(5, 'Empleados'),
+(6, 'Historiales'),
+(7, 'Servicios'),
+(8, 'Insumo'),
+(9, 'Equipo'),
+(10, 'Cuentas'),
+(11, 'Ingresos'),
+(12, 'Egresos'),
+(13, 'Cuentas'),
+(14, 'Movimiento'),
+(15, 'Dashboard'),
+(16, 'Reportes'),
+(17, 'Roles'),
+(18, 'Usuarios'),
+(19, 'Bitacora');
 
 -- --------------------------------------------------------
 
@@ -126,7 +95,7 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `nombre_rol`, `descripcion`, `estado`) VALUES
-(1, 'ADMINISTRADOR', 'SUPER USUARIO', 'ACTIVO');
+(1, 'ADMINISTRADOR', 'SUPER USUARIO', 'ACTIVO'),
 
 -- --------------------------------------------------------
 
@@ -136,22 +105,36 @@ INSERT INTO `roles` (`id`, `nombre_rol`, `descripcion`, `estado`) VALUES
 
 CREATE TABLE `rol_permiso` (
   `id_rol` int(11) NOT NULL,
-  `id_permiso` int(11) NOT NULL
+  `id_permiso` int(11) NOT NULL,
+  `incluir` int(11) NOT NULL,
+  `modificar` int(11) NOT NULL,
+  `eliminar` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `rol_permiso`
 --
 
-INSERT INTO `rol_permiso` (`id_rol`, `id_permiso`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5),
-(1, 6),
-(1, 7),
-(1, 8);
+INSERT INTO `rol_permiso` (`id_rol`, `id_permiso`, `incluir`, `modificar`, `eliminar`) VALUES
+(1, 1, 1, 1, 1),
+(1, 2, 1, 1, 1),
+(1, 3, 1, 1, 1),
+(1, 4, 1, 1, 1),
+(1, 5, 1, 1, 1),
+(1, 6, 1, 1, 1),
+(1, 7, 1, 1, 1),
+(1, 8, 1, 1, 1),
+(1, 9, 1, 1, 1),
+(1, 10, 1, 1, 1),
+(1, 11, 1, 1, 1),
+(1, 12, 1, 1, 1),
+(1, 13, 1, 1, 1),
+(1, 14, 1, 1, 1),
+(1, 15, 1, 1, 1),
+(1, 16, 1, 1, 1),
+(1, 17, 1, 1, 1),
+(1, 18, 1, 1, 1),
+(1, 19, 1, 1, 1),
 
 -- --------------------------------------------------------
 
@@ -171,7 +154,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`usuario`, `nombre_apellido`, `contrasena`, `imagen`) VALUES
-(12345678, '', '$2y$10$E2B6J6Enuw8CTkaf3Bd5t.2N9JB9XFLp1hkoy7wDr2GUbD6tpsYW2', 'otros/img/usuarios/default.png');
+(12345678, 'Juan Lopez', '$2y$10$E2B6J6Enuw8CTkaf3Bd5t.2N9JB9XFLp1hkoy7wDr2GUbD6tpsYW2', 'otros/img/usuarios/default.png');
 
 -- --------------------------------------------------------
 
@@ -266,8 +249,8 @@ ALTER TABLE `usuarios`
 -- Indices de la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
-  ADD KEY `usuario` (`usuario`,`id_rol`),
-  ADD KEY `id_rol` (`id_rol`);
+  ADD KEY `id_rol` (`id_rol`),
+  ADD KEY `usuario` (`usuario`) USING BTREE;
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -277,29 +260,23 @@ ALTER TABLE `usuario_rol`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `bitacora`
---
-ALTER TABLE `bitacora`
-  ADD CONSTRAINT `bitacora_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `rol_permiso`

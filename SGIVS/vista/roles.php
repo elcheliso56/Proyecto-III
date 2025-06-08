@@ -103,7 +103,7 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 						<form method="post" id="f_permisos" autocomplete="off">
 							<input type="hidden" id="id_rol" name="id_rol">
 							<div class="container">
-								<div class="row" id="rol_permisos">
+								<div class="row mb-2 " id="rol_permisos">
 									<!-- Aquí se cargarán dinámicamente los permisos -->
 								</div>
 							</div>

@@ -5,13 +5,6 @@ if (!is_file("modelo/".$pagina.".php")){
 	exit;
 }  
 require_once("modelo/".$pagina.".php"); // Incluye el archivo del modelo
-
-// Verifica si el usuario es un administrador
-if (!isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'administrador') {
-	header("Location: ?pagina=principal"); // Redirige si no es administrador
-	exit;
-}
-
 // Verifica si la vista existe
 if(is_file("vista/".$pagina.".php")){  
 	if(!empty($_POST)){ // Comprueba si se han enviado datos por POST

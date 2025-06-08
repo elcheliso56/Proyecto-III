@@ -14,15 +14,16 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
             <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-speedometer2 me-2"></i>Panel Principal</h1>
         </div>
         <div class="d-flex align-items-center">
-            <img src="<?php echo isset($_SESSION['imagen_usuario']) ? $_SESSION['imagen_usuario'] : 'otros/img/menu/avatar.jpg'; ?>" 
+            <img src="<?php echo isset($_SESSION['imagen']) ? $_SESSION['imagen'] : 'otros/img/menu/avatar.jpg'; ?>" 
             alt="Avatar" class="rounded-circle me-2" width="40" height="40">
-            <span class="text-dark">¡Bienvenido, <?php echo ucfirst($_SESSION['nombre_usuario']); ?>!</span>
+            <span class="text-dark">¡Bienvenido, <?php echo ucfirst($_SESSION['nombre_apellido']); ?>!</span>
         </div>
     </div>
 
     <!-- Sección de estadísticas -->
-    <div class="row">
+    <div class="row justify-content-center">
         <!-- Tarjeta de Empleados -->
+        <?php if (tienePermiso('5')): ?>
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -40,26 +41,9 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-    <!-- Tarjeta de Pacientes -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Pacientes</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $datos['pacientes']; ?></div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-person-heart fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <a href="?pagina=pacientes" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-
+        <?php endif; ?>
         <!-- Tarjeta de Historiales -->
+        <?php if (tienePermiso('6')): ?>
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -77,8 +61,9 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-
+        <?php endif; ?>
         <!-- Tarjeta de Publicidad -->
+        <?php if (tienePermiso('2')): ?>
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
@@ -96,10 +81,8 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Segunda fila de tarjetas -->
-    <div class="row">
+        <?php endif; ?>
+        <?php if (tienePermiso('7')): ?>
         <!-- Tarjeta de Proveedores -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-secondary shadow h-100 py-2">
@@ -118,7 +101,8 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-
+        <?php endif; ?>
+        <?php if (tienePermiso('11')): ?>
         <!-- Tarjeta de Productos -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-danger shadow h-100 py-2">
@@ -137,7 +121,8 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-
+        <?php endif; ?>
+        <?php if (tienePermiso('9')): ?>
         <!-- Tarjeta de Clientes -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-dark shadow h-100 py-2">
@@ -156,7 +141,8 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-
+        <?php endif; ?>
+        <?php if (tienePermiso('13')): ?>
         <!-- Tarjeta de Apartados -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
@@ -175,10 +161,8 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Tarjeta de Usuarios (solo para administradores) -->
-    <?php if ($_SESSION['tipo_usuario'] == 'administrador'): ?>
-    <div class="row justify-content-center">
+        <?php endif; ?>
+        <?php if (tienePermiso('18')): ?>
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -192,14 +176,12 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                             <i class="bi bi-person-lock fa-2x text-gray-300"></i>
                         </div>
                     </div>
-                    <a href="?pagina=usuarios" class="stretched-link"></a>
+                    <a href="?pagina=usuario" class="stretched-link"></a>
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
-      <!-- Tarjeta de Historiales -->
-    <?php endif; ?>
-  
 
 
 </div>
