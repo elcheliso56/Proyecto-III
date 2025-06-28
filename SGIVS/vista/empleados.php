@@ -16,28 +16,17 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 				</div>
 			</div>
 		</div> 
-	<!-- Tabla de empleados -->
-	<div class="card shadow mb-4">
-		<div class="card-header py-3 d-flex justify-content-between align-items-center">
-			<h6 class="m-0 font-weight-bold text-info">LISTADO DE EMPLEADOS</h6>
-			<div class="dropdown no-arrow">
-				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
-					<i class="bi bi-three-dots-vertical"></i>
-				</a>
-				<div class="dropdown-menu dropdown-menu-right shadow">
-					<a class="dropdown-item" href="#" id="exportarExcel"><i class="bi bi-file-excel me-2"></i>EXPORTAR A
-						EXCEL</a>
-					<a class="dropdown-item" href="#" id="imprimirListado"><i class="bi bi-printer me-2"></i>IMPRIMIR
-						LISTADO</a>
-				</div>
+		<!-- Tabla de empleados -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3 d-flex justify-content-between align-items-center">
+				<h6 class="m-0 font-weight-bold text-info">LISTADO DE EMPLEADOS</h6>
 			</div>
-		</div>
-		<div class="card-body">
-			<div class="table-responsive">
-					<table class="table table-striped table-hover table-center" id="tablacliente">
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover table-center" id="tablaempleado">
 						<thead class="table-light">
 							<tr>
-								<!-- Encabezados de la tabla -->
+							<!-- Encabezados de la tabla -->
 								<th class="text-center">#</th>
 								<th class="text-center" style="display: none;">RIF</th>
 								<th class="text-center">CEDULA</th>
@@ -58,9 +47,9 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 							<!-- Aquí se cargarán dinámicamente los datos de los Empleados -->
 						</tbody>
 					</table>
+				</div>
 			</div>
 		</div>
-	</div>
 		<!-- Modal para agregar o editar Empleados -->
 		<div class="modal fade" tabindex="-1" role="dialog"  id="modal1">
 			<div class="modal-dialog modal-lg" role="document" id="lm">
@@ -168,15 +157,12 @@ require_once('comunes/menu.php');//Incluye el menú común de la página
 									</div>
 									<div class="col-md-4">
 										<label for="cargo">CARGO</label>
-										<select class="form-control" id="cargo" title="Género del paciente" required/>
+										<select class="form-select" id="cargo" title="Género del paciente" required/>
 											<option value="" selected disabled>SELECCIONE UNA OPCION</option>
-											<option value="DOCTOR"title="DOCTOR">DOCTOR</option>
 											<option value="ASISTENTE"title="ASISTENTE">ASISTENTE</option>
+											<option value="ESPECIALISTA B"title="ESPECIALISTA B">ESPECIALISTA</option>
 											<option value="LIMPIEZA"title="LIMPIEZA">LIMPIEZA</option>
 											<option value="RECEPCIONISTA"title="RECEPCIONISTA">RECEPCIONISTA</option>
-											<option value="RADIOLOGO"title="RADIOLOGO">RADIOLOGO</option>
-											<option value="ESPECIALISTA A"title="ESPECIALISTA A">ESPECIALISTA A</option>
-											<option value="ESPECIALISTA B"title="ESPECIALISTA B">ESPECIALISTA B</option>
 										</select>
 										<p id="scargo"></p>
 									</div>

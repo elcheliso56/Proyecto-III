@@ -446,8 +446,8 @@ function cargarPermisos() {
                     let permisos = "";
                     lee.mensaje.forEach(function(p) {
                         permisos += `
-                            <div class="form-check col-md-6 mb-2">
-                                <input class="form-check-input permiso-check" type="checkbox" id="permiso_${p.id_permiso}" value="${p.id_permiso}" ${p.tiene_permiso == 1 ? 'checked' : ''}>
+                            <div class="form-check form-switch col-md-6 mb-2">
+                                <input class="form-check-input permiso-check" type="checkbox"  role="switch" id="permiso_${p.id_permiso}" value="${p.id_permiso}" ${p.tiene_permiso == 1 ? 'checked' : ''}>
                                 <label class="form-check-label" for="permiso_${p.id_permiso}"> ${p.nombre_permiso} </label>
                             </div>`;
                     });

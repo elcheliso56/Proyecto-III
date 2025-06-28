@@ -7,15 +7,15 @@ function consultar() {
 
 function destruyeDT() {
     // Verifica si la tabla existe y la destruye si es así
-	if ($.fn.DataTable.isDataTable("#tablacliente")) {
-        $("#tablacliente").DataTable().destroy();
+	if ($.fn.DataTable.isDataTable("#tablaempleado")) {
+        $("#tablaempleado").DataTable().destroy();
     }
 }
 
 function crearDT() {
     // Crea una nueva tabla si no existe
-    if (!$.fn.DataTable.isDataTable("#tablacliente")) {
-        $("#tablacliente").DataTable({
+    if (!$.fn.DataTable.isDataTable("#tablaempleado")) {
+        $("#tablaempleado").DataTable({
             language: {
                 // Configuración de idioma para la tabla
                 lengthMenu: "Mostrar _MENU_ por página",
@@ -43,7 +43,7 @@ function crearDT() {
         });
     }
     $(window).resize(function() {
-        $('#tablacliente').DataTable().columns.adjust().draw();
+        $('#tablaempleado').DataTable().columns.adjust().draw();
     });
 }
 

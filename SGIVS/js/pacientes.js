@@ -7,24 +7,24 @@ function consultar() {
 
 function destruyeDT() {
     // Verifica si la tabla existe y la destruye si es así
-	if ($.fn.DataTable.isDataTable("#tablacliente")) {
-        $("#tablacliente").DataTable().destroy();
+	if ($.fn.DataTable.isDataTable("#tablapaciente")) {
+        $("#tablapaciente").DataTable().destroy();
     }
 }
 
 function crearDT() {
     // Crea una nueva tabla si no existe
-    if (!$.fn.DataTable.isDataTable("#tablacliente")) {
-        $("#tablacliente").DataTable({
+    if (!$.fn.DataTable.isDataTable("#tablapaciente")) {
+        $("#tablapaciente").DataTable({
             language: {
                 // Configuración de idioma para la tabla
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron pacientes",
+                zeroRecords: "No se encontraron registros",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay pacientes registrados",
+                infoEmpty: "No hay registros",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar paciente...",
+                searchPlaceholder: "Buscar...",
                 paginate: {
                     first: "Primera",
                     last: "Última",
@@ -43,7 +43,7 @@ function crearDT() {
         });
     }
     $(window).resize(function() {
-        $('#tablacliente').DataTable().columns.adjust().draw();
+        $('#tablapaciente').DataTable().columns.adjust().draw();
     });
 }
 
@@ -67,17 +67,25 @@ $(document).ready(function() {
     var fechaMax = anio + '-' + mes + '-' + dia;
     $("#fecha_nacimiento").attr("max", fechaMax);
 
-    // Validaciones para el campo de número de documento
+    // Validaciones para el campo codigo de paciente letras y numeros
+    $("#id_paciente").on("keypress", function(e) {
+        validarkeypress(/^[A-Z0-9\b]*$/, e);
+    });
+    $("#id_paciente").on("keyup", function() {
+        validarkeyup(/^[A-Z0-9]{2,20}$/, $(this), $("#sid_paciente"), "El código de paciente debe tener entre 2 y 20 caracteres");
+    });
+
+    // Validaciones para el campo de tipo de documento
     $("#tipo_documento").on("change", function() {
         var documento = document.getElementById('cedula');
         if (this.value === 'NC') {
             documento.value = '';
-            documento.disabled = true;
+            documento.disabled = false;
         } else {
             documento.disabled = false;
         }
     });
-
+    // Validaciones para el campo de cédula
     $("#cedula").on("keypress", function(e) {
         validarkeypress(/^[0-9-\b]*$/, e);
     });
@@ -86,17 +94,17 @@ $(document).ready(function() {
     });
     // Validaciones para el campo de nombre
     $("#nombre").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });
     $("#nombre").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#snombre"), "Solo letras entre 2 y 30 caracteres");
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#snombre"), "Solo letras entre 2 y 30 caracteres");
     });
     // Validaciones para el campo de apellido
     $("#apellido").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+        validarkeypress(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
     });	
     $("#apellido").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
+        validarkeyup(/^[A-Z\b\s\u00f1\u00d1\u00E0-\u00FC]{2,30}$/, $(this), $("#sapellido"), "Solo letras entre 2 y 30 caracteres");
     });
     //Validaciones para el campo de fecha de nacimiento y coloca la edad y clasificación automática
     $("#fecha_nacimiento").on("change", function() {
@@ -126,23 +134,9 @@ $(document).ready(function() {
         }
         $("#clasificacion").val(clasificacion);
     });
-    // Validaciones para el campo de alergias
-    $("#alergias").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\s,.\-]*$/, e);
-    });
-    $("#alergias").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $(this), $("#salergias"), "Las alergias deben tener entre 2 y 20 caracteres");
-    });
-    // Validaciones para el campo de antecedentes médicos
-    $("#antecedentes").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z\s,.\-]*$/, e);
-    });
-    $("#antecedentes").on("keyup", function() {
-        validarkeyup(/^[A-Za-z\s,.\-]{2,20}$/, $(this), $("#santecedentes"), "Los antecedentes médicos deben tener entre 2 y 20 caracteres");
-    });
     // Validaciones para el campo de email
     $("#email").on("keypress", function(e) {
-        validarkeypress(/^[A-Za-z0-9\s,.\-@]*$/, e);
+        validarkeypress(/^[A-Z0-9\s,.\-@]*$/, e);
     });
     $("#email").on("keyup", function() {
         validarkeyup(/^[\w._%+-]+@[\w.-]+\.[\w]{2,100}$/, $(this), $("#semail"), "El formato de email electrónico debe ser ejemplo@email.com");
@@ -154,6 +148,13 @@ $(document).ready(function() {
     $("#telefono").on("keyup", function() {
         validarkeyup(/^0[0-9]{10}$/, $(this), $("#stelefono"), "El formato de teléfono debe ser 04120000000");
     });
+    // Validaciones para el campo de contacto de emergencia
+    $("#contacto_emergencia").on("keypress", function(e) {
+        validarkeypress(/^[A-Z\s,.\-]*$/, e);
+    });
+    $("#contacto_emergencia").on("keyup", function() {
+        validarkeyup(/^[A-Z\s,.\-]{2,20}$/, $(this), $("#scontacto_emergencia"), "El contacto de emergencia debe tener entre 2 y 20 caracteres");
+    });
     // Validaciones para el campo de dirección
     $("#direccion").on("keypress", function(e) {
         validarkeypress(/^[^"']*$/, e);
@@ -161,6 +162,34 @@ $(document).ready(function() {
     $("#direccion").on("keyup", function() {
         validarkeyup(/^[^"']{1,100}$/, $(this), $("#sdireccion"), "La dirección debe tener entre 1 y 100 caracteres");
     });	
+    // Validaciones para el campo de ocupación
+    $("#ocupacion").on("keypress", function(e) {
+        validarkeypress(/^[A-Z\s,.\-]*$/, e);
+    });
+    $("#ocupacion").on("keyup", function() {
+        validarkeyup(/^[A-Z\s,.\-]{2,20}$/, $(this), $("#socupacion"), "La ocupación debe tener entre 2 y 20 caracteres");
+    });
+    // Validaciones para el campo de alergias
+    $("#alergias").on("keypress", function(e) {
+        validarkeypress(/^[A-Z\s,.\-]*$/, e);
+    });
+    $("#alergias").on("keyup", function() {
+        validarkeyup(/^[A-Z\s,.\-]{2,20}$/, $(this), $("#salergias"), "Las alergias deben tener entre 2 y 20 caracteres");
+    });
+    // Validaciones para el campo de antecedentes médicos
+    $("#antecedentes").on("keypress", function(e) {
+        validarkeypress(/^[A-Z\s,.\-]*$/, e);
+    });
+    $("#antecedentes").on("keyup", function() {
+        validarkeyup(/^[A-Z\s,.\-]{2,20}$/, $(this), $("#santecedentes"), "Los antecedentes médicos deben tener entre 2 y 20 caracteres");
+    });
+    // Validaciones para el campo de medicamentos
+    $("#medicamentos").on("keypress", function(e) {
+        validarkeypress(/^[A-Z\s,.\-]*$/, e);
+    });
+    $("#medicamentos").on("keyup", function() {
+        validarkeyup(/^[A-Z\s,.\-]{2,20}$/, $(this), $("#smedicamentos"), "Los medicamentos deben tener entre 2 y 20 caracteres");
+    });
     // Manejo de clic en el botón de proceso
     $("#proceso").on("click", function() {
         if ($(this).text() == " INCLUIR") {
@@ -180,17 +209,21 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'incluir');
+                            datos.append('id_paciente', $("#id_paciente").val());
                             datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('alergias', $("#alergias").val());
-                            datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
                             datos.append('telefono', $("#telefono").val());
+                            datos.append('contacto_emergencia', $("#contacto_emergencia").val());
                             datos.append('direccion', $("#direccion").val());
+                            datos.append('ocupacion', $("#ocupacion").val());
+                            datos.append('alergias', $("#alergias").val());
+                            datos.append('antecedentes', $("#antecedentes").val());
+                            datos.append('medicamentos', $("#medicamentos").val());
                             datos.append('fecha_registro', $("#fecha_registro").val());
                             enviaAjax(datos);
                         }
@@ -221,18 +254,22 @@ $(document).ready(function() {
                         if (validarenvio()) {
                             var datos = new FormData();
                             datos.append('accion', 'modificar');
+                            datos.append('id_paciente', $("#id_paciente").val());
                             datos.append('tipo_documento', $("#tipo_documento").val());
                             datos.append('cedula', $("#cedula").val());
                             datos.append('nombre', $("#nombre").val());
                             datos.append('apellido', $("#apellido").val());
                             datos.append('fecha_nacimiento', $("#fecha_nacimiento").val());
                             datos.append('genero', $("#genero").val());
-                            datos.append('alergias', $("#alergias").val());
-                            datos.append('antecedentes', $("#antecedentes").val());
                             datos.append('email', $("#email").val());
                             datos.append('telefono', $("#telefono").val());
-                            datos.append('direccion', $("#direccion").val()); 		
-                            datos.append('fecha_registro', $("#fecha_registro").val());						           
+                            datos.append('contacto_emergencia', $("#contacto_emergencia").val());
+                            datos.append('direccion', $("#direccion").val());
+                            datos.append('ocupacion', $("#ocupacion").val());
+                            datos.append('alergias', $("#alergias").val());
+                            datos.append('antecedentes', $("#antecedentes").val());
+                            datos.append('medicamentos', $("#medicamentos").val());
+                            datos.append('fecha_registro', $("#fecha_registro").val());
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -248,9 +285,9 @@ $(document).ready(function() {
         // Manejo de eliminación de un paciente
         if ($(this).text() == " ELIMINAR") {
             var validacion;
-            validacion = validarkeyup(/^[0-9]{7,8}$/, $("#cedula"), $("#scedula"), "El formato de CI debe ser 1234567 o 12345678");
+            validacion = validarkeyup(/^[A-Z0-9]{2,20}$/, $(this), $("#sid_paciente"), "El código de paciente debe tener entre 2 y 20 caracteres");
             if (validacion == 0) {
-                muestraMensaje("El documento debe coincidir con el formato solicitado <br/>" + "99999999");
+                muestraMensaje("El codigo debe coincidir con el formato solicitado <br/>");
             } else {
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
@@ -271,7 +308,7 @@ $(document).ready(function() {
                     if (result.isConfirmed) {
                         var datos = new FormData();
                         datos.append('accion', 'eliminar');
-                        datos.append('cedula', $("#cedula").val());
+                        datos.append('id_paciente', $("#id_paciente").val());
                         enviaAjax(datos);
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
@@ -293,6 +330,16 @@ $(document).ready(function() {
 });
 // Función para validar el envío de datos
 function validarenvio() {
+    // Validaciones para el campo de codigo de paciente
+    if ($("#id_paciente").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El codigo de paciente es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
     // Validaciones para el campo de tipo de documento
     if ($("#tipo_documento").val().trim() === "") {
         Swal.fire({
@@ -353,26 +400,6 @@ function validarenvio() {
         });    
         return false;
     }
-    // Validaciones para alergias
-    if ($("#alergias").val().trim() === "") {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Las alergias del paciente son obligatorias",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
-    // Validaciones para antecedentes médicos
-    if ($("#antecedentes").val().trim() === "") {
-        Swal.fire({
-            title: "¡ERROR!",
-            text: "Los antecedentes médicos del paciente son obligatorios",
-            icon: "error",
-            confirmButtonText: "Aceptar"
-        });    
-        return false;
-    }
     // Validaciones para el email
     if ($("#email").val().trim() === "") {
         Swal.fire({
@@ -393,6 +420,16 @@ function validarenvio() {
         });   
         return false;
     }
+    // Validaciones para el contacto de emergencia
+    if ($("#contacto_emergencia").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "El contacto de emergencia es obligatorio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });   
+        return false;
+    }
     // Validaciones para la dirección
     if ($("#direccion").val().trim() === "") {
         Swal.fire({
@@ -401,6 +438,56 @@ function validarenvio() {
             icon: "error",
             confirmButtonText: "Aceptar"
         });   
+        return false;
+    }
+    // Validaciones para la ocupación
+    if ($("#ocupacion").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La ocupación del paciente es obligatoria",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    // Validaciones para alergias
+    if ($("#alergias").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Las alergias del paciente son obligatorias",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    // Validaciones para antecedentes médicos
+    if ($("#antecedentes").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los antecedentes médicos del paciente son obligatorios",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    // Validaciones para medicamentos
+    if ($("#medicamentos").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "Los medicamentos del paciente son obligatorios",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
+        return false;
+    }
+    // Validaciones para fecha de registro
+    if ($("#fecha_registro").val().trim() === "") {
+        Swal.fire({
+            title: "¡ERROR!",
+            text: "La fecha de registro del paciente es obligatoria",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });    
         return false;
     }
     return true; // Si todas las validaciones pasan, retorna verdadero
@@ -431,7 +518,7 @@ function validarkeyup(er, etiqueta, etiquetamensaje, mensaje) {
 function pone(pos, accion) {
     // Función para llenar el formulario con los datos del paciente seleccionado
     linea = $(pos).closest('tr');
-    var fechaNacimiento = new Date($(linea).find("td:eq(4)").text());
+    var fechaNacimiento = new Date($(linea).find("td:eq(5)").text());
     var fechaActual = new Date();
     var anios = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     var meses = fechaActual.getMonth() - fechaNacimiento.getMonth();
@@ -445,9 +532,10 @@ function pone(pos, accion) {
         meses += 12;
     }
     // Clasificación automática
-    var clasificacion = $(linea).find("td:eq(6)").text();
+    var clasificacion = $(linea).find("td:eq(7)").text();
     if (accion == 0) {
         $("#proceso").text(" MODIFICAR");
+        $("#id_paciente").prop("disabled", true);
         $("#tipo_documento").prop("disabled", false);
         $("#cedula").prop("disabled", false);
         $("#nombre").prop("disabled", false);
@@ -458,14 +546,18 @@ function pone(pos, accion) {
         $("#clasificacion").prop("disabled", true);
         $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
-        $("#alergias").prop("disabled", false);
-        $("#antecedentes").prop("disabled", false);
         $("#email").prop("disabled", false);
         $("#telefono").prop("disabled", false);
+        $("#contacto_emergencia").prop("disabled", false);
         $("#direccion").prop("disabled", false);
+        $("#ocupacion").prop("disabled", false);
+        $("#alergias").prop("disabled", false);
+        $("#antecedentes").prop("disabled", false);
+        $("#medicamentos").prop("disabled", false);
         $("#fecha_registro").prop("disabled", true);
     } else {
         $("#proceso").text(" ELIMINAR");
+        $("#id_paciente").prop("disabled", true);
         $("#tipo_documento").prop("disabled", true);
         $("#cedula").prop("disabled", true);
         $("#nombre").prop("disabled", true);
@@ -476,33 +568,46 @@ function pone(pos, accion) {
         $("#clasificacion").prop("disabled", true);
         $("#clasificacion").val(clasificacion);
         $("#genero").prop("disabled", true);
-        $("#alergias").prop("disabled", true);
-        $("#antecedentes").prop("disabled", true);
         $("#email").prop("disabled", true);
         $("#telefono").prop("disabled", true);
+        $("#contacto_emergencia").prop("disabled", true);
         $("#direccion").prop("disabled", true);
+        $("#ocupacion").prop("disabled", true);
+        $("#alergias").prop("disabled", true);
+        $("#antecedentes").prop("disabled", true);
+        $("#medicamentos").prop("disabled", true);
         $("#fecha_registro").prop("disabled", true);
     }
+
     // Llena los campos del formulario con los datos de la fila seleccionada
-    var documentoCompleto = $(linea).find("td:eq(1)").text().trim();
+    $("#id_paciente").val($(linea).find("td:eq(1)").text());
+    var documentoCompleto = $(linea).find("td:eq(2)").text().trim();
     var partes = documentoCompleto.split("-");
     var tipoDocumento = partes[0];
     var cedula = partes[1];
 
+    var nombreCompleto = $(linea).find("td:eq(3)").text().trim();
+    var partesNombre = nombreCompleto.split(" ");
+    var nombre = partesNombre[0];
+    var apellido = partesNombre[1];
+
     $("#tipo_documento").val(tipoDocumento);
     $("#cedula").val(cedula);
-    $("#nombre").val($(linea).find("td:eq(2)").text());
-    $("#apellido").val($(linea).find("td:eq(3)").text());
+    $("#nombre").val(nombre);
+    $("#apellido").val(apellido);
     $("#fecha_nacimiento").val(toISODate($(linea).find("td:eq(4)").text()));
     $("#edad").val(anios);
     $("#clasificacion").val(clasificacion);
     $("#genero").val($(linea).find("td:eq(7)").text());
-    $("#alergias").val($(linea).find("td:eq(8)").text());
-    $("#antecedentes").val($(linea).find("td:eq(9)").text());
-    $("#email").val($(linea).find("td:eq(10)").text());
-    $("#telefono").val($(linea).find("td:eq(11)").text());
-    $("#direccion").val($(linea).find("td:eq(12)").text());
-    $("#fecha_registro").val(toISODate($(linea).find("td:eq(13)").text()));
+    $("#email").val($(linea).find("td:eq(8)").text());
+    $("#telefono").val($(linea).find("td:eq(9)").text());
+    $("#contacto_emergencia").val($(linea).find("td:eq(10)").text());
+    $("#direccion").val($(linea).find("td:eq(11)").text());
+    $("#ocupacion").val($(linea).find("td:eq(12)").text());
+    $("#alergias").val($(linea).find("td:eq(13)").text());
+    $("#antecedentes").val($(linea).find("td:eq(14)").text());
+    $("#medicamentos").val($(linea).find("td:eq(15)").text());
+    $("#fecha_registro").val(toISODate($(linea).find("td:eq(16)").text()));
 	$("#modal1").modal("show"); // Muestra el modal
 }
 
@@ -548,25 +653,28 @@ function enviaAjax(datos) {
                     let filas = "";
                     (lee.mensaje || []).forEach(function(p, idx) {
                         filas += `<tr class='text-center'>
-                            <td class='align-middle'>${idx+1}</td>
-                            <td class='align-middle'>${p.tipo_documento}-${p.cedula}</td>
-                            <td class='align-middle'>${p.nombre}</td>
-                            <td class='align-middle'>${p.apellido}</td>
-                            <td class='align-middle'>${formatearFecha(p.fecha_nacimiento)}</td>
-                            <td class='align-middle'>${p.edad}</td>
-                            <td class='align-middle'>${p.clasificacion}</td>
-                            <td class='align-middle'>${p.genero}</td>
-                            <td class='align-middle'>${p.alergias}</td>
-                            <td class='align-middle'>${p.antecedentes}</td>
-                            <td class='align-middle'>${p.email}</td>
-                            <td class='align-middle'>${p.telefono}</td>
-                            <td class='align-middle'>${p.direccion}</td>
-                            <td class='align-middle'>${formatearFecha(p.fecha_registro)}</td>
-                            <td class='align-middle'>
-                                <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>
-                                <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>
-                            </td>
-                        </tr>`;
+                                    <td class='align-middle'>${idx+1}</td>
+                                    <td class='align-middle' style='display: none;'>${p.id_paciente}</td>
+                                    <td class='align-middle'>${p.tipo_documento}-${p.cedula}</td>
+                                    <td class='align-middle' style="text-align:initial;">${p.nombre} ${p.apellido}</td>
+                                    <td class='align-middle' style='display: none;'>${formatearFecha(p.fecha_nacimiento)}</td>
+                                    <td class='align-middle' style='display: none;'>${p.edad}</td>
+                                    <td class='align-middle'>${p.genero}</td>
+                                    <td class='align-middle' style='display: none;'>${p.email}</td>
+                                    <td class='align-middle'>${p.telefono}</td>
+                                    <td class='align-middle' style='display: none;'>${p.contacto_emergencia}</td>
+                                    <td class='align-middle' style='display: none;'>${p.direccion}</td>
+                                    <td class='align-middle' style='display: none;'>${p.ocupacion}</td>
+                                    <td class='align-middle' style='display: none;'>${p.alergias}</td>
+                                    <td class='align-middle' style='display: none;'>${p.antecedentes}</td>
+                                    <td class='align-middle' style='display: none;'>${p.medicamentos}</td>
+                                    <td class='align-middle'>${formatearFecha(p.fecha_registro)}</td>
+                                    <td class='align-middle d-flex'>
+                                        <button type='button' class='btn-sm btn-secondary w-50 small-width mt-1 bi bi-clipboard2-pulse' onclick='verHistorial("${p.id_paciente}")' title='Ver historial' style='margin:.2rem'></button>
+                                        <button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar paciente' style='margin:.2rem'><i class='bi bi-arrow-repeat'></i></button><br/>
+                                        <button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar paciente' style='margin:.2rem'><i class='bi bi-trash-fill'></i></button><br/>
+                                    </td>
+                                </tr>`;
                     });
                     $("#resultadoconsulta").html(filas);
                     crearDT();
@@ -648,7 +756,7 @@ function enviaAjax(datos) {
 
 function limpia() {
     // Función para limpiar los campos del formulario
-    $("#tipo_documento").prop("selectedIndex", 0);
+    $("#tipo_documento").val("");
     $("#cedula").val("");
     $("#nombre").val("");
     $("#apellido").val("");
@@ -656,25 +764,36 @@ function limpia() {
     $("#edad").val("");
     $("#clasificacion").val("");
     $("#genero").prop("selectedIndex", 0);
-    $("#alergias").val("");
-    $("#antecedentes").val("");
     $("#email").val("");
     $("#telefono").val("");
+    $("#contacto_emergencia").val("");
     $("#direccion").val("");
+    $("#ocupacion").val("");
+    $("#alergias").val("");
+    $("#antecedentes").val("");
+    $("#medicamentos").val("");
     establecerFechaActual();
+
     // Habilita los campos del formulario
     $("#tipo_documento").prop("disabled", false); 
-    $("#cedula").prop("disabled", true); 
+    $("#cedula").prop("disabled", false); 
     $("#nombre").prop("disabled", false);   
     $("#apellido").prop("disabled", false); 
     $("#fecha_nacimiento").prop("disabled", false);
     $("#edad").prop("disabled", true);
     $("#clasificacion").prop("disabled", true);
     $("#genero").prop("disabled", false);
-    $("#alergias").prop("disabled", false);
-    $("#antecedentes").prop("disabled", false);
     $("#email").prop("disabled", false);   
     $("#telefono").prop("disabled", false); 
+    $("#contacto_emergencia").prop("disabled", false);
     $("#direccion").prop("disabled", false);   
+    $("#ocupacion").prop("disabled", false);
+    $("#alergias").prop("disabled", false);
+    $("#antecedentes").prop("disabled", false);
+    $("#medicamentos").prop("disabled", false);
     $("#fecha_registro").prop("disabled", true); // Habilita el campo de fecha de registro               
+}
+
+function verHistorial(id_paciente) {
+    window.location.href = "historial_paciente.php?id_paciente=" + encodeURIComponent(id_paciente);
 }

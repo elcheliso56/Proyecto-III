@@ -39,8 +39,59 @@ function tienePermiso($permiso) {
 			</figure>
 			
 			<nav class="full-width">
-				<ul class="full-width list-unstyle menu-principal">
-					<?php if (tienePermiso('1')): ?>
+				<ul class="full-width list-unstyle menu-principal"><?php if (tienePermiso('17') || tienePermiso('18') || tienePermiso('19')) : ?>
+					<li class="full-width divider-menu-h"></li>
+					<li class="full-width">
+						<a href="#!" class="full-width btn-subMenu">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-settings"></i>
+							</div>
+							<div class="navLateral-body-cr" style="color: white;">
+								PERMISOS
+							</div>
+							<span class="zmdi zmdi-chevron-left"></span>
+						</a>
+						<ul class="full-width menu-principal sub-menu-options">
+							<?php if (tienePermiso('17')) : ?>
+								<li class="full-width">
+									<a href="?pagina=roles" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-person-fill-gear"></i>
+										</div>
+										<div class="navLateral-body-cr" style="color: white;">
+											ROLES
+										</div>
+									</a>
+								</li>
+							<?php endif; ?>
+							<?php if (tienePermiso('18')) : ?>
+								<li class="full-width">
+									<a href="?pagina=usuario" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-person-fill-gear"></i>
+										</div>
+										<div class="navLateral-body-cr" style="color: white;">
+											USUARIOS
+										</div>
+									</a>
+								</li>
+							<?php endif; ?>
+							<?php if (tienePermiso('19')) : ?>
+								<li class="full-width">
+									<a href="?pagina=bitacora" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-file-earmark-text"></i>
+										</div>
+										<div class="navLateral-body-cr">
+											BITACORA
+										</div>
+									</a>
+								</li>
+								<?php endif; ?>
+							</ul>
+						</li>
+					<?php endif; ?>
+					
 						<li class="full-width divider-menu-h"></li>
 						<li class="full-width">
 							<a href="?pagina=principal" class="full-width">
@@ -49,6 +100,19 @@ function tienePermiso($permiso) {
 								</div>
 								<div class="navLateral-body-cr">
 									PRINCIPAL
+								</div>
+							</a>
+						</li>
+
+					<?php if (tienePermiso('5')): ?>
+						<li class="full-width divider-menu-h"></li>
+						<li class="full-width">
+							<a href="?pagina=empleados" class="full-width">
+								<div class="navLateral-body-cl">
+									<i class="zmdi zmdi-account"></i>
+								</div>
+								<div class="navLateral-body-cr">
+									EMPLEADOS
 								</div>
 							</a>
 						</li>
@@ -81,7 +145,7 @@ function tienePermiso($permiso) {
 							</a>
 						</li>
 					<?php endif; ?>
-
+					
 					<?php if (tienePermiso('4')): ?>
 						<li class="full-width divider-menu-h"></li>
 						<li class="full-width">
@@ -95,25 +159,25 @@ function tienePermiso($permiso) {
 							</a>
 						</li>
 					<?php endif; ?>
-
-					<?php if (tienePermiso('5')): ?>
+						
+					<!--<?php if (tienePermiso('5')): ?>-->
 						<li class="full-width divider-menu-h"></li>
 						<li class="full-width">
-							<a href="?pagina=empleados" class="full-width">
+							<a href="?pagina=pacientes" class="full-width">
 								<div class="navLateral-body-cl">
 									<i class="zmdi zmdi-account"></i>
 								</div>
 								<div class="navLateral-body-cr">
-									EMPLEADOS
+									PACIENTES
 								</div>
 							</a>
 						</li>
-					<?php endif; ?>
+					<!--<?php endif; ?>-->
 
 					<?php if (tienePermiso('6')): ?>
 						<li class="full-width divider-menu-h"></li>
 						<li class="full-width">
-							<a href="?pagina=ubicaciones" class="full-width">
+							<a href="?pagina=historial" class="full-width">
 								<div class="navLateral-body-cl">
 									<i class="bi bi-clipboard2-pulse"></i>
 								</div>
@@ -280,58 +344,7 @@ function tienePermiso($permiso) {
 					</li>
 					<?php endif; ?>
 
-					<?php if (tienePermiso('17') || tienePermiso('18') || tienePermiso('19')) : ?>
-					<li class="full-width divider-menu-h"></li>
-					<li class="full-width">
-						<a href="#!" class="full-width btn-subMenu">
-							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-settings"></i>
-							</div>
-							<div class="navLateral-body-cr" style="color: white;">
-								ADMINISTRADOR
-							</div>
-							<span class="zmdi zmdi-chevron-left"></span>
-						</a>
-						<ul class="full-width menu-principal sub-menu-options">
-							<?php if (tienePermiso('17')) : ?>
-								<li class="full-width">
-									<a href="?pagina=roles" class="full-width">
-										<div class="navLateral-body-cl">
-											<i class="bi bi-person-fill-gear"></i>
-										</div>
-										<div class="navLateral-body-cr" style="color: white;">
-											ROLES
-										</div>
-									</a>
-								</li>
-							<?php endif; ?>
-							<?php if (tienePermiso('18')) : ?>
-								<li class="full-width">
-									<a href="?pagina=usuario" class="full-width">
-										<div class="navLateral-body-cl">
-											<i class="bi bi-person-fill-gear"></i>
-										</div>
-										<div class="navLateral-body-cr" style="color: white;">
-											USUARIOS
-										</div>
-									</a>
-								</li>
-							<?php endif; ?>
-							<?php if (tienePermiso('19')) : ?>
-								<li class="full-width">
-									<a href="?pagina=bitacora" class="full-width">
-										<div class="navLateral-body-cl">
-											<i class="bi bi-file-earmark-text"></i>
-										</div>
-										<div class="navLateral-body-cr">
-											BITACORA
-										</div>
-									</a>
-								</li>
-								<?php endif; ?>
-							</ul>
-						</li>
-					<?php endif; ?>
+					
 				</ul>
 			</nav>
 		</div>

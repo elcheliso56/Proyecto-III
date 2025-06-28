@@ -11,7 +11,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
     <!-- Encabezado con bienvenida -->
     <div class="d-flex justify-content-between align-items-center mb-4 py-3 border-bottom">
         <div>
-            <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-speedometer2 me-2"></i>Panel Principal</h1>
+            <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-speedometer2 me-2"></i> Panel Principal</h1>
         </div>
         <div class="d-flex align-items-center">
             <img src="<?php echo isset($_SESSION['imagen']) ? $_SESSION['imagen'] : 'otros/img/menu/avatar.jpg'; ?>" 
@@ -57,7 +57,7 @@ $datos = $conteos->obtenerConteos(); // Obtiene los conteos de diferentes catego
                             <i class="bi bi-clipboard2-pulse fa-2x text-gray-300"></i>
                         </div>
                     </div>
-                    <a href="?pagina=ubicaciones" class="stretched-link"></a>
+                    <a href="?pagina=historial" class="stretched-link"></a>
                 </div>
             </div>
         </div>
