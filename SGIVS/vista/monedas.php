@@ -5,18 +5,18 @@ require_once('comunes/menu.php');
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-wallet2 me-2"></i>Cuentas</h1>
+        <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-currency-exchange me-2"></i>Monedas</h1>
         <div>
-            <button type="button" class="btn btn-info" id="incluir" title="Registrar Cuenta">
-                <i class="bi bi-plus-circle me-1"></i> Nueva Cuenta
+            <button type="button" class="btn btn-info" id="incluir" title="Registrar Moneda">
+                <i class="bi bi-plus-circle me-1"></i> Nueva Moneda
             </button>
         </div>
     </div>
 
-    <!-- Tabla de cuentas -->
+    <!-- Tabla de monedas -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-info">Listado de Cuentas</h6>
+            <h6 class="m-0 font-weight-bold text-info">Listado de Monedas</h6>
             <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
                     <i class="bi bi-three-dots-vertical"></i>
@@ -29,23 +29,20 @@ require_once('comunes/menu.php');
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <!-- Agrega esto antes de la tabla -->
-               
-                <table class="table table-bordered table-hover" id="tablacuentas" width="100%" cellspacing="0">
+                <table class="table table-bordered table-hover" id="tablamonedas" width="100%" cellspacing="0">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
+                            <th class="text-center">Código</th>
                             <th class="text-center">Nombre</th>
-                            <th class="text-center">Tipo</th>
-                            <th class="text-center">Moneda</th>
+                            <th class="text-center">Símbolo</th>
                             <th class="text-center">Estado</th>
-                            <th class="text-center">Entidad Bancaria</th>
-                            <th class="text-center">Número de Cuenta</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="resultadoconsulta">
-                        <!-- Aquí se cargan las cuentas dinámicamente -->
+                        <!-- Aquí se cargan las monedas dinámicamente -->
                     </tbody>
                 </table>
             </div>
@@ -53,12 +50,12 @@ require_once('comunes/menu.php');
     </div>
 </div>
 
-<!-- Modal: Registrar cuenta -->
+<!-- Modal: Registrar moneda -->
 <div class="modal fade" id="modal1" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" id="f" autocomplete="off" enctype="multipart/form-data" class="modal-content">
             <div class="modal-header bg-info text-white">
-                <h5 class="modal-title"><i class="bi bi-wallet2 me-2"></i>Registrar Cuenta</h5>
+                <h5 class="modal-title"><i class="bi bi-currency-exchange me-2"></i>Registrar Moneda</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -67,45 +64,24 @@ require_once('comunes/menu.php');
                 <input type="hidden" name="id" id="id">
 
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="nombre" placeholder="Nombre de la cuenta">
-                    <label for="nombre">Nombre de la cuenta</label>
+                    <input type="text" class="form-control" id="codigo" placeholder="Código de la moneda (ej: USD)">
+                    <label for="codigo">Código de la moneda</label>
+                    <span id="scodigo" class="text-danger small"></span>
+                    <small class="form-text text-muted">Código ISO de 3 letras (ej: USD, VES, EUR)</small>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="nombre" placeholder="Nombre completo de la moneda">
+                    <label for="nombre">Nombre de la moneda</label>
                     <span id="snombre" class="text-danger small"></span>
+                    <small class="form-text text-muted">Nombre completo (ej: Dólar Estadounidense)</small>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-select select2" id="tipo">
-                        <option value="" selected disabled>Seleccione un tipo</option>
-                        <option value="bancaria">Bancaria</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                    <label for="tipo">Tipo de cuenta</label>
-                    <span id="stipo" class="text-danger small"></span>
-                </div>
-
-                <div class="form-floating mb-3" id="banco_group" style="display: none;">
-                    <select class="form-select select2" id="entidad_bancaria">
-                        <option value="" selected disabled>Seleccione un banco</option>
-                    </select>
-                    <label for="entidad_bancaria">Banco</label>
-                    <span id="sentidad_bancaria" class="text-danger small"></span>
-                </div>
-
-                <div class="form-floating mb-3" id="numero_cuenta_group" style="display: none;">
-                    <input type="text" class="form-control" id="numero_cuenta" placeholder="Número de cuenta">
-                    <label for="numero_cuenta">Número de Cuenta</label>
-                    <span id="snumero_cuenta" class="text-danger small"></span>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <select class="form-select select2" id="moneda">
-                        <option value="" selected disabled>Seleccione una moneda</option>
-                        <option value="Bs">Bolívares (Bs)</option>
-                        <option value="USD">Dólares (USD)</option>
-                        <option value="EUR">Euros (EUR)</option>
-                    </select>
-                    <label for="moneda">Moneda</label>
-                    <span id="smoneda" class="text-danger small"></span>
+                    <input type="text" class="form-control" id="simbolo" placeholder="Símbolo de la moneda (ej: $)">
+                    <label for="simbolo">Símbolo de la moneda</label>
+                    <span id="ssimbolo" class="text-danger small"></span>
+                    <small class="form-text text-muted">Símbolo (ej: $, Bs, €)</small>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -114,6 +90,15 @@ require_once('comunes/menu.php');
                         <option value="0">Inactiva</option>
                     </select>
                     <label for="activa">Estado</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select select2" id="es_principal">
+                        <option value="0" selected>Secundaria</option>
+                        <option value="1">Principal</option>
+                    </select>
+                    <label for="es_principal">Tipo de moneda</label>
+                    <small class="form-text text-muted">Solo puede haber una moneda principal (USD)</small>
                 </div>
             </div>
 
@@ -130,7 +115,7 @@ require_once('comunes/menu.php');
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" src="js/cuentas.js"></script>
+<script type="text/javascript" src="js/monedas.js"></script>
 <link href="css/select2.min.css" rel="stylesheet" />
 <script src="js/select2.min.js"></script>
 

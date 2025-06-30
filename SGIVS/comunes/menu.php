@@ -268,6 +268,45 @@ function tienePermiso($permiso) {
 									</a>
 								</li>
 							<?php endif; ?>
+							<?php if (tienePermiso('10')) : ?>
+								<li class="full-width">
+									<a href="?pagina=bancos" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-bank"></i>
+										</div>
+										<div class="navLateral-body-cr" style="color: white;">
+											BANCOS
+										</div>
+									</a>
+								</li>
+							<?php endif; ?>
+
+							<?php if (tienePermiso('10')) : ?>
+								<li class="full-width">
+									<a href="?pagina=monedas" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-currency-exchange"></i>
+										</div>
+										<div class="navLateral-body-cr" style="color: white;">
+											MONEDAS
+										</div>
+									</a>
+								</li>
+							<?php endif; ?>
+
+							<?php if (tienePermiso('10')) : ?>
+								<li class="full-width">
+									<a href="?pagina=tipos_cambio" class="full-width">
+										<div class="navLateral-body-cl">
+											<i class="bi bi-graph-up-arrow"></i>
+										</div>
+										<div class="navLateral-body-cr" style="color: white;">
+											TIPOS DE CAMBIO
+										</div>
+									</a>
+								</li>
+							<?php endif; ?>
+
 							<?php if (tienePermiso('11')) : ?>
 								<li class="full-width">
 									<a href="?pagina=ingresos" class="full-width">

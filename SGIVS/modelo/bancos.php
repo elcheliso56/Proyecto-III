@@ -3,17 +3,17 @@ require_once('modelo/datos.php');
 require_once('modelo/traits/validaciones.php');
 require_once('modelo/traits/generador_ids.php');
 
-class cuentas extends datos {
+class bancos extends datos {
     use validaciones, generador_ids;
     
-    // Propiedades de la clase cuentas
+    // Propiedades de la clase bancos
     private $id;
     private $nombre;
-    private $tipo;
-    private $moneda;
-    private $activa;
-    private $entidad_bancaria;
-    private $numero_cuenta;
+    private $codigo_swift;
+    private $codigo_local;
+    private $logo;
+    private $activo;
+    private $fecha_registro;
 
     // Getters y setters para las propiedades
     function set_id($valor){
@@ -28,43 +28,43 @@ class cuentas extends datos {
     function get_nombre(){
         return $this->nombre;
     }
-    function set_tipo($valor){
-        $this->tipo = $valor;
+    function set_codigo_swift($valor){
+        $this->codigo_swift = $valor;
     }
-    function get_tipo(){
-        return $this->tipo;
+    function get_codigo_swift(){
+        return $this->codigo_swift;
     }
-    function set_moneda($valor){
-        $this->moneda = $valor;
+    function set_codigo_local($valor){
+        $this->codigo_local = $valor;
     }
-    function get_moneda(){
-        return $this->moneda;
+    function get_codigo_local(){
+        return $this->codigo_local;
     }
-    function set_activa($valor){
-        $this->activa = $valor;
+    function set_logo($valor){
+        $this->logo = $valor;
     }
-    function get_activa(){
-        return $this->activa;
+    function get_logo(){
+        return $this->logo;
     }
-    function set_entidad_bancaria($valor){
-        $this->entidad_bancaria = $valor;
+    function set_activo($valor){
+        $this->activo = $valor;
     }
-    function get_entidad_bancaria(){
-        return $this->entidad_bancaria;
+    function get_activo(){
+        return $this->activo;
     }
-    function set_numero_cuenta($valor){
-        $this->numero_cuenta = $valor;
+    function set_fecha_registro($valor){
+        $this->fecha_registro = $valor;
     }
-    function get_numero_cuenta(){
-        return $this->numero_cuenta;
+    function get_fecha_registro(){
+        return $this->fecha_registro;
     }
 
-    // Método para incluir una nueva cuenta
+    // Método para incluir un nuevo banco
     function incluir(){
         $r = array();
         
         // Generar ID único antes de verificar si existe
-        $this->id = $this->generarIdUnico('cuentas', 'CTA');
+        $this->id = $this->generarIdUnico('bancos', 'BAN');
         
         // Verifica si el id ya existe (aunque ya generamos uno único, es una verificación adicional)        
         if(!$this->existe($this->id)){
@@ -80,19 +80,18 @@ class cuentas extends datos {
             $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 // Inserta el nuevo registro en la base de datos                
-                $co->query("INSERT INTO cuentas(id, nombre, tipo, moneda, activa, entidad_bancaria, numero_cuenta)
+                $co->query("INSERT INTO bancos(id, nombre, codigo_swift, codigo_local, logo, activo)
                     VALUES(
                         '$this->id',
                         '$this->nombre',
-                        '$this->tipo',
-                        '$this->moneda',
-                        '$this->activa',
-                        '$this->entidad_bancaria',
-                        '$this->numero_cuenta'
+                        '$this->codigo_swift',
+                        '$this->codigo_local',
+                        '$this->logo',
+                        '$this->activo'
                     )
                 ");
                 $r['resultado'] = 'incluir';
-                $r['mensaje'] =  '¡Cuenta Registrada con éxito!';
+                $r['mensaje'] =  '¡Banco Registrado con éxito!';
             } catch(Exception $e) {
                 $r['resultado'] = 'error';
                 $r['mensaje'] =  $e->getMessage();
@@ -102,18 +101,18 @@ class cuentas extends datos {
         }
         else{
             $r['resultado'] = 'incluir';
-            $r['mensaje'] =  'Cuenta ya registrada';
+            $r['mensaje'] =  'Banco ya registrado';
         }
         return $r;
     }
 
-    // Método para modificar una cuenta existente
+    // Método para modificar un banco existente
     function modificar() {
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $r = array();
     
-        // Verifica si la cuenta existe
+        // Verifica si el banco existe
         if ($this->existe($this->id)) {
             // Validar los datos antes de modificar
             $validacion = $this->validarDatos();
@@ -124,14 +123,13 @@ class cuentas extends datos {
             }
 
             try {
-                // Actualiza los datos de la cuenta
-                $co->query("UPDATE cuentas SET 
+                // Actualiza los datos del banco
+                $co->query("UPDATE bancos SET 
                     nombre = '$this->nombre',
-                    tipo = '$this->tipo',
-                    moneda = '$this->moneda',
-                    activa = '$this->activa',
-                    entidad_bancaria = '$this->entidad_bancaria',
-                    numero_cuenta = '$this->numero_cuenta'
+                    codigo_swift = '$this->codigo_swift',
+                    codigo_local = '$this->codigo_local',
+                    logo = '$this->logo',
+                    activo = '$this->activo'
                     WHERE id = '$this->id'
                 ");
     
@@ -145,13 +143,13 @@ class cuentas extends datos {
             }
         } else {
             $r['resultado'] = 'modificar';
-            $r['mensaje'] = 'Cuenta no modificada';
+            $r['mensaje'] = 'Banco no modificado';
         }
     
         return $r;
     }
     
-    // Método para eliminar una cuenta    
+    // Método para eliminar un banco    
     function eliminar(){
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -159,8 +157,8 @@ class cuentas extends datos {
         // Verifica si el registro existe
         if($this->existe($this->id)){
             try {                
-                // Elimina el registro de la cuenta
-                $co->query("DELETE from cuentas 
+                // Elimina el registro del banco
+                $co->query("DELETE from bancos 
                     where
                     id = '$this->id'
                     ");
@@ -170,7 +168,7 @@ class cuentas extends datos {
             } catch (Exception $e) {
                 $r['resultado'] = 'error';
                 if ($e->getCode() == 23000) {
-                    $r['mensaje'] = 'No se puede eliminar esta cuenta porque tiene transacciones asociadas';
+                    $r['mensaje'] = 'No se puede eliminar este banco porque tiene cuentas asociadas';
                 } else {
                     $r['mensaje'] = $e->getMessage();
                 }
@@ -185,15 +183,15 @@ class cuentas extends datos {
         return $r;
     }
 
-    // Método para consultar cuentas        
+    // Método para consultar bancos        
     function consultar(){
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $r = array();
         try{
-            // Realiza la consulta para obtener las cuentas
-            $resultado = $co->query("SELECT id, nombre, tipo, moneda, activa, entidad_bancaria, numero_cuenta 
-                                    FROM cuentas 
+            // Realiza la consulta para obtener los bancos
+            $resultado = $co->query("SELECT id, nombre, codigo_swift, codigo_local, logo, activo, fecha_registro 
+                                    FROM bancos 
                                     ORDER BY nombre");
             if ($resultado->rowCount() > 0) {
                 $respuesta = "";
@@ -202,15 +200,18 @@ class cuentas extends datos {
                     // Genera la respuesta en formato HTML
                     $respuesta .= "<tr data-id='".$row['id']."'>";
                     $respuesta .= "<td>$n</td>";
-                    $respuesta .= "<td>".$row['nombre']."</td>";
-                    $respuesta .= "<td>".$row['tipo']."</td>";
-                    $respuesta .= "<td>".$row['moneda']."</td>";
-                    $respuesta .= "<td>".($row['activa'] == 1 ? "Activa" : "Inactiva")."</td>";
-                    $respuesta .= "<td>".$row['entidad_bancaria']."</td>";
-                    $respuesta .= "<td>".$row['numero_cuenta']."</td>";
                     $respuesta .= "<td>";
-                    $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
-                    $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
+                    if (!empty($row['logo'])) {
+                        $respuesta .= "<img src='".$row['logo']."' alt='Logo' class='img-thumbnail me-2' style='width: 40px; height: 40px; object-fit: contain;'>";
+                    }
+                    $respuesta .= $row['nombre']."</td>";
+                    $respuesta .= "<td>".$row['codigo_swift']."</td>";
+                    $respuesta .= "<td>".$row['codigo_local']."</td>";
+                    $respuesta .= "<td>".($row['activo'] == 1 ? "Activo" : "Inactivo")."</td>";
+                    $respuesta .= "<td>".date('d/m/Y H:i', strtotime($row['fecha_registro']))."</td>";
+                    $respuesta .= "<td>";
+                    $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar banco'><i class='bi bi-arrow-repeat'></i></button><br/>";
+                    $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar banco'><i class='bi bi-trash'></i></button><br/>";
                     $respuesta .= "</td>";
                     $respuesta .= "</tr>";
                     $n++;
@@ -219,7 +220,7 @@ class cuentas extends datos {
                 $r['mensaje'] = $respuesta;
             } else {
                 $r['resultado'] = 'consultar';
-                $r['mensaje'] = 'No se encontraron cuentas.';
+                $r['mensaje'] = 'No se encontraron bancos.';
             }
         } catch(Exception $e) {
             $r['resultado'] = 'error';
@@ -230,12 +231,12 @@ class cuentas extends datos {
         return $r;
     }
 
-    // Método privado para verificar si una cuenta existe    
+    // Método privado para verificar si un banco existe    
     private function existe($id){
         $co = $this->conecta();
         $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try{        
-            $resultado = $co->query("Select * from cuentas where id='$id'");    
+            $resultado = $co->query("Select * from bancos where id='$id'");    
             $fila = $resultado->fetchAll(PDO::FETCH_BOTH);
             if($fila){
                 return true;   
@@ -250,55 +251,66 @@ class cuentas extends datos {
         }
     }    
 
-    // Método para validar los datos de la cuenta
+    // Método para validar los datos del banco
     private function validarDatos() {
         $r = array();
         $r['valido'] = true;
         $r['mensaje'] = '';
 
         // Validar nombre
-        if (empty($this->nombre) || strlen($this->nombre) < 3 || strlen($this->nombre) > 50) {
+        if (empty($this->nombre) || strlen($this->nombre) < 3 || strlen($this->nombre) > 100) {
             $r['valido'] = false;
-            $r['mensaje'] = 'El nombre debe tener entre 3 y 50 caracteres';
+            $r['mensaje'] = 'El nombre debe tener entre 3 y 100 caracteres';
             return $r;
         }
 
-        // Validar tipo
-        if (empty($this->tipo) || !in_array($this->tipo, ['bancaria', 'efectivo', 'otro'])) {
-            $r['valido'] = false;
-            $r['mensaje'] = 'El tipo de cuenta no es válido';
-            return $r;
+        // Validar código SWIFT (opcional pero si se proporciona debe tener formato válido)
+        if (!empty($this->codigo_swift)) {
+            if (strlen($this->codigo_swift) < 8 || strlen($this->codigo_swift) > 11) {
+                $r['valido'] = false;
+                $r['mensaje'] = 'El código SWIFT debe tener entre 8 y 11 caracteres';
+                return $r;
+            }
+            if (!preg_match('/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/', $this->codigo_swift)) {
+                $r['valido'] = false;
+                $r['mensaje'] = 'El código SWIFT debe tener formato válido (ej: BANCPEPL)';
+                return $r;
+            }
         }
 
-        // Validar moneda
-        if (empty($this->moneda) || !in_array($this->moneda, ['Bs', 'USD', 'EUR'])) {
-            $r['valido'] = false;
-            $r['mensaje'] = 'La moneda no es válida';
-            return $r;
+        // Validar código local (opcional pero si se proporciona debe tener formato válido)
+        if (!empty($this->codigo_local)) {
+            if (strlen($this->codigo_local) < 2 || strlen($this->codigo_local) > 20) {
+                $r['valido'] = false;
+                $r['mensaje'] = 'El código local debe tener entre 2 y 20 caracteres';
+                return $r;
+            }
+            if (!preg_match('/^[A-Z0-9]+$/', $this->codigo_local)) {
+                $r['valido'] = false;
+                $r['mensaje'] = 'El código local solo puede contener letras mayúsculas y números';
+                return $r;
+            }
         }
 
-        // Validar activa
-        if (!in_array($this->activa, ['0', '1'])) {
+        // Validar activo
+        if (!in_array($this->activo, ['0', '1'])) {
             $r['valido'] = false;
             $r['mensaje'] = 'El estado no es válido';
             return $r;
         }
 
-        // Validar entidad bancaria (solo si el tipo es bancaria)
-        if ($this->tipo === 'bancaria') {
-            if (empty($this->entidad_bancaria) || strlen($this->entidad_bancaria) < 3 || strlen($this->entidad_bancaria) > 50) {
-                $r['valido'] = false;
-                $r['mensaje'] = 'La entidad bancaria debe tener entre 3 y 50 caracteres';
-                return $r;
-            }
-            if (empty($this->numero_cuenta) || !preg_match('/^[0-9]{10,20}$/', $this->numero_cuenta)) {
-                $r['valido'] = false;
-                $r['mensaje'] = 'El número de cuenta debe tener entre 10 y 20 dígitos';
-                return $r;
-            }
-        }
-
         return $r;
+    }
+
+    public function obtenerBancosSelect() {
+        $co = $this->conecta();
+        $co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $bancos = [];
+        $resultado = $co->query("SELECT id, nombre, codigo_local FROM bancos WHERE activo = 1 ORDER BY nombre");
+        while ($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
+            $bancos[] = $row;
+        }
+        return $bancos;
     }
 }
 ?> 

@@ -78,3 +78,397 @@ Array
 (
     [accion] => cargarOpciones
 )
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => incluir
+    [descripcion] => prueba de modal
+    [monto] => 20
+    [fecha] => 2025-06-29
+    [origen] => manual
+    [cuenta_id] => CTA1751223614226
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => incluir
+    [descripcion] => prueba de idsss
+    [monto] => 20
+    [fecha] => 2025-06-29
+    [origen] => servicio
+    [cuenta_id] => CTA1751223614226
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => incluir
+    [paciente_id] => 12
+    [monto_total] => 100
+    [fecha_emision] => 2025-06-29
+    [fecha_vencimiento] => 2025-07-13
+    [descripcion] => pago
+    [referencia] => 0132
+    [numero_cuotas] => 2
+    [frecuencia_pago] => semanal
+    [cuenta_id] => CTA1751223614226
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultarCuotasPendientes
+    [id] => COB1751235435880
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => eliminar
+    [id] => 7
+    [cuenta_id] => null
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultarCuotas
+    [id] => COB1751235435880
+)
+Array
+(
+    [accion] => consultarCuotas
+    [id] => COB1751235435880
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => modificar
+    [id] => ING1751234910308
+    [descripcion] => prueba de modals
+    [monto] => 20.00
+    [fecha] => 2025-06-29
+    [origen] => manual
+    [cuenta_id] => CTA1751223614226
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => eliminar
+    [id] => 0
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)
+Array
+(
+    [accion] => eliminar
+    [id] => 0
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => modificar
+    [id] => EGR1751235116367
+    [descripcion] => prueba de id2
+    [monto] => 20.00
+    [fecha] => 2025-06-29
+    [origen] => servicio
+    [cuenta_id] => CTA1751223614226
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => consultar
+)
+Array
+(
+    [accion] => cargarOpciones
+)

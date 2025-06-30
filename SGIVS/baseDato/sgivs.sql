@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-06-2025 a las 01:25:24
+-- Tiempo de generación: 30-06-2025 a las 06:33:56
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -19,10 +19,62 @@ SET time_zone = "+00:00";
 
 --
 -- Base de datos: `sgivs`
-CREATE DATABASE IF NOT EXISTS `sgivs` 
-DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `sgivs`;
 --
+
+DELIMITER $$
+--
+-- Funciones
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `convertir_moneda` (`monto` DECIMAL(10,2), `moneda_origen` VARCHAR(3), `moneda_destino` VARCHAR(3), `fecha_cambio` DATE) RETURNS DECIMAL(10,2) DETERMINISTIC READS SQL DATA BEGIN
+    DECLARE tipo_cambio_valor DECIMAL(10,4);
+    
+    -- Si es la misma moneda, retornar el mismo valor
+    IF moneda_origen = moneda_destino THEN
+        RETURN monto;
+    END IF;
+    
+    -- Obtener el tipo de cambio
+    SELECT tc.tipo_cambio INTO tipo_cambio_valor
+    FROM tipos_cambio tc
+    INNER JOIN monedas mo ON tc.moneda_origen = mo.id
+    INNER JOIN monedas md ON tc.moneda_destino = md.id
+    WHERE mo.codigo = moneda_origen 
+    AND md.codigo = moneda_destino
+    AND tc.fecha = fecha_cambio
+    LIMIT 1;
+    
+    -- Si no hay tipo de cambio, retornar NULL
+    IF tipo_cambio_valor IS NULL THEN
+        RETURN NULL;
+    END IF;
+    
+    RETURN monto * tipo_cambio_valor;
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `bancos`
+--
+
+CREATE TABLE `bancos` (
+  `id` varchar(20) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `codigo_swift` varchar(11) DEFAULT NULL,
+  `codigo_local` varchar(20) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `bancos`
+--
+
+INSERT INTO `bancos` (`id`, `nombre`, `codigo_swift`, `codigo_local`, `logo`, `activo`, `fecha_registro`) VALUES
+('BAN1751257700917', 'Banco Nacional de Credito', 'NCRTVECAXXX', '0191', 'otros/img/bancos/686212640e43b.png', 1, '2025-06-30 04:28:20');
 
 -- --------------------------------------------------------
 
@@ -118,23 +170,16 @@ INSERT INTO `consultas` (`id`, `nombre`, `Apellido`, `tratamiento`, `telefono`, 
 --
 
 CREATE TABLE `cuentas` (
-  `id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `tipo` varchar(50) NOT NULL COMMENT 'Ej: Efectivo, Bancaria, Tarjeta',
   `saldo_actual` decimal(12,2) DEFAULT 0.00,
   `numero_cuenta` varchar(20) NOT NULL,
-  `entidad_bancaria` varchar(80) NOT NULL,
+  `entidad_bancaria` varchar(20) DEFAULT NULL,
   `moneda` varchar(3) DEFAULT 'VES',
   `activa` tinyint(1) DEFAULT 1,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `cuentas`
---
-
-INSERT INTO `cuentas` (`id`, `nombre`, `tipo`, `saldo_actual`, `numero_cuenta`, `entidad_bancaria`, `moneda`, `activa`, `fecha_creacion`) VALUES
-(4, 'Principal', 'bancaria', 500.00, '01254656856', 'BBVA', 'Bs', 1, '2025-05-30 07:10:39');
 
 -- --------------------------------------------------------
 
@@ -143,9 +188,9 @@ INSERT INTO `cuentas` (`id`, `nombre`, `tipo`, `saldo_actual`, `numero_cuenta`, 
 --
 
 CREATE TABLE `cuentas_por_cobrar` (
-  `id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `paciente_id` int(20) NOT NULL,
-  `cuenta_id` int(11) NOT NULL,
+  `cuenta_id` varchar(20) NOT NULL,
   `fecha_emision` date NOT NULL,
   `fecha_vencimiento` date NOT NULL,
   `monto_total` decimal(10,2) NOT NULL,
@@ -164,7 +209,7 @@ CREATE TABLE `cuentas_por_cobrar` (
 --
 
 INSERT INTO `cuentas_por_cobrar` (`id`, `paciente_id`, `cuenta_id`, `fecha_emision`, `fecha_vencimiento`, `monto_total`, `monto_pendiente`, `estado`, `descripcion`, `referencia`, `fecha_creacion`, `numero_cuotas`, `monto_cuota`, `frecuencia_pago`) VALUES
-(7, 2, 4, '2025-05-29', '2025-12-02', 4230.00, 4230.00, 'pendiente', 'pago moto', '0132', '2025-05-30 07:13:43', 4, 1057.50, 'quincenal');
+('COB1751235435880', 12, 'CTA1751223614226', '2025-06-29', '2025-07-13', 100.00, 100.00, 'pendiente', 'pago', '0132', '2025-06-29 22:17:15', 2, 50.00, 'semanal');
 
 -- --------------------------------------------------------
 
@@ -173,7 +218,7 @@ INSERT INTO `cuentas_por_cobrar` (`id`, `paciente_id`, `cuenta_id`, `fecha_emisi
 --
 
 CREATE TABLE `cuentas_por_pagar` (
-  `id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `proveedor_id` int(11) NOT NULL,
   `fecha_emision` date NOT NULL,
   `fecha_vencimiento` date NOT NULL,
@@ -192,8 +237,8 @@ CREATE TABLE `cuentas_por_pagar` (
 --
 
 CREATE TABLE `cuotas_pago` (
-  `id` int(11) NOT NULL,
-  `cuenta_por_cobrar_id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
+  `cuenta_por_cobrar_id` varchar(20) NOT NULL,
   `numero_cuota` int(11) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
   `fecha_vencimiento` date NOT NULL,
@@ -207,10 +252,12 @@ CREATE TABLE `cuotas_pago` (
 --
 
 INSERT INTO `cuotas_pago` (`id`, `cuenta_por_cobrar_id`, `numero_cuota`, `monto`, `fecha_vencimiento`, `estado`, `fecha_pago`, `fecha_creacion`) VALUES
-(6, 7, 1, 1057.50, '2025-06-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
-(7, 7, 2, 1057.50, '2025-06-28', 'pendiente', NULL, '2025-05-30 07:13:43'),
-(8, 7, 3, 1057.50, '2025-07-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
-(9, 7, 4, 1057.50, '2025-07-28', 'pendiente', NULL, '2025-05-30 07:13:43');
+('6', '7', 1, 1057.50, '2025-06-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
+('7', '7', 2, 1057.50, '2025-06-28', 'pendiente', NULL, '2025-05-30 07:13:43'),
+('8', '7', 3, 1057.50, '2025-07-13', 'pendiente', NULL, '2025-05-30 07:13:43'),
+('9', '7', 4, 1057.50, '2025-07-28', 'pendiente', NULL, '2025-05-30 07:13:43'),
+('CUA1751235435084', 'COB1751235435880', 2, 50.00, '2025-07-13', 'pendiente', NULL, '2025-06-29 22:17:15'),
+('CUA1751235435196', 'COB1751235435880', 1, 50.00, '2025-07-06', 'pendiente', NULL, '2025-06-29 22:17:15');
 
 -- --------------------------------------------------------
 
@@ -219,12 +266,12 @@ INSERT INTO `cuotas_pago` (`id`, `cuenta_por_cobrar_id`, `numero_cuota`, `monto`
 --
 
 CREATE TABLE `egresos` (
-  `id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `descripcion` varchar(255) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
   `fecha` date DEFAULT NULL,
   `origen` enum('servicio','proveedor','otro') DEFAULT 'servicio',
-  `cuenta_id` int(11) DEFAULT NULL
+  `cuenta_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -232,7 +279,7 @@ CREATE TABLE `egresos` (
 --
 
 INSERT INTO `egresos` (`id`, `descripcion`, `monto`, `fecha`, `origen`, `cuenta_id`) VALUES
-(0, 'egresos', 500.00, '2025-05-29', 'proveedor', 4);
+('EGR1751235116367', 'prueba de id2', 20.00, '2025-06-29', 'servicio', 'CTA1751223614226');
 
 --
 -- Disparadores `egresos`
@@ -427,12 +474,12 @@ INSERT INTO `historial` (`id`, `nombre`, `Apellido`, `Ocupacion`, `Sexo`, `Perso
 --
 
 CREATE TABLE `ingresos` (
-  `id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `descripcion` varchar(255) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
   `fecha` date DEFAULT NULL,
   `origen` enum('manual','consulta','servicio') DEFAULT 'manual',
-  `cuenta_id` int(11) DEFAULT NULL
+  `cuenta_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -440,7 +487,7 @@ CREATE TABLE `ingresos` (
 --
 
 INSERT INTO `ingresos` (`id`, `descripcion`, `monto`, `fecha`, `origen`, `cuenta_id`) VALUES
-(0, 'pagos', 1000.00, '2025-05-29', 'consulta', 4);
+('ING1751234910308', 'prueba de modals', 20.00, '2025-06-29', 'manual', 'CTA1751223614226');
 
 --
 -- Disparadores `ingresos`
@@ -537,6 +584,33 @@ INSERT INTO `insumos_entradas` (`id_entradas_insumos`, `id_insumos`, `cantidad`,
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `monedas`
+--
+
+CREATE TABLE `monedas` (
+  `id` varchar(20) NOT NULL,
+  `codigo` varchar(3) NOT NULL COMMENT 'Código ISO de la moneda (USD, VES, EUR, etc.)',
+  `nombre` varchar(50) NOT NULL COMMENT 'Nombre completo de la moneda',
+  `simbolo` varchar(5) DEFAULT NULL COMMENT 'Símbolo de la moneda ($, Bs, €)',
+  `activa` tinyint(1) DEFAULT 1 COMMENT '1=Activa, 0=Inactiva',
+  `es_principal` tinyint(1) DEFAULT 0 COMMENT '1=Moneda principal (USD), 0=Otra moneda',
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `monedas`
+--
+
+INSERT INTO `monedas` (`id`, `codigo`, `nombre`, `simbolo`, `activa`, `es_principal`, `fecha_creacion`) VALUES
+('MON001', 'USD', 'Dólar Estadounidense', '$', 1, 1, '2025-06-30 02:30:23'),
+('MON002', 'VES', 'Bolívar Soberano', 'Bs', 1, 0, '2025-06-30 02:30:23'),
+('MON003', 'EUR', 'Euro', '€', 1, 0, '2025-06-30 02:30:23'),
+('MON004', 'COP', 'Peso Colombiano', '$', 1, 0, '2025-06-30 02:30:23'),
+('MON1751253939041', 'CNY', 'YUAN RENMIBI CHINO', '¥', 1, 0, '2025-06-30 03:25:39');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `pacientes`
 --
 
@@ -578,15 +652,15 @@ INSERT INTO `pacientes` (`id_paciente`, `tipo_documento`, `cedula`, `nombre`, `a
 --
 
 CREATE TABLE `pagos_cuentas_por_cobrar` (
-  `id` int(11) NOT NULL,
-  `cuenta_por_cobrar_id` int(11) NOT NULL,
+  `id` varchar(20) NOT NULL,
+  `cuenta_por_cobrar_id` varchar(20) NOT NULL,
   `fecha_pago` date NOT NULL,
   `monto` decimal(10,2) NOT NULL,
   `metodo_pago` varchar(50) NOT NULL,
   `referencia_pago` varchar(50) DEFAULT NULL,
-  `cuenta_id` int(11) NOT NULL,
+  `cuenta_id` varchar(20) NOT NULL,
   `observaciones` text DEFAULT NULL,
-  `cuota_id` int(11) DEFAULT NULL
+  `cuota_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -732,9 +806,67 @@ INSERT INTO `servicios_insumos` (`id_servicio`, `id_insumo`, `cantidad`, `precio
 (182, 2, 1, 10.00, 1),
 (182, 7, 1, 15.00, 1);
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipos_cambio`
+--
+
+CREATE TABLE `tipos_cambio` (
+  `id` varchar(20) NOT NULL,
+  `moneda_origen` varchar(20) NOT NULL COMMENT 'ID de la moneda origen',
+  `moneda_destino` varchar(20) NOT NULL COMMENT 'ID de la moneda destino',
+  `tipo_cambio` decimal(10,4) NOT NULL COMMENT 'Valor del tipo de cambio',
+  `fecha` date NOT NULL COMMENT 'Fecha del tipo de cambio',
+  `usuario_id` varchar(20) DEFAULT NULL COMMENT 'Usuario que registró el tipo de cambio',
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipos_cambio`
+--
+
+INSERT INTO `tipos_cambio` (`id`, `moneda_origen`, `moneda_destino`, `tipo_cambio`, `fecha`, `usuario_id`, `fecha_registro`) VALUES
+('TC003', 'MON001', 'MON004', 3800.0000, '2025-06-29', NULL, '2025-06-30 02:30:23'),
+('TC1751255137109', 'MON002', 'MON001', 0.0083, '2025-06-30', NULL, '2025-06-30 03:45:37'),
+('TC1751255137878', 'MON001', 'MON002', 120.0000, '2025-06-30', '', '2025-06-30 03:45:37'),
+('TC1751256219667', 'MON001', 'MON1751253939041', 60.0000, '2025-06-30', '', '2025-06-30 04:03:39');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `v_tipo_cambio_actual`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `v_tipo_cambio_actual` (
+`id` varchar(20)
+,`moneda_origen_codigo` varchar(3)
+,`moneda_origen_nombre` varchar(50)
+,`moneda_destino_codigo` varchar(3)
+,`moneda_destino_nombre` varchar(50)
+,`tipo_cambio` decimal(10,4)
+,`fecha` date
+,`fecha_registro` timestamp
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `v_tipo_cambio_actual`
+--
+DROP TABLE IF EXISTS `v_tipo_cambio_actual`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_tipo_cambio_actual`  AS SELECT `tc`.`id` AS `id`, `mo`.`codigo` AS `moneda_origen_codigo`, `mo`.`nombre` AS `moneda_origen_nombre`, `md`.`codigo` AS `moneda_destino_codigo`, `md`.`nombre` AS `moneda_destino_nombre`, `tc`.`tipo_cambio` AS `tipo_cambio`, `tc`.`fecha` AS `fecha`, `tc`.`fecha_registro` AS `fecha_registro` FROM ((`tipos_cambio` `tc` join `monedas` `mo` on(`tc`.`moneda_origen` = `mo`.`id`)) join `monedas` `md` on(`tc`.`moneda_destino` = `md`.`id`)) WHERE `tc`.`fecha` = (select max(`tipos_cambio`.`fecha`) from `tipos_cambio` where `tipos_cambio`.`moneda_origen` = `tc`.`moneda_origen` AND `tipos_cambio`.`moneda_destino` = `tc`.`moneda_destino`) ;
+
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `bancos`
+--
+ALTER TABLE `bancos`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `citas`
@@ -753,7 +885,8 @@ ALTER TABLE `citas_contacto`
 -- Indices de la tabla `cuentas`
 --
 ALTER TABLE `cuentas`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_cuentas_banco` (`entidad_bancaria`);
 
 --
 -- Indices de la tabla `cuentas_por_cobrar`
@@ -830,6 +963,13 @@ ALTER TABLE `insumos_entradas`
   ADD KEY `insumos_entradas_ibfk_2` (`id_insumos`);
 
 --
+-- Indices de la tabla `monedas`
+--
+ALTER TABLE `monedas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `codigo` (`codigo`);
+
+--
 -- Indices de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
@@ -861,6 +1001,15 @@ ALTER TABLE `servicios_equipos`
 ALTER TABLE `servicios_insumos`
   ADD PRIMARY KEY (`id_servicio`,`id_insumo`),
   ADD KEY `id_insumo` (`id_insumo`);
+
+--
+-- Indices de la tabla `tipos_cambio`
+--
+ALTER TABLE `tipos_cambio`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `moneda_fecha` (`moneda_origen`,`moneda_destino`,`fecha`),
+  ADD KEY `fk_tc_moneda_origen` (`moneda_origen`),
+  ADD KEY `fk_tc_moneda_destino` (`moneda_destino`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -931,6 +1080,12 @@ ALTER TABLE `citas`
   ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`cita_contacto_id`) REFERENCES `citas_contacto` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `cuentas`
+--
+ALTER TABLE `cuentas`
+  ADD CONSTRAINT `fk_cuentas_banco` FOREIGN KEY (`entidad_bancaria`) REFERENCES `bancos` (`id`) ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `entradas_equipos_detalles`
 --
 ALTER TABLE `entradas_equipos_detalles`
@@ -963,6 +1118,13 @@ ALTER TABLE `servicios_equipos`
 ALTER TABLE `servicios_insumos`
   ADD CONSTRAINT `servicios_insumos_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicios` (`id`),
   ADD CONSTRAINT `servicios_insumos_ibfk_2` FOREIGN KEY (`id_insumo`) REFERENCES `insumos` (`id`);
+
+--
+-- Filtros para la tabla `tipos_cambio`
+--
+ALTER TABLE `tipos_cambio`
+  ADD CONSTRAINT `fk_tc_moneda_destino` FOREIGN KEY (`moneda_destino`) REFERENCES `monedas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_tc_moneda_origen` FOREIGN KEY (`moneda_origen`) REFERENCES `monedas` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

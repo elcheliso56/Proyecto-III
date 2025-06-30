@@ -1,9 +1,10 @@
 <?php
 require_once('modelo/datos.php');
 require_once('modelo/traits/validaciones.php');
+require_once('modelo/traits/generador_ids.php');
 
 class cxc extends datos {
-    use validaciones;
+    use validaciones, generador_ids;
     
     // Propiedades de la clase cxc
     private $id;
@@ -155,10 +156,14 @@ class cxc extends datos {
                 ];
             }
 
+            // Generar ID único para la cuenta por cobrar
+            $this->id = $this->generarIdUnico('cuentas_por_cobrar', 'COB');
+
             // Iniciar transacción
             $co->beginTransaction();
 
             $sql = "INSERT INTO cuentas_por_cobrar (
+                id,
                 paciente_id, 
                 cuenta_id,
                 fecha_emision, 
@@ -172,6 +177,7 @@ class cxc extends datos {
                 frecuencia_pago, 
                 estado
             ) VALUES (
+                :id,
                 :paciente_id,
                 :cuenta_id,
                 :fecha_emision,
@@ -187,6 +193,7 @@ class cxc extends datos {
             )";
 
             $stmt = $co->prepare($sql);
+            $stmt->bindParam(':id', $this->id);
             $stmt->bindParam(':paciente_id', $this->paciente_id);
             $stmt->bindParam(':cuenta_id', $this->cuenta_id);
             $stmt->bindParam(':fecha_emision', $this->fecha_emision);
@@ -201,11 +208,8 @@ class cxc extends datos {
 
             $stmt->execute();
             
-            // Obtener el ID de la cuenta recién creada
-            $cuenta_id = $co->lastInsertId();
-            
             // Generar las cuotas
-            $this->generarCuotas($co, $cuenta_id);
+            $this->generarCuotas($co, $this->id);
 
             // Confirmar transacción
             $co->commit();
@@ -230,6 +234,9 @@ class cxc extends datos {
         $monto_cuota = $this->monto_total / $this->numero_cuotas;
 
         for ($i = 1; $i <= $this->numero_cuotas; $i++) {
+            // Generar ID único para cada cuota
+            $cuota_id = $this->generarIdUnico('cuotas_pago', 'CUA');
+            
             // Calcula la fecha de vencimiento de la cuota según la frecuencia
             switch ($this->frecuencia_pago) {
                 case 'semanal':
@@ -248,9 +255,11 @@ class cxc extends datos {
             
             // Inserta la cuota
             $co->query("INSERT INTO cuotas_pago (
+                id,
                 cuenta_por_cobrar_id, numero_cuota, monto, fecha_vencimiento,
                 estado, fecha_creacion
             ) VALUES (
+                '$cuota_id',
                 '$cuenta_id',
                 '$i',
                 '$monto_cuota',
@@ -386,6 +395,7 @@ class cxc extends datos {
                 // Actualiza los datos de la cuenta por cobrar
                 $co->query("UPDATE cuentas_por_cobrar SET 
                     paciente_id = '$this->paciente_id',
+                    cuenta_id = '$this->cuenta_id',
                     fecha_emision = '$this->fecha_emision',
                     fecha_vencimiento = '$this->fecha_vencimiento',
                     monto_total = '$this->monto_total',
@@ -470,11 +480,9 @@ class cxc extends datos {
                     $respuesta .= "<td>".$row['estado']."</td>";
                     $respuesta .= "<td>".$row['referencia']."</td>";
                     $respuesta .= "<td>";
-                        // Botón de modificar comentado
-                        // $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
+                        $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar cuenta'><i class='bi bi-arrow-repeat'></i></button><br/>";
                         $respuesta .= "<button type='button' class='btn-sm btn-info w-50 small-width mb-1' onclick='pone(this,2)' title='Abonar cuenta'><i class='bi bi-cash'></i></button><br/>";
-                        // Botón de eliminar comentado
-                        // $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
+                        $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar cuenta'><i class='bi bi-trash'></i></button><br/>";
                         $respuesta .= "</td>";
                     $respuesta .= "</tr>";
                     $n++;

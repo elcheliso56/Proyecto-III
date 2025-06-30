@@ -1,9 +1,10 @@
 <?php
 require_once('modelo/datos.php');
 require_once('modelo/traits/validaciones.php');
+require_once('modelo/traits/generador_ids.php');
 
 class egresos extends datos {
-    use validaciones;
+    use validaciones, generador_ids;
     
     // Propiedades de la clase egresos
 	private $id;
@@ -53,7 +54,11 @@ class egresos extends datos {
 	
 	function incluir(){
 		$r = array();
-        // Verifica si el id ya existe		
+        
+        // Generar ID único antes de verificar si existe
+        $this->id = $this->generarIdUnico('egresos', 'EGR');
+        
+        // Verifica si el id ya existe (aunque ya generamos uno único, es una verificación adicional)		
 		if(!$this->existe($this->id)){
             // Validar los datos antes de insertar
             $validacion = $this->validarDatos();
@@ -74,8 +79,9 @@ class egresos extends datos {
 			$co->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			try {
                 // Inserta el nuevo registro en la base de datos				
-				$co->query("INSERT INTO egresos(descripcion, monto, fecha, origen, cuenta_id)
+				$co->query("INSERT INTO egresos(id, descripcion, monto, fecha, origen, cuenta_id)
               VALUES(
+                  '$this->id',
                   '$this->descripcion',
                   '$this->monto',
                   '$this->fecha', 
@@ -205,10 +211,8 @@ function consultar(){
                 $respuesta .= "<td>".$row['origen']."</td>";
                 $respuesta .= "<td data-cuenta-id='".$row['cuenta_id']."'>".$row['nombre_cuenta']."</td>";
 				$respuesta .= "<td>";
-                    // Botón de modificar comentado
-                    // $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar egreso'><i class='bi bi-arrow-repeat'></i></button><br/>";
-                    // Botón de eliminar comentado
-                    // $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar egreso'><i class='bi bi-trash'></i></button><br/>";
+                    $respuesta .= "<button type='button' class='btn-sm btn-primary w-50 small-width mb-1' onclick='pone(this,0)' title='Modificar egreso'><i class='bi bi-arrow-repeat'></i></button><br/>";
+                    $respuesta .= "<button type='button' class='btn-sm btn-danger w-50 small-width mt-1' onclick='pone(this,1)' title='Eliminar egreso'><i class='bi bi-trash'></i></button><br/>";
                     $respuesta .= "</td>";
                 $respuesta .= "</tr>";
                 $n++;
@@ -281,6 +285,58 @@ function consultar(){
         } finally {
             $co = null; // Cierra la conexión después de la operación
         }
+    }
+
+    // Método para validar los datos del egreso
+    private function validarDatos() {
+        $r = array();
+        $r['valido'] = true;
+        $r['mensaje'] = '';
+
+        // Validar descripción
+        if (empty($this->descripcion) || strlen($this->descripcion) < 3 || strlen($this->descripcion) > 255) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'La descripción debe tener entre 3 y 255 caracteres';
+            return $r;
+        }
+
+        // Validar monto
+        if (empty($this->monto) || !is_numeric($this->monto) || $this->monto <= 0) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'El monto debe ser un número mayor a 0';
+            return $r;
+        }
+
+        // Validar fecha
+        if (empty($this->fecha)) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'La fecha es obligatoria';
+            return $r;
+        }
+
+        // Validar que la fecha sea válida
+        $fecha_obj = DateTime::createFromFormat('Y-m-d', $this->fecha);
+        if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $this->fecha) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'La fecha no es válida';
+            return $r;
+        }
+
+        // Validar origen
+        if (empty($this->origen) || !in_array($this->origen, ['servicio', 'proveedor', 'otro'])) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'El origen no es válido';
+            return $r;
+        }
+
+        // Validar cuenta_id
+        if (empty($this->cuenta_id)) {
+            $r['valido'] = false;
+            $r['mensaje'] = 'La cuenta es obligatoria';
+            return $r;
+        }
+
+        return $r;
     }
 }
 ?>

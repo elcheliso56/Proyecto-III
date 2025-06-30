@@ -5,22 +5,22 @@ function consultar() {
 }
 
 function destruyeDT() {
-    if ($.fn.DataTable.isDataTable("#tablacuentas")) {
-        $("#tablacuentas").DataTable().destroy();
+    if ($.fn.DataTable.isDataTable("#tablabancos")) {
+        $("#tablabancos").DataTable().destroy();
     }
 }
 
 function crearDT() {
-    if (!$.fn.DataTable.isDataTable("#tablacuentas")) {
-        $("#tablacuentas").DataTable({
+    if (!$.fn.DataTable.isDataTable("#tablabancos")) {
+        $("#tablabancos").DataTable({
             language: {
                 lengthMenu: "Mostrar _MENU_ por página",
-                zeroRecords: "No se encontraron cuentas",
+                zeroRecords: "No se encontraron bancos",
                 info: "Mostrando página _PAGE_ de _PAGES_",
-                infoEmpty: "No hay cuentas registradas",
+                infoEmpty: "No hay bancos registrados",
                 infoFiltered: "(filtrado de _MAX_ registros totales)",
                 search: "<i class='bi bi-search'></i>",
-                searchPlaceholder: "Buscar cuenta...",
+                searchPlaceholder: "Buscar banco...",
                 paginate: {
                     first: "Primera",
                     last: "Última",
@@ -38,37 +38,6 @@ function crearDT() {
     }
 }
 
-function cargarBancos() {
-    var datos = new FormData();
-    datos.append('accion', 'obtenerBancosSelect');
-    $.ajax({
-        async: true,
-        url: '?pagina=bancos',
-        type: 'POST',
-        contentType: false,
-        data: datos,
-        processData: false,
-        cache: false,
-        success: function (respuesta) {
-            try {
-                var bancos = JSON.parse(respuesta);
-                var select = $('#entidad_bancaria');
-                select.empty();
-                select.append('<option value="" selected disabled>Seleccione un banco</option>');
-                bancos.forEach(function (banco) {
-                    select.append('<option value="' + banco.id + '">' + banco.nombre + ' (' + banco.codigo_local + ')</option>');
-                });
-                select.trigger('change');
-            } catch (e) {
-                console.error('Error al cargar bancos:', e);
-            }
-        },
-        error: function () {
-            console.error('Error de conexión al cargar bancos');
-        }
-    });
-}
-
 $(document).ready(function () {
     consultar();
 
@@ -78,48 +47,68 @@ $(document).ready(function () {
     });
 
     $("#nombre").on("keyup", function () {
-        validarkeyup(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]{3,50}$/, $(this), $("#snombre"), "Solo letras y números entre 3 y 50 caracteres");
+        validarkeyup(/^[A-Za-z0-9\s\u00f1\u00d1\u00E0-\u00FC]{3,100}$/, $(this), $("#snombre"), "Solo letras y números entre 3 y 100 caracteres");
     });
 
-    // Manejo del tipo de cuenta
-    $("#tipo").on("change", function() {
-        var tipo = $(this).val();
-        if (tipo === 'bancaria') {
-            $("#banco_group").show();
-            $("#numero_cuenta_group").show();
-            cargarBancos();
-        } else {
-            $("#banco_group").hide();
-            $("#numero_cuenta_group").hide();
-            $("#entidad_bancaria").val("");
-            $("#numero_cuenta").val("");
+    // Validaciones para código SWIFT
+    $("#codigo_swift").on("keypress", function (e) {
+        validarkeypress(/^[A-Z]*$/, e);
+    });
+
+    $("#codigo_swift").on("keyup", function () {
+        var valor = $(this).val();
+        if (valor === "") {
+            $("#scodigo_swift").text("");
+            return 1;
         }
+        validarkeyup(/^[A-Z]{8,11}$/, $(this), $("#scodigo_swift"), "Solo letras mayúsculas entre 8 y 11 caracteres");
     });
 
-    // Validaciones para entidad bancaria
-    $("#entidad_bancaria").on("keypress", function (e) {
-        validarkeypress(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]*$/, e);
+    // Validaciones para código local
+    $("#codigo_local").on("keypress", function (e) {
+        validarkeypress(/^[A-Z0-9]*$/, e);
     });
 
-    $("#entidad_bancaria").on("keyup", function () {
-        validarkeyup(/^[A-Za-z\s\u00f1\u00d1\u00E0-\u00FC]{3,50}$/, $(this), $("#sentidad_bancaria"), "Solo letras entre 3 y 50 caracteres");
+    $("#codigo_local").on("keyup", function () {
+        var valor = $(this).val();
+        if (valor === "") {
+            $("#scodigo_local").text("");
+            return 1;
+        }
+        validarkeyup(/^[A-Z0-9]{2,20}$/, $(this), $("#scodigo_local"), "Solo letras mayúsculas y números entre 2 y 20 caracteres");
     });
 
-    // Validaciones para número de cuenta
-    $("#numero_cuenta").on("keypress", function (e) {
-        validarkeypress(/^[0-9]*$/, e);
-    });
+    // Manejo del campo logo
+    $("#logo").on("change", function() {
+        var file = this.files[0];
+        if (file) {
+            // Validar tamaño (2MB máximo)
+            if (file.size > 2 * 1024 * 1024) {
+                $("#slogo").text("El archivo es demasiado grande. Máximo 2MB");
+                this.value = "";
+                $("#logo_preview").hide();
+                return;
+            }
 
-    $("#numero_cuenta").on("keyup", function () {
-        validarkeyup(/^[0-9]{10,20}$/, $(this), $("#snumero_cuenta"), "Solo números entre 10 y 20 dígitos");
-    });
+            // Validar tipo de archivo
+            var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                $("#slogo").text("Solo se permiten archivos JPG, JPEG, PNG y GIF");
+                this.value = "";
+                $("#logo_preview").hide();
+                return;
+            }
 
-    // Validaciones para moneda
-    $("#moneda").on("change", function () {
-        if ($(this).val() === null) {
-            $("#smoneda").text("La moneda es obligatoria");
+            // Mostrar vista previa
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $("#preview_img").attr("src", e.target.result);
+                $("#logo_preview").show();
+                $("#slogo").text("");
+            };
+            reader.readAsDataURL(file);
         } else {
-            $("#smoneda").text("");
+            $("#logo_preview").hide();
         }
     });
 
@@ -129,7 +118,7 @@ $(document).ready(function () {
             if (validarenvio()) {
                 Swal.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas registrar esta cuenta?",
+                    text: "¿Deseas registrar este banco?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -142,11 +131,16 @@ $(document).ready(function () {
                             var datos = new FormData();
                             datos.append('accion', 'incluir');
                             datos.append('nombre', $("#nombre").val());
-                            datos.append('tipo', $("#tipo").val());
-                            datos.append('moneda', $("#moneda").val());
-                            datos.append('activa', $("#activa").val());
-                            datos.append('entidad_bancaria', $("#entidad_bancaria").val());
-                            datos.append('numero_cuenta', $("#numero_cuenta").val());
+                            datos.append('codigo_swift', $("#codigo_swift").val());
+                            datos.append('codigo_local', $("#codigo_local").val());
+                            datos.append('activo', $("#activo").val());
+                            
+                            // Agregar el archivo del logo si existe
+                            var logoFile = $("#logo")[0].files[0];
+                            if (logoFile) {
+                                datos.append('logo', logoFile);
+                            }
+                            
                             enviaAjax(datos);
                         }
                     }
@@ -163,7 +157,7 @@ $(document).ready(function () {
                 });
                 swalWithBootstrapButtons.fire({
                     title: "¿Estás seguro?",
-                    text: "¿Deseas modificar esta cuenta?",
+                    text: "¿Deseas modificar este banco?",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonText: "Sí, modificar",
@@ -176,17 +170,22 @@ $(document).ready(function () {
                             datos.append('accion', 'modificar');
                             datos.append('id', $("#id").val());
                             datos.append('nombre', $("#nombre").val());
-                            datos.append('tipo', $("#tipo").val());
-                            datos.append('moneda', $("#moneda").val());
-                            datos.append('activa', $("#activa").val());
-                            datos.append('entidad_bancaria', $("#entidad_bancaria").val());
-                            datos.append('numero_cuenta', $("#numero_cuenta").val());
+                            datos.append('codigo_swift', $("#codigo_swift").val());
+                            datos.append('codigo_local', $("#codigo_local").val());
+                            datos.append('activo', $("#activo").val());
+                            
+                            // Agregar el archivo del logo si existe
+                            var logoFile = $("#logo")[0].files[0];
+                            if (logoFile) {
+                                datos.append('logo', logoFile);
+                            }
+                            
                             enviaAjax(datos);
                         }
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         swalWithBootstrapButtons.fire({
                             title: "Cancelado",
-                            text: "La cuenta no ha sido modificada",
+                            text: "El banco no ha sido modificado",
                             icon: "error"
                         });
                     }
@@ -217,7 +216,7 @@ $(document).ready(function () {
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     swalWithBootstrapButtons.fire({
                         title: "Cancelado",
-                        text: "Cuenta no eliminada",
+                        text: "Banco no eliminado",
                         icon: "error"
                     });
                 }
@@ -257,31 +256,32 @@ function validarenvio() {
         valido = false;
     }
 
-    // Validar tipo
-    if ($("#tipo").val() === null) {
-        $("#stipo").text("El tipo de cuenta es obligatorio");
+    // Validar código SWIFT (opcional)
+    var codigoSwift = $("#codigo_swift").val();
+    if (codigoSwift !== "" && (codigoSwift.length < 8 || codigoSwift.length > 11)) {
+        $("#scodigo_swift").text("El código SWIFT debe tener entre 8 y 11 caracteres");
         valido = false;
     }
 
-    // Validar moneda
-    if ($("#moneda").val() === null) {
-        $("#smoneda").text("La moneda es obligatoria");
+    // Validar código local (opcional)
+    var codigoLocal = $("#codigo_local").val();
+    if (codigoLocal !== "" && (codigoLocal.length < 2 || codigoLocal.length > 20)) {
+        $("#scodigo_local").text("El código local debe tener entre 2 y 20 caracteres");
         valido = false;
     }
 
-    // Validar campos bancarios si el tipo es bancaria
-    if ($("#tipo").val() === 'bancaria') {
-        if ($("#entidad_bancaria").val() === "" || $("#entidad_bancaria").val() === null) {
-            $("#sentidad_bancaria").text("El banco es obligatorio");
+    // Validar logo (opcional)
+    var logoFile = $("#logo")[0].files[0];
+    if (logoFile) {
+        if (logoFile.size > 2 * 1024 * 1024) {
+            $("#slogo").text("El archivo es demasiado grande. Máximo 2MB");
             valido = false;
-        } else {
-            $("#sentidad_bancaria").text("");
         }
-        if ($("#numero_cuenta").val() === "") {
-            $("#snumero_cuenta").text("El número de cuenta es obligatorio");
+        
+        var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(logoFile.type)) {
+            $("#slogo").text("Solo se permiten archivos JPG, JPEG, PNG y GIF");
             valido = false;
-        } else {
-            $("#snumero_cuenta").text("");
         }
     }
 
@@ -315,28 +315,32 @@ function pone(pos, accion) {
         $("#proceso").text("MODIFICAR");
         $("#id").prop("disabled", true);
         $("#nombre").prop("disabled", true);
-        $("#tipo").prop("disabled", true);
-        $("#moneda").prop("disabled", true);
-        $("#activa").prop("disabled", false);
-        $("#entidad_bancaria").prop("disabled", true);
-        $("#numero_cuenta").prop("disabled", true);
+        $("#codigo_swift").prop("disabled", true);
+        $("#codigo_local").prop("disabled", true);
+        $("#logo").prop("disabled", false);
+        $("#activo").prop("disabled", false);
     } else {
         $("#proceso").text("ELIMINAR");
         $("#id").prop("disabled", true);
         $("#nombre").prop("disabled", true);
-        $("#tipo").prop("disabled", true);
-        $("#moneda").prop("disabled", true);
-        $("#activa").prop("disabled", true);
-        $("#entidad_bancaria").prop("disabled", true);
-        $("#numero_cuenta").prop("disabled", true);
+        $("#codigo_swift").prop("disabled", true);
+        $("#codigo_local").prop("disabled", true);
+        $("#logo").prop("disabled", true);
+        $("#activo").prop("disabled", true);
     }
 
-    $("#nombre").val($(linea).find("td:eq(1)").text());
-    $("#tipo").val($(linea).find("td:eq(2)").text()).trigger('change');
-    $("#moneda").val($(linea).find("td:eq(3)").text()).trigger('change');
-    $("#activa").val($(linea).find("td:eq(4)").text() === "Activa" ? "1" : "0").trigger('change');
-    $("#entidad_bancaria").val($(linea).find("td:eq(5)").text());
-    $("#numero_cuenta").val($(linea).find("td:eq(6)").text());
+    $("#nombre").val($(linea).find("td:eq(1)").text().trim());
+    $("#codigo_swift").val($(linea).find("td:eq(2)").text());
+    $("#codigo_local").val($(linea).find("td:eq(3)").text());
+    $("#activo").val($(linea).find("td:eq(4)").text() === "Activo" ? "1" : "0").trigger('change');
+    
+    var logoImg = $(linea).find("td:eq(1) img");
+    if (logoImg.length > 0) {
+        $("#preview_img").attr("src", logoImg.attr("src"));
+        $("#logo_preview").show();
+    } else {
+        $("#logo_preview").hide();
+    }
     
     $("#modal1").modal("show");
 }
@@ -427,14 +431,15 @@ function enviaAjax(datos) {
 
 function limpia() {
     $("#nombre").val("");
-    $("#tipo").val("").trigger('change');
-    $("#moneda").val("");
-    $("#activa").val("1");
-    $("#entidad_bancaria").val("");
-    $("#numero_cuenta").val("");
+    $("#codigo_swift").val("");
+    $("#codigo_local").val("");
+    $("#logo").val("");
+    $("#activo").val("1");
+    $("#logo_preview").hide();
 
     $("#nombre").prop("disabled", false);
-    $("#tipo").prop("disabled", false);
-    $("#moneda").prop("disabled", false);
-    $("#activa").prop("disabled", false);
+    $("#codigo_swift").prop("disabled", false);
+    $("#codigo_local").prop("disabled", false);
+    $("#logo").prop("disabled", false);
+    $("#activo").prop("disabled", false);
 } 

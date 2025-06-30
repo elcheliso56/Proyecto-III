@@ -1,0 +1,15 @@
+# Permitir acceso solo a archivos de imagen
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Denegar acceso a otros tipos de archivos
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Configuración de seguridad adicional
+Options -Indexes
+Options -ExecCGI 
